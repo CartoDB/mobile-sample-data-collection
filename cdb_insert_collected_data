@@ -14,15 +14,19 @@ description text;
 image_url text;
 longitude float;
 latitude float;
-accuracy float;
+user_longitude float;
+user_latitude float;
+user_accuracy float;
 the_geom text;
+marker_latitude float;
+marker_longitude float;
 
 keys text;
 values text;
 
 BEGIN
 
-keys := 'the_geom,identifier,title,description,accuracy,image_url';
+keys := 'the_geom,identifier,title,description,user_accuracy,user_latitude,user_longitude,image_url';
 values := '';
 
 FOR i in 1 .. array_upper(jsons, 1) LOOP
@@ -30,22 +34,27 @@ FOR i in 1 .. array_upper(jsons, 1) LOOP
     values := values || ','; 
   END IF;
 
-  longitude := jsons[i]::json->>'longitude';
-  latitude := jsons[i]::json->>'latitude';
+  latitude := jsons[i]::json->>'marker_latitude';
+  longitude := jsons[i]::json->>'marker_longitude';
+  
   the_geom := 'CDB_LatLng(' || latitude || ',' || longitude || ')';
   
   identifier := jsons[i]::json->>'identifier';
   title := jsons[i]::json->>'title';
   description := jsons[i]::json->>'description';
   image_url := jsons[i]::json->>'image_url';
-  accuracy := jsons[i]::json->>'accuracy';
+  user_accuracy := jsons[i]::json->>'user_accuracy';
+  user_longitude := jsons[i]::json->>'user_longitude';
+  user_latitude := jsons[i]::json->>'user_latitude';
   
   values := values || '(';
   values := values || the_geom || ',';
   values := values || quote_literal(identifier) || ',';
   values := values || quote_literal(title) || ',';
   values := values || quote_literal(description) || ',';
-  values := values || quote_literal(accuracy) || ',';
+  values := values || quote_literal(user_accuracy) || ',';
+  values := values || quote_literal(user_latitude) || ',';
+  values := values || quote_literal(user_longitude) || ',';
   values := values || quote_literal(image_url);
   
   values := values || ')';

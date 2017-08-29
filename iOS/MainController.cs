@@ -70,6 +70,9 @@ namespace data.collection.iOS
 			item.Longitude = LocationClient.Longitude;
 			item.Accuracy = LocationClient.Accuracy;
 
+            item.MarkerLatitude = LocationClient.MarkerLatitude;
+            item.MarkerLongitude = LocationClient.MarkerLongitude;
+
             return item;
         }
 
