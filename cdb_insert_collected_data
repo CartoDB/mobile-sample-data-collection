@@ -1,0 +1,64 @@
+CREATE OR REPLACE FUNCTION nutiteq.cdb_insert_collected_data(jsons jsonb[])
+ RETURNS TABLE(cartodb_id integer)
+ LANGUAGE plpgsql
+ STRICT SECURITY DEFINER
+AS $function$
+
+DECLARE
+
+sql text;
+
+identifier text;
+title text;
+description text;
+image_url text;
+longitude float;
+latitude float;
+accuracy float;
+the_geom text;
+
+keys text;
+values text;
+
+BEGIN
+
+keys := 'the_geom,identifier,title,description,accuracy,image_url';
+values := '';
+
+FOR i in 1 .. array_upper(jsons, 1) LOOP
+  IF i > 1 THEN 
+    values := values || ','; 
+  END IF;
+
+  longitude := jsons[i]::json->>'longitude';
+  latitude := jsons[i]::json->>'latitude';
+  the_geom := 'CDB_LatLng(' || latitude || ',' || longitude || ')';
+  
+  identifier := jsons[i]::json->>'identifier';
+  title := jsons[i]::json->>'title';
+  description := jsons[i]::json->>'description';
+  image_url := jsons[i]::json->>'image_url';
+  accuracy := jsons[i]::json->>'accuracy';
+  
+  values := values || '(';
+  values := values || the_geom || ',';
+  values := values || quote_literal(identifier) || ',';
+  values := values || quote_literal(title) || ',';
+  values := values || quote_literal(description) || ',';
+  values := values || quote_literal(accuracy) || ',';
+  values := values || quote_literal(image_url);
+  
+  values := values || ')';
+  
+END LOOP;
+
+sql := 'WITH do_insert AS (INSERT INTO sample_collected_data (' || keys || ') '
+  || 'VALUES '|| values
+  || 'RETURNING cartodb_id) SELECT cartodb_id FROM do_insert';
+
+RAISE DEBUG '%', sql;
+
+RETURN QUERY EXECUTE sql;
+
+END;
+$function$
