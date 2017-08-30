@@ -47,10 +47,12 @@ namespace data.collection.iOS
 
             Done.Frame = new CGRect(x, y, w, h);
 
+            nfloat legendPadding = 5;
+
             w = 220;
             h = 100;
-            x = padding;
-            y = Frame.Height - (h + padding);
+            x = legendPadding;
+            y = Frame.Height - (h + legendPadding);
 
             Legend.Frame = new CGRect(x, y, w, h);
         }
