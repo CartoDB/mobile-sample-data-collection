@@ -31,6 +31,8 @@ namespace data.collection.iOS
             Listener.Bitmap = BitmapUtils.CreateBitmapFromUIImage(UIImage.FromFile("icon_pin_red.png"));
 
             Listener.QueryPoints(Device.Id);
+            string text = "QUERYING POINTS...";
+            ContentView.Banner.SetLoadingText(text, false);
 		}
 
         public override void ViewWillAppear(bool animated)

@@ -68,6 +68,9 @@ namespace data.collection.iOS
         public LegendRow()
         {
             Indicator = new UIView();
+            Indicator.Layer.BorderWidth = 0.5f;
+            Indicator.Layer.BorderColor = UIColor.White.CGColor;
+
             AddSubview(Indicator);
 
             Label = new UILabel();

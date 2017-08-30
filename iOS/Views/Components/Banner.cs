@@ -118,6 +118,12 @@ namespace data.collection.iOS
             ShowInfo();
         }
 
+		public void SetLoadingText(string text, bool autoclose, Action completed = null)
+		{
+			SetText(text, autoclose, completed);
+            ShowSpinner();
+		}
+
         public void ShowUploadingImage()
         {
             SetText("Uploading image to amazon...", false);
