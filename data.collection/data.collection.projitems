@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteAsync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\FileUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocationChoiceListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\DateUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Model\" />

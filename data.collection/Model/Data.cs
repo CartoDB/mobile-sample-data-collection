@@ -28,6 +28,8 @@ namespace data.collection
 
         public double MarkerLongitude { get; set; }
 
+        public double Time { get; set; }
+
         public bool IsUploadedToAmazon
         {
             get { return ImageUrl.Contains(BucketClient.PublicReadPath); }
@@ -41,19 +43,42 @@ namespace data.collection
         public override string ToString()
         {
             var map = new StringVariantMap();
-            map.Add("identifier", new Variant(Identifier));
             map.Add("title", new Variant(Title));
             map.Add("description", new Variant(Description));
-            map.Add("image_url", new Variant(ImageUrl));
-            map.Add("user_longitude", new Variant(Longitude));
-            map.Add("user_latitude", new Variant(Latitude));
-            map.Add("user_accuracy", new Variant(Accuracy));
+            map.Add("attachment_url", new Variant(ImageUrl));
             map.Add("marker_latitude", new Variant(MarkerLatitude));
             map.Add("marker_longitude", new Variant(MarkerLongitude));
+			map.Add("device_identifier", new Variant(Identifier));
+			map.Add("user_longitude", new Variant(Longitude));
+			map.Add("user_latitude", new Variant(Latitude));
+			map.Add("user_accuracy", new Variant(Accuracy));
+            map.Add("report_time", new Variant(Time));
 
             string result = new Variant(map).ToString();
 
             return result;
         }
-    }
+
+		public static Data Get(string id, string url, string title, string description)
+		{
+			var item = new Data();
+            item.Identifier = id;
+
+			item.ImageUrl = url;
+            item.Title = title;
+            item.Description = description;
+
+			item.Latitude = LocationClient.Latitude;
+			item.Longitude = LocationClient.Longitude;
+			item.Accuracy = LocationClient.Accuracy;
+
+			item.MarkerLatitude = LocationClient.MarkerLatitude;
+			item.MarkerLongitude = LocationClient.MarkerLongitude;
+
+			item.Time = DateUtils.CurrentMilliseconds;
+
+			return item;
+		}
+
+	}
 }

@@ -57,23 +57,14 @@ namespace data.collection.iOS
             ContentView.Submit.Click -= OnSubmitClicked;
         }
 
-        public Data GetData(string imageUrl)
+        public Data GetData(string url)
         {
-            var item = new Data();
-            item.Identifier = UIDevice.CurrentDevice.IdentifierForVendor.ToString();
+            string id = UIDevice.CurrentDevice.IdentifierForVendor.ToString();
 
-            item.ImageUrl = imageUrl;
-            item.Title = ContentView.TitleField.Text;
-            item.Description = ContentView.DescriptionField.Text;
-			
-            item.Latitude = LocationClient.Latitude;
-			item.Longitude = LocationClient.Longitude;
-			item.Accuracy = LocationClient.Accuracy;
+            string title = ContentView.TitleField.Text;
+            string description = ContentView.DescriptionField.Text;
 
-            item.MarkerLatitude = LocationClient.MarkerLatitude;
-            item.MarkerLongitude = LocationClient.MarkerLongitude;
-
-            return item;
+            return Data.Get(id, url, title, description);
         }
 
         string GenerateName()
