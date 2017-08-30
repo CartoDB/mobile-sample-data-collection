@@ -131,7 +131,7 @@ namespace data.collection.iOS
 
             Console.WriteLine(position);
 
-            LocationField.AddMap(MapView, position);
+            LocationField.SetMap(MapView, position);
         }
 
         const string NewLine = "\n";

@@ -39,12 +39,38 @@ namespace data.collection.iOS
 
             Photo.Frame = Bounds;
 
-            nfloat w = Frame.Height / 3;
+            nfloat w = Frame.Height / 3.5f;
             nfloat h = w;
             nfloat x = Frame.Width / 2 - w / 2;
             nfloat y = Frame.Height / 2 - h / 2;
 
 			image.Frame = new CGRect(x, y, w, h);
+        }
+
+        UIView imageBackground;
+
+        void SetIconRoundWithBackground()
+        {
+            if (imageBackground != null)
+            {
+                return;
+            }
+
+            imageBackground = new UIView();
+            imageBackground.BackgroundColor = Colors.DarkTransparentGray;
+			AddSubview(imageBackground);
+
+            nfloat imagePadding = 10;
+
+            nfloat x = image.Frame.X - imagePadding;
+            nfloat y = image.Frame.Y - imagePadding;
+            nfloat w = image.Frame.Width + 2 * imagePadding;
+            nfloat h = w;
+
+			imageBackground.Layer.CornerRadius = w / 2;
+            imageBackground.Frame = new CGRect(x, y, w, h);
+
+            BringSubviewToFront(image);
         }
 
         UITapGestureRecognizer recognizer;
@@ -62,13 +88,10 @@ namespace data.collection.iOS
 
         public bool IsSet
         {
-            get
-            {
-                return Subviews.Any(view => view is MapView);
-            }
+            get { return Subviews.Any(view => view is MapView); }
         }
 
-        public void AddMap(MapView mapView, MapPos position)
+        public void SetMap(MapView mapView, MapPos position)
         {
             AddSubview(mapView);
             mapView.Frame = Bounds;
@@ -80,6 +103,14 @@ namespace data.collection.iOS
 
             var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
             mapView.Layers.Add(layer);
+
+            SetIconRoundWithBackground();
+        }
+
+        public void SetPhoto(UIImage image)
+        {
+            Photo.Image = image;
+            SetIconRoundWithBackground();
         }
     }
 }
