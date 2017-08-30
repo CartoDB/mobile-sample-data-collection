@@ -7,12 +7,17 @@ namespace data.collection.iOS
 {
     public class Legend : UIView
     {
-        LegendRow synced, mySynced, unsynced;
+        LegendRow mycurrentLocation, synced, mySynced, unsynced;
 
         public Legend()
         {
             BackgroundColor = Colors.DarkTransparentGray;
             Layer.CornerRadius = 5;
+
+			mycurrentLocation = new LegendRow();
+            mycurrentLocation.Indicator.BackgroundColor = Colors.DarkTransparentAppleBlue;
+            mycurrentLocation.Label.Text = "CURRENT LOCATION";
+			AddSubview(mycurrentLocation);
 
             synced = new LegendRow();
             AddSubview(synced);
@@ -31,7 +36,11 @@ namespace data.collection.iOS
             nfloat x = 0;
             nfloat y = 0;
             nfloat w = Frame.Width;
-            nfloat h = Frame.Height / 3;
+            nfloat h = Frame.Height / 4;
+
+            mycurrentLocation.Frame = new CGRect(x, y, w, h);
+
+            y += h;
 
             synced.Frame = new CGRect(x, y, w, h);
 
