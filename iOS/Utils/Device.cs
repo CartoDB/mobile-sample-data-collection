@@ -5,6 +5,8 @@ namespace data.collection.iOS
 {
     public class Device
     {
+        public static string Id => UIDevice.CurrentDevice.IdentifierForVendor.ToString();
+
 		public static nfloat StatusBarHeight
 		{
 			get { return Shared.StatusBarFrame.Height; }

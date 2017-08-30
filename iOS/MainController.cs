@@ -59,7 +59,7 @@ namespace data.collection.iOS
 
         public Data GetData(string url)
         {
-            string id = UIDevice.CurrentDevice.IdentifierForVendor.ToString();
+            string id = Device.Id;
 
             string title = ContentView.TitleField.Text;
             string description = ContentView.DescriptionField.Text;

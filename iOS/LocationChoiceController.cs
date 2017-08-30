@@ -33,7 +33,7 @@ namespace data.collection.iOS
 			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
 			ContentView.Banner.SetInformationText(text, false);
 
-            Listener.QueryPoints();
+            Listener.QueryPoints(Device.Id);
 		}
 
         public override void ViewWillAppear(bool animated)

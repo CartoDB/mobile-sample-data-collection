@@ -2,11 +2,14 @@
 using System;
 using System.IO;
 using Carto.Core;
+using Carto.Projections;
 
 namespace data.collection
 {
     public class Data
     {
+        public const string DEVICEID = "device_identifier";
+
         [SQLite.PrimaryKey, SQLite.AutoIncrement]
         public int Id { get; set; }
 
@@ -48,7 +51,7 @@ namespace data.collection
             map.Add("attachment_url", new Variant(ImageUrl));
             map.Add("marker_latitude", new Variant(MarkerLatitude));
             map.Add("marker_longitude", new Variant(MarkerLongitude));
-			map.Add("device_identifier", new Variant(Identifier));
+            map.Add(DEVICEID, new Variant(Identifier));
 			map.Add("user_longitude", new Variant(Longitude));
 			map.Add("user_latitude", new Variant(Latitude));
 			map.Add("user_accuracy", new Variant(Accuracy));
@@ -58,6 +61,11 @@ namespace data.collection
 
             return result;
         }
+
+		public MapPos GetPosition(Projection projection)
+		{
+			return projection.FromWgs84(new MapPos(Longitude, Latitude));
+		}
 
 		public static Data Get(string id, string url, string title, string description)
 		{
@@ -80,5 +88,5 @@ namespace data.collection
 			return item;
 		}
 
-	}
+    }
 }

@@ -24,7 +24,8 @@ namespace data.collection
 
         public Bitmap Bitmap { get; set; }
 
-        LocalVectorDataSource source;
+        LocalVectorDataSource markerSource;
+        LocalVectorDataSource pointSource;
 
         public Projection Projection
         {
@@ -39,9 +40,13 @@ namespace data.collection
         {
             MapView = mapView;
 
-			source = new LocalVectorDataSource(Projection);
-            VectorLayer routeLayer = new VectorLayer(source);
-			MapView.Layers.Add(routeLayer);
+            markerSource = new LocalVectorDataSource(Projection);
+            VectorLayer markerLayer = new VectorLayer(markerSource);
+			MapView.Layers.Add(markerLayer);
+
+            pointSource = new LocalVectorDataSource(Projection);
+			VectorLayer pointLayer = new VectorLayer(pointSource);
+			MapView.Layers.Add(pointLayer);
 
             Service = new CartoSQLService();
             Service.Username = "nutiteq";
@@ -49,11 +54,11 @@ namespace data.collection
 
         public override void OnMapClicked(MapClickInfo mapClickInfo)
         {
-            source.Clear();
+            markerSource.Clear();
 
             MarkerPosition = mapClickInfo.ClickPos;
             var marker = GetUserMarker(Bitmap, MarkerPosition);
-            source.Add(marker);
+            markerSource.Add(marker);
 
             PinAdded?.Invoke(this, EventArgs.Empty);
         }
@@ -73,13 +78,16 @@ namespace data.collection
             return new Marker(position, builder.BuildStyle());
         }
 
-        public void QueryPoints()
+		// Synced locations
+		public static readonly Color LocationRed = new Color(215, 82, 75, 255);
+        // Synced locations, by me
+        public static readonly Color Green = new Color(145, 198, 112, 255);
+		// Unsynced locations
+		public static readonly Color Gray = new Color(99, 109, 114, 255);
+
+        public void QueryPoints(string deviceId)
         {
-            var builder = new PointStyleBuilder
-            {
-                Size = 10,
-                Color = new Color(255, 0, 0, 255)
-            };
+            var builder = new PointStyleBuilder { Size = 12 };
 
             Dictionary<string, Color> ids = new Dictionary<string, Color>();
 
@@ -106,13 +114,37 @@ namespace data.collection
 
                     PointGeometry geometry = (PointGeometry)feature.Geometry;
 
+                    string id = feature.Properties.GetObjectElement(Data.DEVICEID).String;
+
+                    if (id.Equals(deviceId))
+                    {
+                        builder.Color = Green;
+                    }
+                    else
+                    {
+                        builder.Color = LocationRed;
+                    }
+
                     var point = new Point(geometry, builder.BuildStyle());
                     points.Add(point);
                 }
 
-                source.AddAll(points);
+                List<Data> unsynced = SQLClient.Instance.GetAll();
 
-                PointsAdded?.Invoke(this, EventArgs.Empty);
+                foreach (var item in unsynced)
+                {
+                    MapPos position = item.GetPosition(Projection);
+                    var geomery = new PointGeometry(position);
+
+                    builder.Color = Gray;
+
+                    var point = new Point(position, builder.BuildStyle());
+                    points.Add(point);
+                }
+
+				pointSource.AddAll(points);
+
+				PointsAdded?.Invoke(this, EventArgs.Empty);
             });
         }
     }
