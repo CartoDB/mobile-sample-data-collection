@@ -30,9 +30,6 @@ namespace data.collection.iOS
             Listener = new LocationChoiceListener(ContentView.MapView);
             Listener.Bitmap = BitmapUtils.CreateBitmapFromUIImage(UIImage.FromFile("icon_pin_red.png"));
 
-			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
-			ContentView.Banner.SetInformationText(text, false);
-
             Listener.QueryPoints(Device.Id);
 		}
 
@@ -48,8 +45,10 @@ namespace data.collection.iOS
             ContentView.MapView.MapEventListener = Listener;
 
             Listener.PinAdded += OnPinAdded;
+			Listener.QueryFailed += OnQueryFailed;
+			Listener.PointsAdded += OnPointsAdded;
 
-            ContentView.Done.Click += OnDoneClick;
+			ContentView.Done.Click += OnDoneClick;
 		}
 
         public override void ViewWillDisappear(bool animated)
@@ -64,6 +63,8 @@ namespace data.collection.iOS
             ContentView.MapView.MapEventListener = null;
 
             Listener.PinAdded -= OnPinAdded;
+            Listener.QueryFailed -= OnQueryFailed;
+            Listener.PointsAdded -= OnPointsAdded;
 
             ContentView.Done.Click -= OnDoneClick;
         }
@@ -79,6 +80,31 @@ namespace data.collection.iOS
             InvokeOnMainThread(delegate
             {
                 ContentView.Done.Hidden = false;
+            });
+        }
+
+        void OnQueryFailed(object sender, EventArgs e)
+        {
+			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+
+            InvokeOnMainThread(delegate
+            {
+                ContentView.Banner.SetInformationText(text, false);
+            });
+        }
+
+        void OnPointsAdded(object sender, EventArgs e)
+        {
+            var syncedColor = LocationChoiceListener.SyncedLocations.ToNativeColor();
+            var mySyncedColor = LocationChoiceListener.MySyncedLocations.ToNativeColor();
+            var unsyncedColor = LocationChoiceListener.UnsyncedLocations.ToNativeColor();
+			
+            string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+
+            InvokeOnMainThread(delegate
+            {
+                ContentView.Banner.SetInformationText(text, false);
+                ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
             });
         }
 

@@ -78,12 +78,12 @@ namespace data.collection
             return new Marker(position, builder.BuildStyle());
         }
 
-		// Synced locations
-		public static readonly Color LocationRed = new Color(215, 82, 75, 255);
-        // Synced locations, by me
-        public static readonly Color Green = new Color(145, 198, 112, 255);
-		// Unsynced locations
-		public static readonly Color Gray = new Color(99, 109, 114, 255);
+		// Location Red
+        public static readonly Color SyncedLocations = new Color(215, 82, 75, 255);
+        // Carto Green
+        public static readonly Color MySyncedLocations = new Color(145, 198, 112, 255);
+		// Gray
+        public static readonly Color UnsyncedLocations = new Color(99, 109, 114, 255);
 
         public void QueryPoints(string deviceId)
         {
@@ -118,11 +118,11 @@ namespace data.collection
 
                     if (id.Equals(deviceId))
                     {
-                        builder.Color = Green;
+                        builder.Color = MySyncedLocations;
                     }
                     else
                     {
-                        builder.Color = LocationRed;
+                        builder.Color = SyncedLocations;
                     }
 
                     var point = new Point(geometry, builder.BuildStyle());
@@ -136,7 +136,7 @@ namespace data.collection
                     MapPos position = item.GetPosition(Projection);
                     var geomery = new PointGeometry(position);
 
-                    builder.Color = Gray;
+                    builder.Color = UnsyncedLocations;
 
                     var point = new Point(position, builder.BuildStyle());
                     points.Add(point);

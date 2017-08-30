@@ -201,6 +201,8 @@
     <Compile Include="Views\LocationChoiceView.cs" />
     <Compile Include="Views\BaseView.cs" />
     <Compile Include="Views\Components\ActionButton.cs" />
+    <Compile Include="Utils\UIExtensions.cs" />
+    <Compile Include="Views\Components\Legend.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_camera.png" />

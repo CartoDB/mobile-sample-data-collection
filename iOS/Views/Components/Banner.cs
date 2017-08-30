@@ -15,7 +15,7 @@ namespace data.collection.iOS
 
         Timer completeTimer;
 
-        void SetText(string text, bool autoclose)
+        void SetText(string text, bool autoclose, Action completed = null)
         {
 			label.Text = text;
 			Show();
@@ -45,7 +45,9 @@ namespace data.collection.iOS
 				completeTimer.Stop();
 				completeTimer.Dispose();
 				completeTimer = null;
-			};
+
+                completed?.Invoke();
+            };
         }
 
         public Banner()
@@ -110,9 +112,9 @@ namespace data.collection.iOS
             });
         }
 
-        public void SetInformationText(string text, bool autoclose)
+        public void SetInformationText(string text, bool autoclose, Action completed = null)
         {
-            SetText(text, autoclose);
+            SetText(text, autoclose, completed);
             ShowInfo();
         }
 
