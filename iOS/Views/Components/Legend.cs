@@ -12,7 +12,6 @@ namespace data.collection.iOS
         public Legend()
         {
             BackgroundColor = Colors.DarkTransparentGray;
-            //Layer.CornerRadius = 5;
 
 			mycurrentLocation = new LegendRow();
             mycurrentLocation.Indicator.BackgroundColor = Colors.DarkTransparentAppleBlue;

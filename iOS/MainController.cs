@@ -19,6 +19,8 @@ namespace data.collection.iOS
 
             Title = "DATA COLLECTION";
 
+            NavigationItem.RightBarButtonItem = ContentView.GetSubmitButton();
+
             List<Data> items = SQLClient.Instance.GetAll();
             if (items.Count > 0)
             {
@@ -35,7 +37,7 @@ namespace data.collection.iOS
             ContentView.CameraField.AddGestureRecognizer(OnCameraButtonClick);
             ContentView.LocationField.AddGestureRecognizer(OnLocationButtonClick);
 
-            ContentView.Submit.Click += OnSubmitClicked;
+            (NavigationItem.RightBarButtonItem.CustomView as UIButton).TouchUpInside += OnSubmitClicked;
 
             if (LocationClient.IsMarkerSet)
             {
@@ -54,7 +56,7 @@ namespace data.collection.iOS
             ContentView.CameraField.RemoveGestureRecognizer();
             ContentView.LocationField.RemoveGestureRecognizer();
 
-            ContentView.Submit.Click -= OnSubmitClicked;
+            (NavigationItem.RightBarButtonItem.CustomView as UIButton).TouchUpInside -= OnSubmitClicked;
         }
 
         public Data GetData(string url)

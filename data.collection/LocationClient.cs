@@ -68,8 +68,8 @@ namespace data.collection
 
             if (!FoundUser)
             {
-				MapView.SetFocusPos(position, 1);
-				MapView.SetZoom(17, 1);
+				MapView.SetFocusPos(position, 0);
+				MapView.SetZoom(17, 0);
                 FoundUser = true;
             }
 

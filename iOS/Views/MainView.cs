@@ -20,8 +20,6 @@ namespace data.collection.iOS
 
         public ImageEntry LocationField { get; private set; }
 
-        public SubmitButton Submit { get; private set; }
-
 		public MainView()
         {
             BackgroundColor = UIColor.FromRGB(245, 245, 245);
@@ -39,9 +37,6 @@ namespace data.collection.iOS
 
 			LocationField = new ImageEntry("ADD LOCATION", "icon_add_location.png");
 			AddSubview(LocationField);
-
-            Submit = new SubmitButton();
-            AddSubview(Submit);
         }
 
         public override void LayoutSubviews()
@@ -71,14 +66,6 @@ namespace data.collection.iOS
             x += w + padding;
 
             LocationField.Frame = new CGRect(x, y, w, h);
-
-            y += h + padding;
-
-            x = padding;
-            w = Frame.Width - 2 * padding;
-            h = 50;
-
-            Submit.Frame = new CGRect(x, y, w, h);
         }
 
         public bool IsAnyFieldEmpty
@@ -146,6 +133,15 @@ namespace data.collection.iOS
             }
 
             return true;
+        }
+
+        public UIBarButtonItem GetSubmitButton()
+        {
+            UIButton button = new UIButton(UIButtonType.Custom);
+			button.SetImage(UIImage.FromBundle("icon_done.png"), UIControlState.Normal);
+            button.Frame = new CGRect(0, 0, 30, 30);
+
+            return new UIBarButtonItem(button);
         }
 
     }
