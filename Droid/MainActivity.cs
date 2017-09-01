@@ -55,7 +55,6 @@ namespace data.collection.Droid
 			{
 				ShowSyncAlert(items.Count);
 			}
-
 		}
 
         protected override void OnResume()
@@ -63,8 +62,6 @@ namespace data.collection.Droid
             base.OnResume();
 
             ContentView.ImageField.Click += TakePicture;
-
-            ContentView.Submit.Click += OnSubmitClicked;
         }
 
         protected override void OnPause()
@@ -72,8 +69,25 @@ namespace data.collection.Droid
             base.OnPause();
 
             ContentView.ImageField.Click -= TakePicture;
+        }
 
-            ContentView.Submit.Click -= OnSubmitClicked;
+        public override bool OnCreateOptionsMenu(Android.Views.IMenu menu)
+        {
+            menu.Add(new Java.Lang.String(""))
+                .SetIcon(Resource.Drawable.icon_done)
+                .SetShowAsAction(Android.Views.ShowAsAction.Always);
+
+            return true;
+        }
+
+        public override bool OnOptionsItemSelected(Android.Views.IMenuItem item)
+        {
+            if (item.ItemId == 0)
+            {
+                OnSubmitClicked();
+            }
+
+            return true;
         }
 
         const int Code_TakePicture = 1;
@@ -90,7 +104,7 @@ namespace data.collection.Droid
             }
         }
 
-        async void OnSubmitClicked(object sender, EventArgs e)
+        async void OnSubmitClicked()
         {
             using (var stream = new MemoryStream())
             {

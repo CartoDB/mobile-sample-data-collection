@@ -19,8 +19,6 @@ namespace data.collection.Droid
 
 		public ImageEntry ImageField { get; private set; }
 
-        public SubmitButton Submit { get; private set; }
-
 		public MainView(Context context) : base(context)
         {
             MapView = new MapView(context);
@@ -37,9 +35,6 @@ namespace data.collection.Droid
 
             ImageField = new ImageEntry(context, "TAKE PHOTO", Resource.Drawable.icon_camera);
             AddView(ImageField);
-
-            Submit = new SubmitButton(context);
-            AddView(Submit);
 
             SetMainViewFrame();
 
@@ -75,11 +70,6 @@ namespace data.collection.Droid
 			y += h + padding;
 
 			ImageField.Frame = new CGRect(x, y, w, h);
-
-			y += h + padding;
-            h = (int)(50 * Density);
-
-			Submit.Frame = new CGRect(x, y, w, h);
         }
 
     }
