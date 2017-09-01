@@ -34,6 +34,8 @@ namespace data.collection.Droid
 			AddView(LocationField);
 
             SetMainViewFrame();
+
+            Banner.BringToFront();
         }
 
         public override void LayoutSubviews()

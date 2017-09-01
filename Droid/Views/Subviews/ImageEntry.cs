@@ -55,17 +55,29 @@ namespace data.collection.Droid
             photoView.SetFrame(0, 0, Frame.W, Frame.H);
         }
 
+        MapView map;
+
         public void SetMap(MapView mapView, MapPos position)
         {
-            mapView.Enabled = false;
-            AddView(mapView);
-            mapView.MatchParent();
+            if (map != null)
+            {
+				map.Zoom = 18;
+				map.FocusPos = position;
 
-            mapView.Zoom = 18;
-            mapView.FocusPos = position;
+                return;
+			}
+
+            map = mapView;
+
+            map.Enabled = false;
+            AddView(map);
+            map.MatchParent();
 
             var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
-            mapView.Layers.Add(layer);
+            map.Layers.Add(layer);
+
+			map.Zoom = 18;
+			map.FocusPos = position;
         }
 
     }
