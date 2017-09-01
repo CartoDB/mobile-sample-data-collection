@@ -18,8 +18,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Networking\Response\BucketResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocationClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLite.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteAsync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\FileUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocationChoiceListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\DateUtils.cs" />
@@ -28,7 +26,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Model\" />
     <Folder Include="$(MSBuildThisFileDirectory)Networking\" />
     <Folder Include="$(MSBuildThisFileDirectory)Networking\Response\" />
-    <Folder Include="$(MSBuildThisFileDirectory)SQLite\" />
     <Folder Include="$(MSBuildThisFileDirectory)Utils\" />
   </ItemGroup>
 </Project>

@@ -30,10 +30,6 @@ namespace data.collection.Droid
 			global::PCLCrypto.Resource.String.Hello = global::data.collection.Droid.Resource.String.Hello;
 			global::PCLStorage.Resource.String.ApplicationName = global::data.collection.Droid.Resource.String.ApplicationName;
 			global::PCLStorage.Resource.String.Hello = global::data.collection.Droid.Resource.String.Hello;
-			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.ApplicationName = global::data.collection.Droid.Resource.String.ApplicationName;
-			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.Hello = global::data.collection.Droid.Resource.String.Hello;
-			global::SQLite.Net.Platform.XamarinAndroidN.Resource.String.ApplicationName = global::data.collection.Droid.Resource.String.ApplicationName;
-			global::SQLite.Net.Platform.XamarinAndroidN.Resource.String.Hello = global::data.collection.Droid.Resource.String.Hello;
 		}
 		
 		public partial class Attribute

@@ -171,6 +171,7 @@
     <Folder Include="Views\" />
     <Folder Include="Views\Components\" />
     <Folder Include="Views\Extensions\" />
+    <Folder Include="SQLite\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -204,6 +205,8 @@
     <Compile Include="Utils\UIExtensions.cs" />
     <Compile Include="Views\Components\Legend.cs" />
     <Compile Include="Utils\ImageUtils.cs" />
+    <Compile Include="SQLite\SQLite.cs" />
+    <Compile Include="SQLite\SQLiteAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_camera.png" />
