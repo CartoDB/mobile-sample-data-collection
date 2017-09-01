@@ -2,15 +2,15 @@
 using System;
 using Android.Content;
 using Android.Widget;
+using Carto.Core;
 using Carto.Layers;
+using Carto.Projections;
 using Carto.Ui;
 
 namespace data.collection.Droid
 {
-    public class MainView : BaseView
+    public class MainView : BannerView
     {
-        public Banner Banner { get; private set; }
-
 		public TextEntry TitleField { get; private set; }
 
 		public TextEntry DescriptionField { get; private set; }
@@ -21,9 +21,6 @@ namespace data.collection.Droid
 
 		public MainView(Context context) : base(context)
         {
-            Banner = new Banner(context);
-            AddView(Banner);
-
             TitleField = new TextEntry(context, "TITLE");
             AddView(TitleField);
 
@@ -41,19 +38,12 @@ namespace data.collection.Droid
 
         public override void LayoutSubviews()
         {
-            int x = 0;
-            int y = 0;
-            int h = (int)(45 * Density);
-            int w = Frame.W;
+            base.LayoutSubviews();
 
-            int padding = (int)(15 * Density);
-
-            Banner.Frame = new CGRect(x, y, w, h);
-
-			x = padding;
-			y = padding;
-            w = Frame.W - 2 * padding;
-            h = (int)(60 * Density);
+			int x = padding;
+			int y = padding;
+            int w = Frame.W - 2 * padding;
+            int h = (int)(60 * Density);
 
 			TitleField.Frame = new CGRect(x, y, w, h);
 
@@ -72,5 +62,26 @@ namespace data.collection.Droid
             LocationField.Frame = new CGRect(x, y, w, h);
         }
 
+		MapView mapView;
+		MapView MapView
+		{
+			get
+			{
+				if (mapView == null)
+				{
+                    mapView = new MapView(Context);
+				}
+
+				return mapView;
+			}
+		}
+
+		Projection Projection => MapView.Options.BaseProjection;
+
+		public void AddMapOverlayTo(double longitude, double latitude)
+		{
+			MapPos position = Projection.FromWgs84(new MapPos(longitude, latitude));
+			LocationField.SetMap(MapView, position);
+		}
     }
 }

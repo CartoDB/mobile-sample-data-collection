@@ -3,6 +3,9 @@ using System;
 using Android.Widget;
 using Android.Content;
 using Android.Graphics;
+using Carto.Core;
+using Carto.Ui;
+using Carto.Layers;
 
 namespace data.collection.Droid
 {
@@ -51,5 +54,21 @@ namespace data.collection.Droid
 
             photoView.SetFrame(0, 0, Frame.W, Frame.H);
         }
-	}
+
+        public void SetMap(MapView mapView, MapPos position)
+        {
+                AddView(mapView);
+                mapView.MatchParent();
+
+            //BringChildToFront(imageView);
+
+            mapView.Zoom = 18;
+            mapView.FocusPos = position;
+
+            var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
+            mapView.Layers.Add(layer);
+
+            //SetIconRoundWithBackground();
+        }
+    }
 }

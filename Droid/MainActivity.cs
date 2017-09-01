@@ -1,12 +1,9 @@
 ﻿using Android.App;
-using Android.Widget;
 using Android.OS;
 using System;
 using Android.Content;
 using Android.Provider;
 using Android.Graphics;
-using Android.Locations;
-using Android.Support.V4.App;
 using System.IO;
 using System.Collections.Generic;
 
@@ -36,8 +33,15 @@ namespace data.collection.Droid
             base.OnResume();
 
             ContentView.PhotoField.Click += TakePicture;
-
+            Settings.Secure.GetString(ContentResolver, Settings.Secure.AndroidId);
             ContentView.LocationField.Click += AddLocation;
+
+			if (LocationClient.IsMarkerSet)
+			{
+				ContentView.AddMapOverlayTo(
+					LocationClient.MarkerLongitude, LocationClient.MarkerLatitude
+				);
+			}
         }
 
         protected override void OnPause()
@@ -129,7 +133,7 @@ namespace data.collection.Droid
 
 		public Data GetData(string imageUrl)
 		{
-            string id = Settings.Secure.GetString(ContentResolver, Settings.Secure.AndroidId);
+            string id = DeviceId;
 			
             var item = new Data();
             item.Identifier = id;
@@ -230,7 +234,7 @@ namespace data.collection.Droid
             (sender as AlertDialog).Cancel();
 			
             string text = "Fine. We'll just keep your stuff offline then";
-			ContentView.Banner.SetText(text, true);
+			ContentView.Banner.SetInformationText(text, true);
 		}
     }
 }

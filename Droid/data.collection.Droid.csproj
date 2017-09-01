@@ -113,6 +113,8 @@
     <Compile Include="Base\BaseActivity.cs" />
     <Compile Include="LocationChoiceActivity.cs" />
     <Compile Include="Views\LocationChoiceView.cs" />
+    <Compile Include="Views\Base\BannerView.cs" />
+    <Compile Include="Views\Subviews\ActionButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -142,6 +144,7 @@
     <Folder Include="Resources\drawable-nodpi\" />
     <Folder Include="Views\Subviews\" />
     <Folder Include="Utils\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\s3_tokens.txt" />

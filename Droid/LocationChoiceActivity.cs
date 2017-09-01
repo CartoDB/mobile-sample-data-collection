@@ -6,12 +6,15 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
+using Carto.Core;
+using Carto.Utils;
 
 namespace data.collection.Droid
 {
@@ -23,7 +26,9 @@ namespace data.collection.Droid
         public LocationClient LocationClient { get; set; }
 
         LocationManager manager;
-        
+
+        LocationChoiceListener Listener { get; set; }
+
         string[] Permissions
         {
             get
@@ -53,10 +58,90 @@ namespace data.collection.Droid
 				OnPermissionsGranted();
 			}
 
+			Listener = new LocationChoiceListener(ContentView.MapView);
+            var bitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.icon_pin_red);
+            Listener.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
+
+			Listener.QueryPoints(DeviceId);
+			string text = "QUERYING POINTS...";
+			ContentView.Banner.SetLoadingText(text, false);
 		}
 
+        protected override void OnResume()
+        {
+            base.OnResume();
 
-        public override void OnPermissionsGranted()
+			LocationClient.AttachIgnoreListener();
+
+			ContentView.MapView.MapEventListener = Listener;
+
+			Listener.PinAdded += OnPinAdded;
+			Listener.QueryFailed += OnQueryFailed;
+			Listener.PointsAdded += OnPointsAdded;
+
+			ContentView.Done.Clicked += OnDoneClick;
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+
+			LocationClient.DetachIgnoreListener();
+
+			ContentView.MapView.MapEventListener = null;
+
+			Listener.PinAdded -= OnPinAdded;
+			Listener.QueryFailed -= OnQueryFailed;
+			Listener.PointsAdded -= OnPointsAdded;
+
+			ContentView.Done.Clicked -= OnDoneClick;
+        }
+
+        void OnPinAdded(object sender, EventArgs e)
+        {
+            MapPos position = Listener.MarkerPosition;
+            position = Listener.Projection.ToLatLong(position.X, position.Y);
+
+            LocationClient.MarkerLatitude = position.X;
+            LocationClient.MarkerLongitude = position.Y;
+
+            RunOnUiThread(delegate
+            {
+                ContentView.Done.Show();
+            });
+        }
+
+		void OnQueryFailed(object sender, EventArgs e)
+		{
+			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+
+            RunOnUiThread(delegate
+			{
+				ContentView.Banner.SetInformationText(text, false);
+			});
+		}
+
+		void OnPointsAdded(object sender, EventArgs e)
+		{
+			var syncedColor = LocationChoiceListener.SyncedLocations.ToNativeColor();
+			var mySyncedColor = LocationChoiceListener.MySyncedLocations.ToNativeColor();
+			var unsyncedColor = LocationChoiceListener.UnsyncedLocations.ToNativeColor();
+
+			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+
+            RunOnUiThread(delegate
+			{
+				ContentView.Banner.SetInformationText(text, false);
+				//ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
+			});
+		}
+		
+        void OnDoneClick(object sender, EventArgs e)
+		{
+            OnBackPressed();
+		}
+
+		public override void OnPermissionsGranted()
         {
             manager = (LocationManager)GetSystemService(LocationService);
 

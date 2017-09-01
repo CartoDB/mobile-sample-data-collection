@@ -58,7 +58,7 @@ namespace data.collection.Droid
 
 		Timer completeTimer;
 
-		public void SetText(string text, bool autoclose)
+		void SetText(string text, bool autoclose)
 		{
 			label.Text = text;
 			Show();
@@ -91,7 +91,19 @@ namespace data.collection.Droid
 			};
 		}
 
-        public void Show()
+		public void SetInformationText(string text, bool autoclose)
+		{
+			SetText(text, autoclose);
+			ShowInfo();
+		}
+
+		public void SetLoadingText(string text, bool autoclose)
+		{
+			SetText(text, autoclose);
+			ShowSpinner();
+		}
+
+		public void Show()
         {
             AnimateAlpha(1.0f);
         }

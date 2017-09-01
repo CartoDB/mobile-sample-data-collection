@@ -1,11 +1,9 @@
 ﻿using System;
 using Android.App;
-using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Support.V4.App;
-using Android.Views;
 using Android.Widget;
-using Carto.Utils;
+using Android.Provider;
 
 namespace data.collection.Droid
 {
@@ -15,6 +13,8 @@ namespace data.collection.Droid
 		protected const int Marshmallow = 23;
 		
         public bool IsMarshmallow { get { return ((int)Build.VERSION.SdkInt) >= Marshmallow; } }
+
+        public string DeviceId => Settings.Secure.GetString(ContentResolver, Settings.Secure.AndroidId);
 
 		public void RequestPermissions(params string[] permissions)
 		{
