@@ -132,7 +132,7 @@ namespace data.collection.Droid
             RunOnUiThread(delegate
 			{
 				ContentView.Banner.SetInformationText(text, false);
-				//ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
+				ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
 			});
 		}
 		

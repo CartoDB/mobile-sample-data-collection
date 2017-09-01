@@ -11,6 +11,8 @@ namespace data.collection.Droid
 
         public static readonly Color TransparentAppleBlue = Color.Argb(150, 0, 122, 255);
 
+        public static readonly Color DarkTransparentAppleBlue = Color.Argb(200, 0, 122, 255);
+
         public static Color ToNativeColor(this Carto.Graphics.Color color)
         {
             return Color.Argb(color.A, color.R, color.G, color.B);

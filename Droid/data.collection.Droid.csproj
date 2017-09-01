@@ -115,6 +115,7 @@
     <Compile Include="Views\LocationChoiceView.cs" />
     <Compile Include="Views\Base\BannerView.cs" />
     <Compile Include="Views\Subviews\ActionButton.cs" />
+    <Compile Include="Views\Subviews\Legend.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

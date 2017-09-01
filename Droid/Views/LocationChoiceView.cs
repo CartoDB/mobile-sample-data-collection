@@ -21,6 +21,8 @@ namespace data.collection.Droid
 
         public ActionButton Done { get; private set; }
 
+        public Legend Legend { get; private set; }
+
 		public LocationChoiceView(Context context) : base(context)
         {
 			MapView = new MapView(context);
@@ -29,6 +31,9 @@ namespace data.collection.Droid
             Done = new ActionButton(context, Resource.Drawable.icon_done);
             Done.SetBackground(Colors.AppleBlue);
             AddView(Done);
+
+            Legend = new Legend(context);
+            AddView(Legend);
 
             SetMainViewFrame();
 
@@ -55,14 +60,14 @@ namespace data.collection.Droid
 
 			Done.Frame = new CGRect(x, y, w, h);
 
-			int legendPadding = 5;
+            int legendPadding = (int)(5 * Density);
 
-			w = 220;
-			h = 100;
+            w = (int)(220 * Density);
+            h = (int)(100 * Density);
 			x = legendPadding;
             y = Frame.H - (h + legendPadding);
 
-			//Legend.Frame = new CGRect(x, y, w, h);
+			Legend.Frame = new CGRect(x, y, w, h);
 		}
 
 	}

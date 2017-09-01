@@ -57,6 +57,7 @@ namespace data.collection.Droid
 
         public void SetMap(MapView mapView, MapPos position)
         {
+            mapView.Enabled = false;
             AddView(mapView);
             mapView.MatchParent();
 
@@ -66,5 +67,6 @@ namespace data.collection.Droid
             var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
             mapView.Layers.Add(layer);
         }
+
     }
 }
