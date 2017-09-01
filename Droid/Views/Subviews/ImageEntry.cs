@@ -42,7 +42,7 @@ namespace data.collection.Droid
         {
             base.LayoutSubviews();
 
-            int w = Frame.H / 2;
+            int w = (int)(Frame.H / 3.2);
 			int h = w;
             int x = Frame.W / 2 - w / 2;
             int y = Frame.H / 2 - h / 2;

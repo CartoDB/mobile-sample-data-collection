@@ -111,6 +111,8 @@
     <Compile Include="Views\Subviews\ImageEntry.cs" />
     <Compile Include="Views\Subviews\SubmitButton.cs" />
     <Compile Include="Base\BaseActivity.cs" />
+    <Compile Include="LocationChoiceActivity.cs" />
+    <Compile Include="Views\LocationChoiceView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -131,6 +133,8 @@
     <AndroidResource Include="Resources\drawable-nodpi\icon_take_photo.png" />
     <AndroidResource Include="Resources\drawable-nodpi\icon_pin_red.png" />
     <AndroidResource Include="Resources\drawable-nodpi\icon_add_location.png" />
+    <AndroidResource Include="Resources\values\Styles.xml" />
+    <AndroidResource Include="Resources\values\Colors.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />

@@ -9,21 +9,18 @@ namespace data.collection.Droid
 {
     public class MainView : BaseView
     {
-        public MapView MapView { get; private set; }
-
         public Banner Banner { get; private set; }
 
 		public TextEntry TitleField { get; private set; }
 
 		public TextEntry DescriptionField { get; private set; }
 
-		public ImageEntry ImageField { get; private set; }
+		public ImageEntry PhotoField { get; private set; }
+
+        public ImageEntry LocationField { get; private set; }
 
 		public MainView(Context context) : base(context)
         {
-            MapView = new MapView(context);
-            AddView(MapView);
-
             Banner = new Banner(context);
             AddView(Banner);
 
@@ -33,19 +30,17 @@ namespace data.collection.Droid
             DescriptionField = new TextEntry(context, "DESCRIPTION");
             AddView(DescriptionField);
 
-            ImageField = new ImageEntry(context, "TAKE PHOTO", Resource.Drawable.icon_camera);
-            AddView(ImageField);
+            PhotoField = new ImageEntry(context, "TAKE PHOTO", Resource.Drawable.icon_camera);
+            AddView(PhotoField);
+
+            LocationField = new ImageEntry(context, "ADD LOCATION", Resource.Drawable.icon_add_location);
+			AddView(LocationField);
 
             SetMainViewFrame();
-
-            var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
-            MapView.Layers.Add(layer);
         }
 
         public override void LayoutSubviews()
         {
-            MapView.SetFrame(0, 0, Frame.W, Frame.H);
-
             int x = 0;
             int y = 0;
             int h = (int)(45 * Density);
@@ -56,7 +51,7 @@ namespace data.collection.Droid
             Banner.Frame = new CGRect(x, y, w, h);
 
 			x = padding;
-			y = Banner.Frame.Bottom - padding;
+			y = padding;
             w = Frame.W - 2 * padding;
             h = (int)(60 * Density);
 
@@ -68,8 +63,13 @@ namespace data.collection.Droid
 			DescriptionField.Frame = new CGRect(x, y, w, h);
 
 			y += h + padding;
+            w = (Frame.W - 3 * padding) / 2;
 
-			ImageField.Frame = new CGRect(x, y, w, h);
+			PhotoField.Frame = new CGRect(x, y, w, h);
+
+            x += w + padding;
+
+            LocationField.Frame = new CGRect(x, y, w, h);
         }
 
     }

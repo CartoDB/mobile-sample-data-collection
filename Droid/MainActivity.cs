@@ -13,24 +13,9 @@ using System.Collections.Generic;
 namespace data.collection.Droid
 {
     [Activity(Label = "DATA COLLECTION", MainLauncher = true, Icon = "@mipmap/icon")]
-    public class MainActivity : BaseActivity, ILocationListener, ActivityCompat.IOnRequestPermissionsResultCallback
+    public class MainActivity : BaseActivity
     {
         public MainView ContentView { get; set; }
-
-        public LocationClient LocationClient { get; set; }
-
-		LocationManager manager;
-		
-        string[] Permissions
-        {
-            get
-            {
-                return new string[] {
-                    Android.Manifest.Permission.AccessCoarseLocation,
-                    Android.Manifest.Permission.AccessFineLocation
-                };
-            }
-        }
 
 		protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -38,17 +23,6 @@ namespace data.collection.Droid
 
             ContentView = new MainView(this);
             SetContentView(ContentView);
-
-            LocationClient = new LocationClient(ContentView.MapView);
-
-			if (IsMarshmallow)
-			{
-				RequestPermissions(Permissions);
-			}
-			else
-			{
-				OnPermissionsGranted();
-			}
 
 			List<Data> items = SQLClient.Instance.GetAll();
 			if (items.Count > 0)
@@ -61,14 +35,18 @@ namespace data.collection.Droid
         {
             base.OnResume();
 
-            ContentView.ImageField.Click += TakePicture;
+            ContentView.PhotoField.Click += TakePicture;
+
+            ContentView.LocationField.Click += AddLocation;
         }
 
         protected override void OnPause()
         {
             base.OnPause();
 
-            ContentView.ImageField.Click -= TakePicture;
+            ContentView.PhotoField.Click -= TakePicture;
+
+            ContentView.LocationField.Click -= AddLocation;
         }
 
         public override bool OnCreateOptionsMenu(Android.Views.IMenu menu)
@@ -104,14 +82,19 @@ namespace data.collection.Droid
             }
         }
 
+        void AddLocation(object sender, EventArgs e)
+        {
+            StartActivity(typeof(LocationChoiceActivity));  
+        }
+
         async void OnSubmitClicked()
         {
             using (var stream = new MemoryStream())
             {
-                Bitmap bitmap = ContentView.ImageField.Photo;
+                Bitmap bitmap = ContentView.PhotoField.Photo;
                 bitmap.Compress(Bitmap.CompressFormat.Png, 0, stream);
 
-				string filename = ContentView.ImageField.ImageName;
+				string filename = ContentView.PhotoField.ImageName;
 
                 Data test = GetData(filename);
                 SQLClient.Instance.Insert(test);
@@ -169,8 +152,8 @@ namespace data.collection.Droid
                 string name = GenerateName();
                 Bitmap image = (Bitmap)data.Extras.Get("data");
 
-                ContentView.ImageField.Photo = image;
-                ContentView.ImageField.ImageName = name;
+                ContentView.PhotoField.Photo = image;
+                ContentView.PhotoField.ImageName = name;
 
                 string folder = FileUtils.GetFolder(name);
 
@@ -248,57 +231,6 @@ namespace data.collection.Droid
 			
             string text = "Fine. We'll just keep your stuff offline then";
 			ContentView.Banner.SetText(text, true);
-		}
-
-		public override void OnPermissionsGranted()
-        {
-			manager = (LocationManager)GetSystemService(LocationService);
-
-			foreach (string provider in manager.GetProviders(true))
-			{
-				manager.RequestLocationUpdates(provider, 1000, 50, this);
-			}
-        }
-
-        public override void OnPermissionsDenied()
-        {
-            // TODO
-        }
-
-		void RequestLocationPermission()
-		{
-			string fine = Android.Manifest.Permission.AccessFineLocation;
-			string coarse = Android.Manifest.Permission.AccessCoarseLocation;
-			ActivityCompat.RequestPermissions(this, new string[] { fine, coarse }, RequestCode);
-		}
-
-		public void OnLocationChanged(Location location)
-		{
-			LocationFound(location);
-		}
-
-		public void OnProviderDisabled(string provider)
-		{
-			Alert("Location provider disabled, bro!");
-		}
-
-		public void OnProviderEnabled(string provider)
-		{
-			Alert("Location provider enabled... scanning for location");
-		}
-
-		public void OnStatusChanged(string provider, Availability status, Bundle extras)
-		{
-			Console.WriteLine("OnStatusChanged");
-		}
-
-		void LocationFound(Location location)
-		{
-            LocationClient.Latitude = location.Latitude;
-            LocationClient.Longitude = location.Longitude;
-            LocationClient.Accuracy = location.Accuracy;
-
-            LocationClient.Update();
 		}
     }
 }
