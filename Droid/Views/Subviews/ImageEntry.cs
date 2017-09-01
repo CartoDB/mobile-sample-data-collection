@@ -57,18 +57,14 @@ namespace data.collection.Droid
 
         public void SetMap(MapView mapView, MapPos position)
         {
-                AddView(mapView);
-                mapView.MatchParent();
-
-            //BringChildToFront(imageView);
+            AddView(mapView);
+            mapView.MatchParent();
 
             mapView.Zoom = 18;
             mapView.FocusPos = position;
 
             var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
             mapView.Layers.Add(layer);
-
-            //SetIconRoundWithBackground();
         }
     }
 }

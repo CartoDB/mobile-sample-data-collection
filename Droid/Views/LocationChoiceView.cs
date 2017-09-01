@@ -27,6 +27,7 @@ namespace data.collection.Droid
 			AddView(MapView);
 
             Done = new ActionButton(context, Resource.Drawable.icon_done);
+            Done.SetBackground(Colors.AppleBlue);
             AddView(Done);
 
             SetMainViewFrame();
@@ -45,9 +46,9 @@ namespace data.collection.Droid
 
 			MapView.SetFrame(0, 0, Frame.W, Frame.H);
 
-            int pad = 15;
+            int pad = (int)(15 * Density);
 
-			int w = 55;
+            int w = (int)(55 * Density);
 			int h = w;
             int x = Frame.W - (w + pad);
             int y = Frame.H - (h + pad);
