@@ -203,6 +203,7 @@
     <Compile Include="Views\Components\ActionButton.cs" />
     <Compile Include="Utils\UIExtensions.cs" />
     <Compile Include="Views\Components\Legend.cs" />
+    <Compile Include="Utils\ImageUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_camera.png" />

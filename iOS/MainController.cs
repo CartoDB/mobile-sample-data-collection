@@ -137,6 +137,9 @@ namespace data.collection.iOS
 		void OnCameraActionComplete(object sender, PhotoEventArgs e)
         {
             UIImage image = Camera.GetImageFromInfo(e.Info);
+
+            image = ImageUtils.Resize(image);
+
             ContentView.CameraField.SetPhoto(image);
 
             string filename = GenerateName();
