@@ -14,6 +14,8 @@ namespace data.collection
 		public const string BaseUrl = "https://" + Schema + ".carto.com/api/v2/sql";
 		public const string SQLUrl = BaseUrl + "?q=";
 
+        public const string InternalServerError = "Internal Server Error";
+
         public static string DataToSql(List<Data> data)
         {
             string[] jsons = new string[data.Count];
@@ -44,6 +46,12 @@ namespace data.collection
         public static CartoResponse DecodePostResponse(string encoded)
 		{
             CartoResponse response = new CartoResponse();
+
+            if (encoded.Contains(InternalServerError))
+            {
+                response.Error = InternalServerError;
+                return response;
+            }
 
 			Variant json = Variant.FromString(encoded);
 

@@ -15,9 +15,9 @@ namespace data.collection
 
         public string Identifier { get; set; }
 
-        public string Title { get; set; }
+        public string @Title { get; set; }
 
-        public string Description { get; set; }
+        public string @Description { get; set; }
 
         public string ImageUrl { get; set; }
 
@@ -46,8 +46,8 @@ namespace data.collection
         public override string ToString()
         {
             var map = new StringVariantMap();
-            map.Add("title", new Variant(Title));
-            map.Add("description", new Variant(Description));
+            map.Add("title", new Variant(Title.EscapeQuotes()));
+            map.Add("description", new Variant(Description.EscapeQuotes()));
             map.Add("attachment_url", new Variant(ImageUrl));
             map.Add("marker_latitude", new Variant(MarkerLatitude));
             map.Add("marker_longitude", new Variant(MarkerLongitude));
