@@ -91,14 +91,21 @@ namespace data.collection.Droid
             StartActivity(typeof(LocationChoiceActivity));  
         }
 
-        async void OnSubmitClicked()
+		// Quality Accepts 0 - 100:
+		// 0 = MAX Compression(Least Quality which is suitable for Small images)
+		// 100 = Least Compression(MAX Quality which is suitable for Big images)
+        const int Quality = 50;
+
+		async void OnSubmitClicked()
         {
             using (var stream = new MemoryStream())
             {
                 Bitmap bitmap = ContentView.PhotoField.Photo;
-                bitmap.Compress(Bitmap.CompressFormat.Png, 0, stream);
+                bitmap.Compress(Bitmap.CompressFormat.Png, Quality, stream);
 
 				string filename = ContentView.PhotoField.ImageName;
+
+				ContentView.Banner.ShowUploadingImage();
 
 				BucketResponse response1 = await BucketClient.Upload(filename, stream);
 
@@ -150,7 +157,7 @@ namespace data.collection.Droid
                 string folder = FileUtils.GetFolder(name);
 
                 var input = new MemoryStream();
-                image.Compress(Bitmap.CompressFormat.Png, 0, input);
+                image.Compress(Bitmap.CompressFormat.Png, Quality, input);
 
                 var output = File.Create(folder);
 
