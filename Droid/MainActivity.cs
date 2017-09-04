@@ -100,9 +100,6 @@ namespace data.collection.Droid
 
 				string filename = ContentView.PhotoField.ImageName;
 
-                Data test = GetData(filename);
-                SQLClient.Instance.Insert(test);
-
 				BucketResponse response1 = await BucketClient.Upload(filename, stream);
 
 				if (response1.IsOk)
@@ -134,19 +131,10 @@ namespace data.collection.Droid
 		public Data GetData(string imageUrl)
 		{
             string id = DeviceId;
-			
-            var item = new Data();
-            item.Identifier = id;
+            string title = ContentView.TitleField.Text;
+            string description = ContentView.DescriptionField.Text;
 
-			item.ImageUrl = imageUrl;
-			item.Title = ContentView.TitleField.Text;
-			item.Description = ContentView.DescriptionField.Text;
-
-			item.Latitude = LocationClient.Latitude;
-			item.Longitude = LocationClient.Longitude;
-			item.Accuracy = LocationClient.Accuracy;
-
-			return item;
+            return Data.Get(id, imageUrl, title, description);
 		}
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
