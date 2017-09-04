@@ -5,7 +5,8 @@ namespace data.collection
     {
         public static string EscapeQuotes(this string source)
         {
-            return source.Replace("'", "''").Replace("\"", @"""");
+            // Escape single apostrophes, replace quotation marks
+            return source.Replace("'", "''").Replace("\"", "");
         }
     }
 }
