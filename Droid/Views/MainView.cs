@@ -15,7 +15,7 @@ namespace data.collection.Droid
 
 		public TextEntry DescriptionField { get; private set; }
 
-		public ImageEntry PhotoField { get; private set; }
+		public ImageEntry CameraField { get; private set; }
 
         public ImageEntry LocationField { get; private set; }
 
@@ -27,8 +27,8 @@ namespace data.collection.Droid
             DescriptionField = new TextEntry(context, "DESCRIPTION");
             AddView(DescriptionField);
 
-            PhotoField = new ImageEntry(context, "TAKE PHOTO", Resource.Drawable.icon_camera);
-            AddView(PhotoField);
+            CameraField = new ImageEntry(context, "TAKE PHOTO", Resource.Drawable.icon_camera);
+            AddView(CameraField);
 
             LocationField = new ImageEntry(context, "ADD LOCATION", Resource.Drawable.icon_add_location);
 			AddView(LocationField);
@@ -57,7 +57,7 @@ namespace data.collection.Droid
 			y += h + padding;
             w = (Frame.W - 3 * padding) / 2;
 
-			PhotoField.Frame = new CGRect(x, y, w, h);
+			CameraField.Frame = new CGRect(x, y, w, h);
 
             x += w + padding;
 
@@ -85,5 +85,33 @@ namespace data.collection.Droid
 			MapPos position = Projection.FromWgs84(new MapPos(longitude, latitude));
 			LocationField.SetMap(MapView, position);
 		}
+
+        public bool IsAnyFieldEmpty
+        {
+            get 
+            {
+                if (string.IsNullOrWhiteSpace(TitleField.Text))
+                {
+                    return true;
+                }
+
+                if (string.IsNullOrWhiteSpace(DescriptionField.Text))
+                {
+                    return true;
+                }
+
+                if (CameraField.Photo == null)
+                {
+                    return true;
+                }
+
+                if (!LocationField.IsSet)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }

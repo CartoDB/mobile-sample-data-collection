@@ -55,6 +55,8 @@ namespace data.collection.Droid
             photoView.SetFrame(0, 0, Frame.W, Frame.H);
         }
 
+        public bool IsSet => map != null;
+
         MapView map;
 
         public void SetMap(MapView mapView, MapPos position)

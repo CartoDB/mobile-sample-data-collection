@@ -32,7 +32,7 @@ namespace data.collection.Droid
         {
             base.OnResume();
 
-            ContentView.PhotoField.Click += TakePicture;
+            ContentView.CameraField.Click += TakePicture;
             Settings.Secure.GetString(ContentResolver, Settings.Secure.AndroidId);
             ContentView.LocationField.Click += AddLocation;
 
@@ -48,7 +48,7 @@ namespace data.collection.Droid
         {
             base.OnPause();
 
-            ContentView.PhotoField.Click -= TakePicture;
+            ContentView.CameraField.Click -= TakePicture;
 
             ContentView.LocationField.Click -= AddLocation;
         }
@@ -98,14 +98,20 @@ namespace data.collection.Droid
 
 		async void OnSubmitClicked()
         {
+            if (ContentView.IsAnyFieldEmpty)
+            {
+                ContentView.Banner.SetInformationText("Please fill our all fields", true);
+                return;
+            }
+
             ContentView.Banner.SetInformationText("Compressing image...", false);
 
             using (var stream = new MemoryStream())
             {
-                Bitmap bitmap = ContentView.PhotoField.Photo;
+                Bitmap bitmap = ContentView.CameraField.Photo;
                 bitmap.Compress(Bitmap.CompressFormat.Png, Quality, stream);
 
-				string filename = ContentView.PhotoField.ImageName;
+				string filename = ContentView.CameraField.ImageName;
 
 				ContentView.Banner.ShowUploadingImage();
 
@@ -153,8 +159,8 @@ namespace data.collection.Droid
                 string name = GenerateName();
                 Bitmap image = (Bitmap)data.Extras.Get("data");
 
-                ContentView.PhotoField.Photo = image;
-                ContentView.PhotoField.ImageName = name;
+                ContentView.CameraField.Photo = image;
+                ContentView.CameraField.ImageName = name;
 
                 string folder = FileUtils.GetFolder(name);
 
