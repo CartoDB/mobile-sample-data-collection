@@ -94,10 +94,12 @@ namespace data.collection.Droid
 		// Quality Accepts 0 - 100:
 		// 0 = MAX Compression(Least Quality which is suitable for Small images)
 		// 100 = Least Compression(MAX Quality which is suitable for Big images)
-        const int Quality = 50;
+        const int Quality = 100;
 
 		async void OnSubmitClicked()
         {
+            ContentView.Banner.SetInformationText("Compressing image...", false);
+
             using (var stream = new MemoryStream())
             {
                 Bitmap bitmap = ContentView.PhotoField.Photo;

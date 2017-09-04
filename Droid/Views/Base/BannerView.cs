@@ -1,15 +1,5 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 
 namespace data.collection.Droid
 {
@@ -21,7 +11,6 @@ namespace data.collection.Droid
         {
 			Banner = new Banner(context);
 			AddView(Banner);
-
 		}
 
         protected int padding;
