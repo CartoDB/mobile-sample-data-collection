@@ -129,7 +129,7 @@ namespace data.collection.Droid
 
             RunOnUiThread(delegate
 			{
-				ContentView.Banner.SetInformationText(text, false);
+				ContentView.Banner.SetInformationText(text, true);
 			});
 		}
 
@@ -143,7 +143,7 @@ namespace data.collection.Droid
 
             RunOnUiThread(delegate
 			{
-				ContentView.Banner.SetInformationText(text, false);
+				ContentView.Banner.SetInformationText(text, true);
 				ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
 			});
 		}
