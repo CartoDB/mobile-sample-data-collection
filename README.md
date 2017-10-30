@@ -12,7 +12,3 @@ This application will not run out-of-the-box. You need to provide your own aws a
 ##### DISCLAIMER
 
 This is a sample app with relatively simple code structure, it has not passed extensive testing etc. I can assure you, if you wish to break it, you will be able to.
-
-##### NOTES
-
-Android dun' goofed it with 7.0 by removing the option to [dynamically link non-native NDK libraries](https://developer.android.com/about/versions/nougat/android-7.0-changes.html#ndk), so the whole SQLite part data.collection.Droid is a mess.
