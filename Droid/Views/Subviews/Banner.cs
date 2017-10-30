@@ -58,7 +58,7 @@ namespace data.collection.Droid
 
 		Timer completeTimer;
 
-		void SetText(string text, bool autoclose)
+		void SetText(string text, bool autoclose, Action complete = null)
 		{
 			label.Text = text;
 			Show();
@@ -88,18 +88,21 @@ namespace data.collection.Droid
 				completeTimer.Stop();
 				completeTimer.Dispose();
 				completeTimer = null;
-			};
+
+                complete?.Invoke();
+
+            };
 		}
 
-		public void SetInformationText(string text, bool autoclose)
+		public void SetInformationText(string text, bool autoclose, Action complete = null)
 		{
-			SetText(text, autoclose);
+            SetText(text, autoclose, complete);
 			ShowInfo();
 		}
 
-		public void SetLoadingText(string text, bool autoclose)
+        public void SetLoadingText(string text, bool autoclose, Action complete = null)
 		{
-			SetText(text, autoclose);
+            SetText(text, autoclose, complete);
 			ShowSpinner();
 		}
 
@@ -128,13 +131,13 @@ namespace data.collection.Droid
 
 		public void ShowUploadingData()
 		{
-			SetText("Uploading data to CARTO...", false);
+            SetText("Uploading data to CARTO...", false);
 			ShowSpinner();
 		}
 
 		public void Complete()
 		{
-			SetText("Great success! Data uploaded", true);
+            SetText("Great success! Data uploaded", true);
 			ShowInfo();
 		}
 

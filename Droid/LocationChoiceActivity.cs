@@ -133,20 +133,27 @@ namespace data.collection.Droid
 			});
 		}
 
-		void OnPointsAdded(object sender, EventArgs e)
-		{
-			var syncedColor = LocationChoiceListener.SyncedLocations.ToNativeColor();
-			var mySyncedColor = LocationChoiceListener.MySyncedLocations.ToNativeColor();
-			var unsyncedColor = LocationChoiceListener.UnsyncedLocations.ToNativeColor();
+        void OnPointsAdded(object sender, EventArgs e)
+        {
+            var syncedColor = LocationChoiceListener.SyncedLocations.ToNativeColor();
+            var mySyncedColor = LocationChoiceListener.MySyncedLocations.ToNativeColor();
+            var unsyncedColor = LocationChoiceListener.UnsyncedLocations.ToNativeColor();
 
-			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+            string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
 
             RunOnUiThread(delegate
-			{
-				ContentView.Banner.SetInformationText(text, true);
-				ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
-			});
-		}
+            {
+                ContentView.Banner.SetInformationText(text, true, delegate
+                {
+                    RunOnUiThread(delegate
+                    {
+                        ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
+                    });
+
+                });
+
+            });
+        }
 		
         void OnDoneClick(object sender, EventArgs e)
 		{

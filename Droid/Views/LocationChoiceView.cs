@@ -64,8 +64,8 @@ namespace data.collection.Droid
 
             w = (int)(220 * Density);
             h = (int)(100 * Density);
-			x = legendPadding;
-            y = Frame.H - (h + legendPadding);
+            x = Frame.W - (w + legendPadding);
+            y = legendPadding;
 
 			Legend.Frame = new CGRect(x, y, w, h);
 		}
