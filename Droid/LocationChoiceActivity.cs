@@ -14,6 +14,9 @@ using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
 using Carto.Core;
+using Carto.DataSources;
+using Carto.Layers;
+using Carto.Projections;
 using Carto.Utils;
 
 namespace data.collection.Droid
@@ -27,7 +30,8 @@ namespace data.collection.Droid
 
         LocationManager manager;
 
-        LocationChoiceListener Listener { get; set; }
+        ElementClickListener ElementListener { get; set; }
+        LocationChoiceListener MapListener { get; set; }
 
         string[] Permissions
         {
@@ -58,11 +62,12 @@ namespace data.collection.Droid
 				OnPermissionsGranted();
 			}
 
-			Listener = new LocationChoiceListener(ContentView.MapView);
+			MapListener = new LocationChoiceListener(ContentView.MapView);
             var bitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.icon_pin_red);
-            Listener.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
+            MapListener.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
+            ElementListener = new ElementClickListener(MapListener.PointSource);
 
-			Listener.QueryPoints(DeviceId);
+			MapListener.QueryPoints(DeviceId);
 			string text = "QUERYING POINTS...";
 			ContentView.Banner.SetLoadingText(text, false);
 		}
@@ -71,36 +76,43 @@ namespace data.collection.Droid
         {
             base.OnResume();
 
-			LocationClient.AttachIgnoreListener();
+			ContentView.MapView.MapEventListener = MapListener;
+            MapListener.PointLayer.VectorElementEventListener = ElementListener;
 
-			ContentView.MapView.MapEventListener = Listener;
+            LocationClient.AttachIgnoreListener();
 
-			Listener.PinAdded += OnPinAdded;
-			Listener.QueryFailed += OnQueryFailed;
-			Listener.PointsAdded += OnPointsAdded;
+			MapListener.PinAdded += OnPinAdded;
+			MapListener.QueryFailed += OnQueryFailed;
+			MapListener.PointsAdded += OnPointsAdded;
 
 			ContentView.Done.Clicked += OnDoneClick;
+
+            for (int i = 0; i < ContentView.MapView.Layers.Count; i++) {
+                var layer = ContentView.MapView.Layers[i];
+                Console.WriteLine(layer);
+            }
         }
 
         protected override void OnPause()
         {
             base.OnPause();
 
-			LocationClient.DetachIgnoreListener();
-
 			ContentView.MapView.MapEventListener = null;
+            MapListener.PointLayer.VectorElementEventListener = null;
 
-			Listener.PinAdded -= OnPinAdded;
-			Listener.QueryFailed -= OnQueryFailed;
-			Listener.PointsAdded -= OnPointsAdded;
+            LocationClient.DetachIgnoreListener();
+
+			MapListener.PinAdded -= OnPinAdded;
+			MapListener.QueryFailed -= OnQueryFailed;
+			MapListener.PointsAdded -= OnPointsAdded;
 
 			ContentView.Done.Clicked -= OnDoneClick;
         }
 
         void OnPinAdded(object sender, EventArgs e)
         {
-            MapPos position = Listener.MarkerPosition;
-            position = Listener.Projection.ToLatLong(position.X, position.Y);
+            MapPos position = MapListener.MarkerPosition;
+            position = MapListener.Projection.ToLatLong(position.X, position.Y);
 
             LocationClient.MarkerLatitude = position.X;
             LocationClient.MarkerLongitude = position.Y;

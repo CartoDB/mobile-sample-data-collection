@@ -25,7 +25,7 @@ namespace data.collection
         public Bitmap Bitmap { get; set; }
 
         LocalVectorDataSource markerSource;
-        LocalVectorDataSource pointSource;
+        public LocalVectorDataSource PointSource { get; private set; }
 
         public Projection Projection
         {
@@ -36,6 +36,8 @@ namespace data.collection
 
         CartoSQLService Service;
 
+        public VectorLayer PointLayer { get; private set; }
+
         public LocationChoiceListener(MapView mapView)
         {
             MapView = mapView;
@@ -44,9 +46,9 @@ namespace data.collection
             VectorLayer markerLayer = new VectorLayer(markerSource);
 			MapView.Layers.Add(markerLayer);
 
-            pointSource = new LocalVectorDataSource(Projection);
-			VectorLayer pointLayer = new VectorLayer(pointSource);
-			MapView.Layers.Add(pointLayer);
+            PointSource = new LocalVectorDataSource(Projection);
+			PointLayer = new VectorLayer(PointSource);
+			MapView.Layers.Add(PointLayer);
 
             Service = new CartoSQLService();
             Service.Username = "nutiteq";
@@ -126,6 +128,12 @@ namespace data.collection
                     }
 
                     var point = new Point(geometry, builder.BuildStyle());
+
+                    var text = feature.Properties.GetObjectElement("title").String;
+                    point.SetMetaDataElement(ElementClickListener.TitleId, new Variant(text));
+                    text = feature.Properties.GetObjectElement("description").String;
+                    point.SetMetaDataElement(ElementClickListener.DescriptionId, new Variant(text));
+
                     points.Add(point);
                 }
 
@@ -139,10 +147,16 @@ namespace data.collection
                     builder.Color = UnsyncedLocations;
 
                     var point = new Point(position, builder.BuildStyle());
+
+                    var text = item.Title;
+                    point.SetMetaDataElement(ElementClickListener.TitleId, new Variant(text));
+                    text = item.Description;
+                    point.SetMetaDataElement(ElementClickListener.DescriptionId, new Variant(text));
+
                     points.Add(point);
                 }
 
-				pointSource.AddAll(points);
+				PointSource.AddAll(points);
 
 				PointsAdded?.Invoke(this, EventArgs.Empty);
             });
