@@ -1,6 +1,6 @@
 ## DATA COLLECTION
 
-Sample app demonstrating how **CartoMobileSDK** and **CARTO SQL API** can be used to actively (and passively) collect data.
+Sample app demonstrating how **Carto Mobile SDK** and **CARTO SQL API** can be used to actively (and passively) collect data.
 
 The user takes a picture, adds a title, description and, if necessary, a custom identifier, the data is then stored locally (SQLite) until it can be uploaded to CARTO via an SQL function, so it could be realized without the use of your API KEY, which introduces a security risk, if stored on your application.
 
