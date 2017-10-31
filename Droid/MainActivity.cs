@@ -1,244 +1,214 @@
-﻿using Android.App;
-using Android.OS;
+﻿
 using System;
-using Android.Content;
-using Android.Provider;
-using Android.Graphics;
-using System.IO;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using Android.App;
+using Android.Content;
+using Android.Graphics;
+using Android.Locations;
+using Android.OS;
+using Android.Runtime;
+using Android.Support.V4.App;
+using Android.Views;
+using Android.Widget;
+using Carto.Core;
+using Carto.DataSources;
+using Carto.Layers;
+using Carto.Projections;
+using Carto.Utils;
 
 namespace data.collection.Droid
 {
     [Activity(Label = "DATA COLLECTION", MainLauncher = true, Icon = "@mipmap/icon")]
-    public class MainActivity : BaseActivity
+    public class MainActivity : BaseActivity, ILocationListener, ActivityCompat.IOnRequestPermissionsResultCallback
     {
-        public MainView ContentView { get; set; }
+        public LocationChoiceView ContentView { get; set; }
 
-		protected override void OnCreate(Bundle savedInstanceState)
+        public LocationClient LocationClient { get; set; }
+
+        LocationManager manager;
+
+        ElementClickListener ElementListener { get; set; }
+        LocationChoiceListener MapListener { get; set; }
+
+        string[] Permissions
+        {
+            get
+            {
+                return new string[] {
+                    Android.Manifest.Permission.AccessCoarseLocation,
+                    Android.Manifest.Permission.AccessFineLocation
+                };
+            }
+        }
+
+        protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            ContentView = new MainView(this);
+            ContentView = new LocationChoiceView(this);
             SetContentView(ContentView);
 
-			List<Data> items = SQLClient.Instance.GetAll();
-			if (items.Count > 0)
+			LocationClient = new LocationClient(ContentView.MapView);
+
+			if (IsMarshmallow)
 			{
-				ShowSyncAlert(items.Count);
+				RequestPermissions(Permissions);
 			}
+			else
+			{
+				OnPermissionsGranted();
+			}
+
+			MapListener = new LocationChoiceListener(ContentView.MapView);
+            var bitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.icon_pin_red);
+            MapListener.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
+            ElementListener = new ElementClickListener(MapListener.PointSource);
+
+			MapListener.QueryPoints(DeviceId);
+			string text = "QUERYING POINTS...";
+			ContentView.Banner.SetLoadingText(text, false);
 		}
 
         protected override void OnResume()
         {
             base.OnResume();
 
-            ContentView.CameraField.Click += TakePicture;
-            Settings.Secure.GetString(ContentResolver, Settings.Secure.AndroidId);
-            ContentView.LocationField.Click += AddLocation;
+			ContentView.MapView.MapEventListener = MapListener;
+            MapListener.PointLayer.VectorElementEventListener = ElementListener;
 
-			if (LocationClient.IsMarkerSet)
-			{
-				ContentView.AddMapOverlayTo(
-					LocationClient.MarkerLongitude, LocationClient.MarkerLatitude
-				);
-			}
+            LocationClient.AttachIgnoreListener();
+
+			MapListener.PinAdded += OnPinAdded;
+			MapListener.QueryFailed += OnQueryFailed;
+			MapListener.PointsAdded += OnPointsAdded;
+
+			ContentView.Done.Clicked += OnDoneClick;
+
+            for (int i = 0; i < ContentView.MapView.Layers.Count; i++) {
+                var layer = ContentView.MapView.Layers[i];
+                Console.WriteLine(layer);
+            }
         }
 
         protected override void OnPause()
         {
             base.OnPause();
 
-            ContentView.CameraField.Click -= TakePicture;
+			ContentView.MapView.MapEventListener = null;
+            MapListener.PointLayer.VectorElementEventListener = null;
 
-            ContentView.LocationField.Click -= AddLocation;
+            LocationClient.DetachIgnoreListener();
+
+			MapListener.PinAdded -= OnPinAdded;
+			MapListener.QueryFailed -= OnQueryFailed;
+			MapListener.PointsAdded -= OnPointsAdded;
+
+			ContentView.Done.Clicked -= OnDoneClick;
         }
 
-        public override bool OnCreateOptionsMenu(Android.Views.IMenu menu)
+        void OnPinAdded(object sender, EventArgs e)
         {
-            menu.Add(new Java.Lang.String(""))
-                .SetIcon(Resource.Drawable.icon_done)
-                .SetShowAsAction(Android.Views.ShowAsAction.Always);
+            MapPos position = MapListener.MarkerPosition;
+            position = MapListener.Projection.ToLatLong(position.X, position.Y);
 
-            return true;
-        }
+            LocationClient.MarkerLatitude = position.X;
+            LocationClient.MarkerLongitude = position.Y;
 
-        public override bool OnOptionsItemSelected(Android.Views.IMenuItem item)
-        {
-            if (item.ItemId == 0)
+            RunOnUiThread(delegate
             {
-                OnSubmitClicked();
-            }
-
-            return true;
+                ContentView.Done.Show();
+            });
         }
 
-        const int Code_TakePicture = 1;
-
-        void TakePicture(object sender, EventArgs e)
-        {
-            var intent = new Intent(MediaStore.ActionImageCapture);
-
-            // Most basic camera implementation from:
-            // https://developer.android.com/training/camera/photobasics.html
-			if (intent.ResolveActivity(PackageManager) != null)
-            {
-                StartActivityForResult(intent, Code_TakePicture);
-            }
-        }
-
-        void AddLocation(object sender, EventArgs e)
-        {
-            StartActivity(typeof(LocationChoiceActivity));  
-        }
-
-		// Quality Accepts 0 - 100:
-		// 0 = MAX Compression(Least Quality which is suitable for Small images)
-		// 100 = Least Compression(MAX Quality which is suitable for Big images)
-        const int Quality = 100;
-
-		async void OnSubmitClicked()
-        {
-            if (ContentView.IsAnyFieldEmpty)
-            {
-                ContentView.Banner.SetInformationText("Please fill our all fields", true);
-                return;
-            }
-
-            ContentView.Banner.SetInformationText("Compressing image...", false);
-
-            using (var stream = new MemoryStream())
-            {
-                Bitmap bitmap = ContentView.CameraField.Photo;
-                bitmap.Compress(Bitmap.CompressFormat.Png, Quality, stream);
-
-				string filename = ContentView.CameraField.ImageName;
-
-				ContentView.Banner.ShowUploadingImage();
-
-				BucketResponse response1 = await BucketClient.Upload(filename, stream);
-
-				if (response1.IsOk)
-				{
-					ContentView.Banner.ShowUploadingData();
-
-					Data item = GetData(response1.Path);
-					CartoResponse response2 = await Networking.Post(item);
-
-					if (response2.IsOk)
-					{
-						ContentView.Banner.Complete();
-					}
-					else
-					{
-						ContentView.Banner.ShowFailedCartoUpload();
-						SQLClient.Instance.Insert(item);
-					}
-				}
-				else
-				{
-					ContentView.Banner.ShowFailedAmazonUpload();
-                    Data item = GetData(filename);
-					SQLClient.Instance.Insert(item);
-				}
-            }
-        }
-
-		public Data GetData(string imageUrl)
+		void OnQueryFailed(object sender, EventArgs e)
 		{
-            string id = DeviceId;
-            string title = ContentView.TitleField.Text;
-            string description = ContentView.DescriptionField.Text;
+			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
 
-            return Data.Get(id, imageUrl, title, description);
-		}
-
-        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-        {
-            if (requestCode == Code_TakePicture && resultCode == Result.Ok)
-            {
-                string name = GenerateName();
-                Bitmap image = (Bitmap)data.Extras.Get("data");
-
-                ContentView.CameraField.Photo = image;
-                ContentView.CameraField.ImageName = name;
-
-                string folder = FileUtils.GetFolder(name);
-
-                var input = new MemoryStream();
-                image.Compress(Bitmap.CompressFormat.Png, Quality, input);
-
-                var output = File.Create(folder);
-
-                input.Seek(0, SeekOrigin.Begin);
-                input.CopyTo(output);
-            }
-        }
-
-        const string Extension = ".png";
-		string GenerateName()
-		{
-			return Guid.NewGuid().ToString() + Extension;
-		}
-
-        public void ShowSyncAlert(int count)
-        {
-			string title = "Attention!";
-			string message = "You have " + count + " items stored locally. Would you like to upload now?";
-
-			var builder = new AlertDialog.Builder(this);
-			builder.SetTitle(title);
-			builder.SetMessage(message);
-            builder.SetCancelable(false);
-
-            builder.SetPositiveButton("SURE", OnYesButtonClicked);
-            builder.SetNegativeButton("NO", OnNoButtonClicked);
-            builder.Show();
-        }
-
-        async void OnYesButtonClicked(object sender, DialogClickEventArgs e)
-        {
-			List<Data> items = SQLClient.Instance.GetAll();
-			int count = items.Count;
-
-			ContentView.Banner.ShowUploadingEverything(count);
-
-			foreach (Data item in items)
+            RunOnUiThread(delegate
 			{
-				if (!item.IsUploadedToAmazon)
-				{
-					byte[] bytes = File.ReadAllBytes(FileUtils.GetFolder(item.ImageUrl));
-					Stream stream = new MemoryStream(bytes);
-					BucketResponse response1 = await BucketClient.Upload(item.FileName, stream);
+				ContentView.Banner.SetInformationText(text, true);
+			});
+		}
 
-                    if (response1.IsOk)
+        void OnPointsAdded(object sender, EventArgs e)
+        {
+            var syncedColor = LocationChoiceListener.SyncedLocations.ToNativeColor();
+            var mySyncedColor = LocationChoiceListener.MySyncedLocations.ToNativeColor();
+            var unsyncedColor = LocationChoiceListener.UnsyncedLocations.ToNativeColor();
+
+            string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+
+            RunOnUiThread(delegate
+            {
+                ContentView.Banner.SetInformationText(text, true, delegate
+                {
+                    RunOnUiThread(delegate
                     {
-						item.ImageUrl = response1.Path;
-						Console.WriteLine("Uploaded offline image to: " + response1.Path);   
-                    }
-				}
-			}
+                        ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
+                    });
 
-			CartoResponse response2 = await Networking.Post(items);
+                });
 
-			if (response2.IsOk)
-			{
-				ContentView.Banner.ShowUploadedEverything(count);
-				SQLClient.Instance.DeleteAll();
-			}
-			else
-			{
-				ContentView.Banner.ShowEverythingUploadFailed(count);
-                SQLClient.Instance.UpdateAll(items);
-			}
+            });
+        }
+		
+        void OnDoneClick(object sender, EventArgs e)
+		{
+            OnBackPressed();
+		}
+
+		public override void OnPermissionsGranted()
+        {
+            manager = (LocationManager)GetSystemService(LocationService);
+
+            foreach (string provider in manager.GetProviders(true))
+            {
+                manager.RequestLocationUpdates(provider, 1000, 50, this);
+            }
         }
 
-		void OnNoButtonClicked(object sender, DialogClickEventArgs e)
-		{
-            (sender as AlertDialog).Cancel();
-			
-            string text = "Fine. We'll just keep your stuff offline then";
-			ContentView.Banner.SetInformationText(text, true);
-		}
+        public override void OnPermissionsDenied()
+        {
+            // TODO
+        }
+
+        void RequestLocationPermission()
+        {
+            string fine = Android.Manifest.Permission.AccessFineLocation;
+            string coarse = Android.Manifest.Permission.AccessCoarseLocation;
+            ActivityCompat.RequestPermissions(this, new string[] { fine, coarse }, RequestCode);
+        }
+
+        public void OnLocationChanged(Location location)
+        {
+            LocationFound(location);
+        }
+
+        public void OnProviderDisabled(string provider)
+        {
+            Alert("Location provider disabled, bro!");
+        }
+
+        public void OnProviderEnabled(string provider)
+        {
+            Alert("Location provider enabled... scanning for location");
+        }
+
+        public void OnStatusChanged(string provider, Availability status, Bundle extras)
+        {
+            Console.WriteLine("OnStatusChanged");
+        }
+
+        void LocationFound(Location location)
+        {
+            LocationClient.Latitude = location.Latitude;
+            LocationClient.Longitude = location.Longitude;
+            LocationClient.Accuracy = location.Accuracy;
+
+            LocationClient.Update();
+        }
     }
 }
-

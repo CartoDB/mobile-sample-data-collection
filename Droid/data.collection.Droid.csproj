@@ -96,7 +96,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainActivity.cs" />
+    <Compile Include="_deprecatedActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\MainView.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="Views\Subviews\ImageEntry.cs" />
     <Compile Include="Views\Subviews\SubmitButton.cs" />
     <Compile Include="Base\BaseActivity.cs" />
-    <Compile Include="LocationChoiceActivity.cs" />
+    <Compile Include="MainActivity.cs" />
     <Compile Include="Views\LocationChoiceView.cs" />
     <Compile Include="Views\Base\BannerView.cs" />
     <Compile Include="Views\Subviews\ActionButton.cs" />
