@@ -1,117 +1,64 @@
 ﻿
-using System;
 using Android.Content;
-using Android.Widget;
-using Carto.Core;
 using Carto.Layers;
-using Carto.Projections;
 using Carto.Ui;
 
 namespace data.collection.Droid
 {
     public class MainView : BannerView
     {
-		public TextEntry TitleField { get; private set; }
+		public MapView MapView { get; private set; }
 
-		public TextEntry DescriptionField { get; private set; }
+        public ActionButton Done { get; private set; }
 
-		public ImageEntry CameraField { get; private set; }
-
-        public ImageEntry LocationField { get; private set; }
+        public Legend Legend { get; private set; }
 
 		public MainView(Context context) : base(context)
         {
-            TitleField = new TextEntry(context, "TITLE");
-            AddView(TitleField);
+			MapView = new MapView(context);
+			AddView(MapView);
 
-            DescriptionField = new TextEntry(context, "DESCRIPTION");
-            AddView(DescriptionField);
+            Done = new ActionButton(context, Resource.Drawable.icon_done);
+            Done.SetBackground(Colors.AppleBlue);
+            AddView(Done);
 
-            CameraField = new ImageEntry(context, "TAKE PHOTO", Resource.Drawable.icon_camera);
-            AddView(CameraField);
-
-            LocationField = new ImageEntry(context, "ADD LOCATION", Resource.Drawable.icon_add_location);
-			AddView(LocationField);
+            Legend = new Legend(context);
+            AddView(Legend);
 
             SetMainViewFrame();
 
-            Banner.BringToFront();
-        }
+			var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
+			MapView.Layers.Add(layer);
 
-        public override void LayoutSubviews()
-        {
+            Banner.BringToFront();
+
+            Done.Hide();
+		}
+
+		public override void LayoutSubviews()
+		{
             base.LayoutSubviews();
 
-			int x = padding;
-			int y = padding;
-            int w = Frame.W - 2 * padding;
-            int h = (int)(60 * Density);
+			MapView.SetFrame(0, 0, Frame.W, Frame.H);
 
-			TitleField.Frame = new CGRect(x, y, w, h);
+            int pad = (int)(15 * Density);
 
-			y += h + padding;
-            h = (int)(150 * Density);
+            int w = (int)(55 * Density);
+			int h = w;
+            int x = Frame.W - (w + pad);
+            int y = Frame.H - (h + pad);
 
-			DescriptionField.Frame = new CGRect(x, y, w, h);
+			Done.Frame = new CGRect(x, y, w, h);
 
-			y += h + padding;
-            w = (Frame.W - 3 * padding) / 2;
+            int legendPadding = (int)(5 * Density);
 
-			CameraField.Frame = new CGRect(x, y, w, h);
+            w = (int)(220 * Density);
+            h = (int)(100 * Density);
+            x = Frame.W - (w + legendPadding);
+            y = legendPadding;
 
-            x += w + padding;
-
-            LocationField.Frame = new CGRect(x, y, w, h);
-        }
-
-		MapView mapView;
-		MapView MapView
-		{
-			get
-			{
-				if (mapView == null)
-				{
-                    mapView = new MapView(Context);
-				}
-
-				return mapView;
-			}
+			Legend.Frame = new CGRect(x, y, w, h);
 		}
 
-		Projection Projection => MapView.Options.BaseProjection;
-
-		public void AddMapOverlayTo(double longitude, double latitude)
-		{
-			MapPos position = Projection.FromWgs84(new MapPos(longitude, latitude));
-			LocationField.SetMap(MapView, position);
-		}
-
-        public bool IsAnyFieldEmpty
-        {
-            get 
-            {
-                if (string.IsNullOrWhiteSpace(TitleField.Text))
-                {
-                    return true;
-                }
-
-                if (string.IsNullOrWhiteSpace(DescriptionField.Text))
-                {
-                    return true;
-                }
-
-                if (CameraField.Photo == null)
-                {
-                    return true;
-                }
-
-                if (!LocationField.IsSet)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
-    }
+	}
 }

@@ -99,23 +99,23 @@
     <Compile Include="_deprecatedActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\MainView.cs" />
     <Compile Include="CollectionApplication.cs" />
     <Compile Include="Base\BaseView.cs" />
     <Compile Include="Base\CGRect.cs" />
     <Compile Include="Base\ViewExtensions.cs" />
     <Compile Include="Views\Subviews\Banner.cs" />
     <Compile Include="Utils\Colors.cs" />
-    <Compile Include="Views\Subviews\BaseEntry.cs" />
-    <Compile Include="Views\Subviews\TextEntry.cs" />
-    <Compile Include="Views\Subviews\ImageEntry.cs" />
-    <Compile Include="Views\Subviews\SubmitButton.cs" />
     <Compile Include="Base\BaseActivity.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Views\LocationChoiceView.cs" />
-    <Compile Include="Views\Base\BannerView.cs" />
+    <Compile Include="Views\MainView.cs" />
+    <Compile Include="Views\Base\BannerBaseView.cs" />
     <Compile Include="Views\Subviews\ActionButton.cs" />
     <Compile Include="Views\Subviews\Legend.cs" />
+    <Compile Include="Views\Popup\Popup.cs" />
+    <Compile Include="Views\Subviews\Entries\BaseEntry.cs" />
+    <Compile Include="Views\Subviews\Entries\ImageEntry.cs" />
+    <Compile Include="Views\Subviews\Entries\TextEntry.cs" />
+    <Compile Include="_deprecatedView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -146,6 +146,8 @@
     <Folder Include="Views\Subviews\" />
     <Folder Include="Utils\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Popup\" />
+    <Folder Include="Views\Subviews\Entries\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\s3_tokens.txt" />

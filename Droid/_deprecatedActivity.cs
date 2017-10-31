@@ -12,13 +12,13 @@ namespace data.collection.Droid
     //[Activity(Label = "DATA COLLECTION", MainLauncher = true, Icon = "@mipmap/icon")]
     public class _deprecatedActivity : BaseActivity
     {
-        public MainView ContentView { get; set; }
+        public _deprecatedView ContentView { get; set; }
 
 		protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            ContentView = new MainView(this);
+            ContentView = new _deprecatedView(this);
             SetContentView(ContentView);
 
 			List<Data> items = SQLClient.Instance.GetAll();

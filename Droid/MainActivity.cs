@@ -24,7 +24,7 @@ namespace data.collection.Droid
     [Activity(Label = "DATA COLLECTION", MainLauncher = true, Icon = "@mipmap/icon")]
     public class MainActivity : BaseActivity, ILocationListener, ActivityCompat.IOnRequestPermissionsResultCallback
     {
-        public LocationChoiceView ContentView { get; set; }
+        public MainView ContentView { get; set; }
 
         public LocationClient LocationClient { get; set; }
 
@@ -48,7 +48,7 @@ namespace data.collection.Droid
         {
             base.OnCreate(savedInstanceState);
 
-            ContentView = new LocationChoiceView(this);
+            ContentView = new MainView(this);
             SetContentView(ContentView);
 
 			LocationClient = new LocationClient(ContentView.MapView);
