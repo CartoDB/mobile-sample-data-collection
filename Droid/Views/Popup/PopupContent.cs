@@ -2,6 +2,7 @@
 using System;
 using Android.Content;
 using Android.Graphics;
+using Android.Views.InputMethods;
 
 namespace data.collection.Droid
 {
@@ -16,6 +17,7 @@ namespace data.collection.Droid
         public PopupContent(Context context) : base(context)
         {
             TitleField = new TextEntry(context, "TITLE", true);
+            TitleField.ImeOptions = ImeAction.Next;
             AddView(TitleField);
 
             DescriptionField = new TextEntry(context, "DESCRIPTION", true);

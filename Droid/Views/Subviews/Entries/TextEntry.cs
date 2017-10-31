@@ -3,6 +3,7 @@ using System;
 using Android.Widget;
 using Android.Content;
 using Android.Graphics;
+using Android.Views.InputMethods;
 
 namespace data.collection.Droid
 {
@@ -15,6 +16,13 @@ namespace data.collection.Droid
 			get { return Field.Text; }
 			set { Field.Text = value; }
 		}
+
+        public ImeAction ImeOptions
+        {
+            get { return Field.ImeOptions; }
+            set { Field.ImeOptions = value; }
+        }
+
 
         public TextEntry(Context context, string title, bool isRequired = false) : base(context, title, isRequired)
         {
