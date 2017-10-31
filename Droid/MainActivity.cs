@@ -87,10 +87,7 @@ namespace data.collection.Droid
 
 			ContentView.Done.Clicked += OnDoneClick;
 
-            for (int i = 0; i < ContentView.MapView.Layers.Count; i++) {
-                var layer = ContentView.MapView.Layers[i];
-                Console.WriteLine(layer);
-            }
+            ContentView.Popup.Closed += OnPopupClose;
         }
 
         protected override void OnPause()
@@ -107,6 +104,13 @@ namespace data.collection.Droid
 			MapListener.PointsAdded -= OnPointsAdded;
 
 			ContentView.Done.Clicked -= OnDoneClick;
+
+            ContentView.Popup.Closed -= OnPopupClose;
+        }
+
+        void OnPopupClose(object sender, EventArgs e)
+        {
+            MapListener.MarkerSource.Clear();
         }
 
         void OnPinAdded(object sender, EventArgs e)
@@ -120,6 +124,7 @@ namespace data.collection.Droid
             RunOnUiThread(delegate
             {
                 ContentView.Done.Show();
+                ContentView.Popup.Show();
             });
         }
 

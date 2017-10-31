@@ -24,7 +24,7 @@ namespace data.collection
 
         public Bitmap Bitmap { get; set; }
 
-        LocalVectorDataSource markerSource;
+        public LocalVectorDataSource MarkerSource { get; private set; }
         public LocalVectorDataSource PointSource { get; private set; }
 
         public Projection Projection
@@ -42,8 +42,8 @@ namespace data.collection
         {
             MapView = mapView;
 
-            markerSource = new LocalVectorDataSource(Projection);
-            VectorLayer markerLayer = new VectorLayer(markerSource);
+            MarkerSource = new LocalVectorDataSource(Projection);
+            VectorLayer markerLayer = new VectorLayer(MarkerSource);
 			MapView.Layers.Add(markerLayer);
 
             PointSource = new LocalVectorDataSource(Projection);
@@ -56,11 +56,11 @@ namespace data.collection
 
         public override void OnMapClicked(MapClickInfo mapClickInfo)
         {
-            markerSource.Clear();
+            MarkerSource.Clear();
 
             MarkerPosition = mapClickInfo.ClickPos;
             var marker = GetUserMarker(Bitmap, MarkerPosition);
-            markerSource.Add(marker);
+            MarkerSource.Add(marker);
 
             PinAdded?.Invoke(this, EventArgs.Empty);
         }

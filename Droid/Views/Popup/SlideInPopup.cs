@@ -9,7 +9,7 @@ namespace data.collection.Droid
 {
     public class SlideInPopup : BaseView
     {
-        BaseView transparentArea;
+        public BaseView TransparentArea { get; private set; }
         PopupView popup;
 
         int hiddenY, visibleY = -1;
@@ -35,10 +35,10 @@ namespace data.collection.Droid
 
         public SlideInPopup(Context context, int backIcon, int closeIcon) : base(context)
         {
-            transparentArea = new BaseView(context);
-            transparentArea.SetBackgroundColor(Color.Black);
-            transparentArea.Alpha = 0.0f;
-            AddView(transparentArea);
+            TransparentArea = new BaseView(context);
+            TransparentArea.SetBackgroundColor(Color.Black);
+            TransparentArea.Alpha = 0.0f;
+            AddView(TransparentArea);
 
             popup = new PopupView(context, backIcon, closeIcon);
             AddView(popup);
@@ -56,7 +56,7 @@ namespace data.collection.Droid
             int w = Frame.W;
             int h = Frame.H;
 
-            transparentArea.SetFrame(x, y, w, h);
+            TransparentArea.SetFrame(x, y, w, h);
 
             hiddenY = h;
             visibleY = h - (h / 5 * 3);
@@ -106,7 +106,7 @@ namespace data.collection.Droid
             AnimateAlpha(0.5f);
             AnimateY(visibleY);
 
-            transparentArea.Click += Hide;
+            TransparentArea.Click += Hide;
             popup.Header.CloseButton.Click += Hide;
         }
 
@@ -115,18 +115,20 @@ namespace data.collection.Droid
             AnimateAlpha(0.0f, duration);
             AnimateY(hiddenY, duration);
 
-			transparentArea.Click -= Hide;
+			TransparentArea.Click -= Hide;
 			popup.Header.CloseButton.Click -= Hide;
         }
 
+        public EventHandler<EventArgs> Closed;
         void Hide(object sender, EventArgs e)
         {
-            Hide();    
+            Hide();
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         void AnimateAlpha(float to, long duration = 200)
         {
-            var animator = ObjectAnimator.OfFloat(transparentArea, "Alpha", to);
+            var animator = ObjectAnimator.OfFloat(TransparentArea, "Alpha", to);
             animator.SetDuration(duration);
             animator.Start();
         }
