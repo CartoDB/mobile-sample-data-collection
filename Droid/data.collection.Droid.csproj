@@ -120,6 +120,7 @@
     <Compile Include="Views\Popup\PopupCloseButton.cs" />
     <Compile Include="Views\Popup\PopupHeader.cs" />
     <Compile Include="Views\Popup\PopupView.cs" />
+    <Compile Include="Views\Popup\PopupContent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

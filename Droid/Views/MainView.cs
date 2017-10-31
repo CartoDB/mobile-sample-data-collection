@@ -10,20 +10,16 @@ namespace data.collection.Droid
     {
 		public MapView MapView { get; private set; }
 
-        public ActionButton Done { get; private set; }
-
         public Legend Legend { get; private set; }
 
         public SlideInPopup Popup { get; private set; }
+
+        public PopupContent Content { get; private set; }
 
 		public MainView(Context context) : base(context)
         {
 			MapView = new MapView(context);
 			AddView(MapView);
-
-            Done = new ActionButton(context, Resource.Drawable.icon_done);
-            Done.SetBackground(Colors.AppleBlue);
-            AddView(Done);
 
             Legend = new Legend(context);
             AddView(Legend);
@@ -42,7 +38,9 @@ namespace data.collection.Droid
             Banner.BringToFront();
             Popup.BringToFront();
 
-            Done.Hide();
+            Content = new PopupContent(context);
+            Popup.SetPopupContent(Content);
+            Popup.Header.Text = "SUBMIT A NEW LOCATION";
 		}
 
 		public override void LayoutSubviews()
@@ -51,21 +49,12 @@ namespace data.collection.Droid
 
 			MapView.SetFrame(0, 0, Frame.W, Frame.H);
 
-            int pad = (int)(15 * Density);
-
-            int w = (int)(55 * Density);
-			int h = w;
-            int x = Frame.W - (w + pad);
-            int y = Frame.H - (h + pad);
-
-			Done.Frame = new CGRect(x, y, w, h);
-
             int legendPadding = (int)(5 * Density);
 
-            w = (int)(220 * Density);
-            h = (int)(100 * Density);
-            x = Frame.W - (w + legendPadding);
-            y = legendPadding;
+            int w = (int)(220 * Density);
+            int h = (int)(100 * Density);
+            int x = Frame.W - (w + legendPadding);
+            int y = legendPadding;
 
 			Legend.Frame = new CGRect(x, y, w, h);
 

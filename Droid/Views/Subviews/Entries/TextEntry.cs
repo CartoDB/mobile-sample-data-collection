@@ -16,7 +16,7 @@ namespace data.collection.Droid
 			set { Field.Text = value; }
 		}
 
-        public TextEntry(Context context, string title) : base(context, title)
+        public TextEntry(Context context, string title, bool isRequired = false) : base(context, title, isRequired)
         {
             Field = new EditText(context);
             Field.TextSize = 14.0f;
@@ -24,6 +24,10 @@ namespace data.collection.Droid
             Field.SetBackground(Color.White);
             Field.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
             Field.InputType = Android.Text.InputTypes.TextFlagImeMultiLine;
+
+            Field.SetBackground(Color.White);
+            Field.SetBorderColor((int)(1 * Density), Colors.CartoNavy);
+
             AddView(Field);
         }
 

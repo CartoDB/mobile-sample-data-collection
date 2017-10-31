@@ -48,6 +48,8 @@ namespace data.collection.Droid
         {
             base.OnCreate(savedInstanceState);
 
+            Window.SetSoftInputMode(SoftInput.AdjustPan);
+
             ContentView = new MainView(this);
             SetContentView(ContentView);
 
@@ -85,7 +87,7 @@ namespace data.collection.Droid
 			MapListener.QueryFailed += OnQueryFailed;
 			MapListener.PointsAdded += OnPointsAdded;
 
-			ContentView.Done.Clicked += OnDoneClick;
+            ContentView.Content.Done.Clicked += OnDoneClick;
 
             ContentView.Popup.Closed += OnPopupClose;
         }
@@ -103,7 +105,7 @@ namespace data.collection.Droid
 			MapListener.QueryFailed -= OnQueryFailed;
 			MapListener.PointsAdded -= OnPointsAdded;
 
-			ContentView.Done.Clicked -= OnDoneClick;
+            ContentView.Content.Done.Clicked -= OnDoneClick;
 
             ContentView.Popup.Closed -= OnPopupClose;
         }
@@ -123,7 +125,6 @@ namespace data.collection.Droid
 
             RunOnUiThread(delegate
             {
-                ContentView.Done.Show();
                 ContentView.Popup.Show();
             });
         }
