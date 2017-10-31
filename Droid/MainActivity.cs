@@ -121,6 +121,14 @@ namespace data.collection.Droid
             {
                 ContentView.Done.Show();
 
+                if (ContentView.Popup.IsVisible)
+                {
+                    ContentView.Popup.Hide();
+                }
+                else
+                {
+                    ContentView.Popup.Show();
+                }
             });
         }
 

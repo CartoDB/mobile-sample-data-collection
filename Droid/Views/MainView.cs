@@ -3,7 +3,6 @@ using System;
 using Android.Content;
 using Carto.Layers;
 using Carto.Ui;
-using data.collection.Droid.Views.Popup;
 
 namespace data.collection.Droid
 {
@@ -15,7 +14,7 @@ namespace data.collection.Droid
 
         public Legend Legend { get; private set; }
 
-        public Popup Popup { get; private set; }
+        public SlideInPopup Popup { get; private set; }
 
 		public MainView(Context context) : base(context)
         {
@@ -29,7 +28,10 @@ namespace data.collection.Droid
             Legend = new Legend(context);
             AddView(Legend);
 
-            Popup = new Popup(context);
+            // Just use close icon for both images,
+            // as back icon is not used in this application
+            int close = Resource.Drawable.icon_close;
+            Popup = new SlideInPopup(context, close, close);
             AddView(Popup);
 
             SetMainViewFrame();
@@ -67,16 +69,12 @@ namespace data.collection.Droid
 
 			Legend.Frame = new CGRect(x, y, w, h);
 
-            w = Frame.W;
-            h = Frame.H / 3 * 2;
-            y = Frame.H - 1;
             x = 0;
+            y = 0;
+            w = Frame.W;
+            h = Frame.H;
 
             Popup.Frame = new CGRect(x, y, w, h);
-
-            int smallVisibleY = Frame.H - (int)(100 * Density);
-            int fullVisibleY = Frame.H - h;
-            Popup.SetLocations(y, smallVisibleY, fullVisibleY);
 		}
 
     }

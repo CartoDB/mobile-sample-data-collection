@@ -111,11 +111,15 @@
     <Compile Include="Views\Base\BannerBaseView.cs" />
     <Compile Include="Views\Subviews\ActionButton.cs" />
     <Compile Include="Views\Subviews\Legend.cs" />
-    <Compile Include="Views\Popup\Popup.cs" />
     <Compile Include="Views\Subviews\Entries\BaseEntry.cs" />
     <Compile Include="Views\Subviews\Entries\ImageEntry.cs" />
     <Compile Include="Views\Subviews\Entries\TextEntry.cs" />
     <Compile Include="_deprecatedView.cs" />
+    <Compile Include="Views\Popup\SlideInPopup.cs" />
+    <Compile Include="Views\Popup\PopupBackButton.cs" />
+    <Compile Include="Views\Popup\PopupCloseButton.cs" />
+    <Compile Include="Views\Popup\PopupHeader.cs" />
+    <Compile Include="Views\Popup\PopupView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -138,6 +142,7 @@
     <AndroidResource Include="Resources\drawable-nodpi\icon_add_location.png" />
     <AndroidResource Include="Resources\values\Styles.xml" />
     <AndroidResource Include="Resources\values\Colors.xml" />
+    <AndroidResource Include="Resources\drawable-nodpi\icon_close.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />

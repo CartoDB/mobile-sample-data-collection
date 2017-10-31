@@ -77,13 +77,16 @@ namespace data.collection.Droid
 			public const int icon_camera_roll = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int icon_done = 2130837508;
+			public const int icon_close = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int icon_pin_red = 2130837509;
+			public const int icon_done = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int icon_take_photo = 2130837510;
+			public const int icon_pin_red = 2130837510;
+			
+			// aapt resource value: 0x7f020007
+			public const int icon_take_photo = 2130837511;
 			
 			static Drawable()
 			{
