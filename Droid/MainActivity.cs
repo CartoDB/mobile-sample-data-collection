@@ -120,15 +120,6 @@ namespace data.collection.Droid
             RunOnUiThread(delegate
             {
                 ContentView.Done.Show();
-
-                if (ContentView.Popup.IsVisible)
-                {
-                    ContentView.Popup.Hide();
-                }
-                else
-                {
-                    ContentView.Popup.Show();
-                }
             });
         }
 
