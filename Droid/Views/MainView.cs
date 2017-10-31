@@ -2,6 +2,7 @@
 using Android.Content;
 using Carto.Layers;
 using Carto.Ui;
+using data.collection.Droid.Views.Popup;
 
 namespace data.collection.Droid
 {
@@ -12,6 +13,8 @@ namespace data.collection.Droid
         public ActionButton Done { get; private set; }
 
         public Legend Legend { get; private set; }
+
+        public Popup Popup { get; private set; }
 
 		public MainView(Context context) : base(context)
         {
@@ -25,12 +28,16 @@ namespace data.collection.Droid
             Legend = new Legend(context);
             AddView(Legend);
 
+            Popup = new Popup(context);
+            AddView(Popup);
+
             SetMainViewFrame();
 
 			var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
 			MapView.Layers.Add(layer);
 
             Banner.BringToFront();
+            Popup.BringToFront();
 
             Done.Hide();
 		}
@@ -58,6 +65,17 @@ namespace data.collection.Droid
             y = legendPadding;
 
 			Legend.Frame = new CGRect(x, y, w, h);
+
+            w = Frame.W;
+            h = Frame.H / 3 * 2;
+            y = Frame.H;
+            x = 0;
+
+            Popup.Frame = new CGRect(x, y, w, h);
+
+            int smallVisibleY = Frame.H - (int)(100 * Density);
+            int fullVisibleY = Frame.H - h;
+            Popup.SetLocations(y, smallVisibleY, fullVisibleY);
 		}
 
 	}

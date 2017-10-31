@@ -36,6 +36,11 @@ namespace data.collection.Droid
             frame = new CGRect(x, y, width, height);
 		}
 
+        public void UpdateY(int y)
+        {
+            Frame = new CGRect(Frame.X, y, Frame.W, Frame.H);
+        }
+
         public float Density 
         { 
             get { return Context.Resources.DisplayMetrics.Density; } 

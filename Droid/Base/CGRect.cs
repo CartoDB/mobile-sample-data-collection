@@ -27,5 +27,6 @@ namespace data.collection.Droid
         }
 
         public static CGRect Empty { get { return new CGRect(0, 0, 0, 0); } }
+
     }
 }

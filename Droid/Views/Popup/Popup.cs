@@ -2,12 +2,19 @@
 using Android.Animation;
 using Android.Content;
 using Android.Graphics;
+using Android.Views.Animations;
+using Android.Widget;
 
 namespace data.collection.Droid.Views.Popup
 {
     public class Popup : BaseView
     {
-        int hiddenY, visibleY = -1;
+        int hiddenY, smallVisibleY, fullVisibleY = -1;
+
+        public bool IsVisible
+        {
+            get { return !Frame.Y.Equals(hiddenY); }
+        }
 
         public Popup(Context context) : base(context)
         {
@@ -19,22 +26,34 @@ namespace data.collection.Droid.Views.Popup
             }
         }
 
-        public void Show()
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+        }
+
+        public void SetLocations(int hiddenY, int smallVisibleY, int fullVisibleY)
+        {
+            this.hiddenY = hiddenY;
+            this.smallVisibleY = smallVisibleY;
+            this.fullVisibleY = fullVisibleY;
+        }
+
+        public void ShowFull()
         {
             BringToFront();
-            Visibility = Android.Views.ViewStates.Visible;
-
-            AnimateY(visibleY);
+            AnimateY(fullVisibleY);
         }
 
-        public void Hide(long duration = 200)
+        public void ShowSmall()
         {
-            AnimateY(hiddenY, duration);
+            BringToFront();
+            AnimateY(smallVisibleY);
         }
 
-        void Hide(object sender, EventArgs e)
+        public void Hide()
         {
-            Hide();
+            BringToFront();
+            AnimateY(hiddenY);
         }
 
         void AnimateY(int to, long duration = 200)
@@ -44,13 +63,12 @@ namespace data.collection.Droid.Views.Popup
             animator.Start();
 
             animator.AnimationEnd += (object sender, EventArgs e) => {
-                if (to == hiddenY)
-                {
-                    Visibility = Android.Views.ViewStates.Gone;
-                }
+                //animator.Dispose();
+                UpdateY(to);
+                TranslationY = 0;
 
-                animator.Dispose();
             };
         }
+
     }
 }
