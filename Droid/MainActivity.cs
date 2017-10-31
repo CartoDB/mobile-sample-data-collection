@@ -120,6 +120,7 @@ namespace data.collection.Droid
             RunOnUiThread(delegate
             {
                 ContentView.Done.Show();
+
             });
         }
 

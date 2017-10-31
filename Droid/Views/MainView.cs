@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Android.Content;
 using Carto.Layers;
 using Carto.Ui;
@@ -68,7 +69,7 @@ namespace data.collection.Droid
 
             w = Frame.W;
             h = Frame.H / 3 * 2;
-            y = Frame.H;
+            y = Frame.H - 1;
             x = 0;
 
             Popup.Frame = new CGRect(x, y, w, h);
@@ -78,5 +79,5 @@ namespace data.collection.Droid
             Popup.SetLocations(y, smallVisibleY, fullVisibleY);
 		}
 
-	}
+    }
 }

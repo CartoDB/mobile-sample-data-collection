@@ -58,15 +58,16 @@ namespace data.collection.Droid.Views.Popup
 
         void AnimateY(int to, long duration = 200)
         {
-            var animator = ObjectAnimator.OfFloat(this, "y", to);
+            // TODO Create a container and animate that. 
+            // Android doesn't really handle off-screen animations very well.
+            var from = Frame.Y;
+            var animator = ObjectAnimator.OfFloat(this, "y", from, to);
             animator.SetDuration(duration);
             animator.Start();
 
             animator.AnimationEnd += (object sender, EventArgs e) => {
-                //animator.Dispose();
                 UpdateY(to);
                 TranslationY = 0;
-
             };
         }
 
