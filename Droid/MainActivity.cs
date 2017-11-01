@@ -75,6 +75,12 @@ namespace data.collection.Droid
             MapListener.QueryPoints(DeviceId);
             string text = "QUERYING POINTS...";
             ContentView.Banner.SetLoadingText(text, false);
+
+            List<Data> items = SQLClient.Instance.GetAll();
+            if (items.Count > 0)
+            {
+                ShowSyncAlert(items.Count);
+            }
         }
 
         protected override void OnResume()
@@ -324,5 +330,68 @@ namespace data.collection.Droid
 
         #endregion
 
+        #region SyncAlert
+
+        public void ShowSyncAlert(int count)
+        {
+            string title = "Attention!";
+            string message = "You have " + count + " items stored locally. Would you like to upload now?";
+
+            var builder = new AlertDialog.Builder(this);
+            builder.SetTitle(title);
+            builder.SetMessage(message);
+            builder.SetCancelable(false);
+
+            builder.SetPositiveButton("SURE", OnYesButtonClicked);
+            builder.SetNegativeButton("NO", OnNoButtonClicked);
+            builder.Show();
+        }
+
+        async void OnYesButtonClicked(object sender, DialogClickEventArgs e)
+        {
+            List<Data> items = SQLClient.Instance.GetAll();
+            int count = items.Count;
+
+            ContentView.Banner.ShowUploadingEverything(count);
+
+            foreach (Data item in items)
+            {
+                if (!item.IsUploadedToAmazon)
+                {
+                    byte[] bytes = File.ReadAllBytes(FileUtils.GetFolder(item.ImageUrl));
+                    Stream stream = new MemoryStream(bytes);
+                    BucketResponse response1 = await BucketClient.Upload(item.FileName, stream);
+
+                    if (response1.IsOk)
+                    {
+                        item.ImageUrl = response1.Path;
+                        Console.WriteLine("Uploaded offline image to: " + response1.Path);
+                    }
+                }
+            }
+
+            CartoResponse response2 = await Networking.Post(items);
+
+            if (response2.IsOk)
+            {
+                ContentView.Banner.ShowUploadedEverything(count);
+                SQLClient.Instance.DeleteAll();
+            }
+            else
+            {
+                ContentView.Banner.ShowEverythingUploadFailed(count);
+                SQLClient.Instance.UpdateAll(items);
+            }
+        }
+
+        void OnNoButtonClicked(object sender, DialogClickEventArgs e)
+        {
+            (sender as AlertDialog).Cancel();
+
+            string text = "Fine. We'll just keep your stuff offline then";
+            ContentView.Banner.SetInformationText(text, true);
+        }
+
+        #endregion
     }
 }
