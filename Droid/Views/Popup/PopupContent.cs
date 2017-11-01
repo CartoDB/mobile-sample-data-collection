@@ -14,6 +14,8 @@ namespace data.collection.Droid
 
         public ActionButton Done { get; private set; }
 
+        public ImageEntry CameraField { get; private set; }
+
         public PopupContent(Context context) : base(context)
         {
             TitleField = new TextEntry(context, "TITLE", true);
@@ -22,6 +24,9 @@ namespace data.collection.Droid
 
             DescriptionField = new TextEntry(context, "DESCRIPTION", true);
             AddView(DescriptionField);
+
+            CameraField = new ImageEntry(context, "TAKE PHOTO", Resource.Drawable.icon_camera);
+            AddView(CameraField);
 
             Done = new ActionButton(context, Resource.Drawable.icon_done);
             Done.SetBackground(Colors.AppleBlue);
@@ -56,6 +61,13 @@ namespace data.collection.Droid
             y += h;
 
             DescriptionField.Frame = new CGRect(x, y, w, h);
+
+            y += h + pad / 2;
+
+            h = (int)(1.3 * h);
+            w = (int)(1.1 * h);
+
+            CameraField.Frame = new CGRect(x, y, w, h);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace data.collection.Droid
         ImageView imageView;
 
         ImageView photoView;
+
         Bitmap bitmap;
         public Bitmap Photo
         {
@@ -29,6 +30,9 @@ namespace data.collection.Droid
 
         public ImageEntry(Context context, string title, int resource) : base(context, title)
 		{
+            SetBackgroundColor(Colors.DarkTransparentGray);
+            label.SetTextColor(Color.White);
+
             photoView = new ImageView(context);
             photoView.SetScaleType(ImageView.ScaleType.CenterCrop);
             AddView(photoView);
