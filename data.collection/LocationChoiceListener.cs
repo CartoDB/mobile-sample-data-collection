@@ -89,6 +89,8 @@ namespace data.collection
 
         public void QueryPoints(string deviceId)
         {
+            PointSource.Clear();
+
             var builder = new PointStyleBuilder { Size = 12 };
 
             Dictionary<string, Color> ids = new Dictionary<string, Color>();

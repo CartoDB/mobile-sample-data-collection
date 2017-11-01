@@ -169,6 +169,8 @@ namespace data.collection.Droid
                 return;
             }
 
+            MapListener.MarkerSource.Clear();
+            ContentView.Popup.Hide();
             ContentView.Banner.SetInformationText("Compressing image...", false);
 
             using (var stream = new MemoryStream())
@@ -205,6 +207,8 @@ namespace data.collection.Droid
                     Data item = GetData(filename);
                     SQLClient.Instance.Insert(item);
                 }
+
+                MapListener.QueryPoints(DeviceId);
             }
         }
 
