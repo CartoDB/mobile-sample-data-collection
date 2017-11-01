@@ -142,6 +142,9 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
     <AndroidResource Include="Resources\values\Colors.xml" />
     <AndroidResource Include="Resources\drawable-nodpi\icon_close.png" />
+    <AndroidResource Include="Resources\drawable-nodpi\icon_remove.png" />
+    <AndroidResource Include="Resources\drawable-nodpi\icon_crosshair.png" />
+    <AndroidResource Include="Resources\drawable-nodpi\icon_add.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />
