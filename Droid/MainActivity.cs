@@ -156,21 +156,56 @@ namespace data.collection.Droid
 
             RunOnUiThread(delegate
             {
-                ContentView.Banner.SetInformationText(text, true, delegate
-                {
-                    RunOnUiThread(delegate
-                    {
-                        ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
-                    });
-
-                });
+                ContentView.Banner.SetInformationText(text, true);
 
             });
         }
 
-        void OnDoneClick(object sender, EventArgs e)
+        async void OnDoneClick(object sender, EventArgs e)
         {
-            // TODO implement actions from _deprecatedActivity
+            if (ContentView.IsAnyRequiredFieldEmpty)
+            {
+                ContentView.Banner.SetInformationText("Please fill our all required fields", true);
+                return;
+            }
+
+            ContentView.Banner.SetInformationText("Compressing image...", false);
+
+            using (var stream = new MemoryStream())
+            {
+                Bitmap bitmap = ContentView.Content.CameraField.Photo;
+                bitmap.Compress(Bitmap.CompressFormat.Png, Quality, stream);
+
+                string filename = ContentView.Content.CameraField.ImageName;
+
+                ContentView.Banner.ShowUploadingImage();
+
+                BucketResponse response1 = await BucketClient.Upload(filename, stream);
+
+                if (response1.IsOk)
+                {
+                    ContentView.Banner.ShowUploadingData();
+
+                    Data item = GetData(response1.Path);
+                    CartoResponse response2 = await Networking.Post(item);
+
+                    if (response2.IsOk)
+                    {
+                        ContentView.Banner.Complete();
+                    }
+                    else
+                    {
+                        ContentView.Banner.ShowFailedCartoUpload();
+                        SQLClient.Instance.Insert(item);
+                    }
+                }
+                else
+                {
+                    ContentView.Banner.ShowFailedAmazonUpload();
+                    Data item = GetData(filename);
+                    SQLClient.Instance.Insert(item);
+                }
+            }
         }
 
         public override void OnPermissionsGranted()

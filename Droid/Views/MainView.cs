@@ -10,19 +10,19 @@ namespace data.collection.Droid
     {
 		public MapView MapView { get; private set; }
 
-        public Legend Legend { get; private set; }
-
         public SlideInPopup Popup { get; private set; }
 
         public PopupContent Content { get; private set; }
 
-		public MainView(Context context) : base(context)
+        public bool IsAnyRequiredFieldEmpty 
+        {
+            get { return Content.TitleField.IsEmpty || Content.DescriptionField.IsEmpty; }
+        }
+
+        public MainView(Context context) : base(context)
         {
 			MapView = new MapView(context);
 			AddView(MapView);
-
-            Legend = new Legend(context);
-            AddView(Legend);
 
             // Just use close icon for both images,
             // as back icon is not used in this application
@@ -49,21 +49,7 @@ namespace data.collection.Droid
 
 			MapView.SetFrame(0, 0, Frame.W, Frame.H);
 
-            int legendPadding = (int)(5 * Density);
-
-            int w = (int)(220 * Density);
-            int h = (int)(100 * Density);
-            int x = Frame.W - (w + legendPadding);
-            int y = legendPadding;
-
-			Legend.Frame = new CGRect(x, y, w, h);
-
-            x = 0;
-            y = 0;
-            w = Frame.W;
-            h = Frame.H;
-
-            Popup.Frame = new CGRect(x, y, w, h);
+            Popup.Frame = new CGRect(0, 0, Frame.W, Frame.H);
 		}
 
     }
