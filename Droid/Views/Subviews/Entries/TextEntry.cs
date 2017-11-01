@@ -17,6 +17,11 @@ namespace data.collection.Droid
 			set { Field.Text = value; }
 		}
 
+        public bool IsEmpty
+        {
+            get { return string.IsNullOrWhiteSpace(Text); }
+        }
+
         public ImeAction ImeOptions
         {
             get { return Field.ImeOptions; }

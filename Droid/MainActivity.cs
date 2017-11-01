@@ -163,7 +163,7 @@ namespace data.collection.Droid
 		
         void OnDoneClick(object sender, EventArgs e)
 		{
-            OnBackPressed();
+            // TODO implement actions from _deprecatedActivity
 		}
 
 		public override void OnPermissionsGranted()
@@ -178,7 +178,7 @@ namespace data.collection.Droid
 
         public override void OnPermissionsDenied()
         {
-            // TODO
+            ContentView.Banner.SetInformationText("Fine. Locate yourself then!", true);
         }
 
         void RequestLocationPermission()
