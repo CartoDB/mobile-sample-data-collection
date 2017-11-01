@@ -17,6 +17,8 @@ namespace data.collection.Droid
         public PopupContent Content { get; private set; }
 
         public ActionButton Add { get; private set; }
+        public ActionButton Done { get; private set; }
+        public ActionButton Cancel { get; private set; }
 
         public bool IsAnyRequiredFieldEmpty 
         {
@@ -37,6 +39,14 @@ namespace data.collection.Droid
             Content = new PopupContent(context);
             Popup.SetPopupContent(Content);
             Popup.Header.Text = "SUBMIT A NEW LOCATION";
+
+            Done = new ActionButton(context, Resource.Drawable.icon_done);
+            Done.SetBackground(Colors.CartoGreen);
+            AddView(Done);
+
+            Cancel = new ActionButton(context, Resource.Drawable.icon_remove);
+            Cancel.SetBackground(Colors.LocationRed);
+            AddView(Cancel);
 
             Add = new ActionButton(context, Resource.Drawable.icon_add);
             Add.SetBackground(Colors.AppleBlue);
@@ -61,6 +71,9 @@ namespace data.collection.Droid
             Popup.BringToFront();
 
             crosshair.Visibility = ViewStates.Gone;
+
+            Done.Hide();
+            Cancel.Hide();
 		}
 
 		public override void LayoutSubviews()
@@ -77,6 +90,8 @@ namespace data.collection.Droid
             int y = Frame.H - (h + padding);
 
             Add.Frame = new CGRect(x, y, w, h);
+            Done.Frame = new CGRect(x, y, w, h);
+            Cancel.Frame = new CGRect(x, y, w, h);
 
             x = MapView.LayoutParameters.Width / 2 - w / 2;
             y = MapView.LayoutParameters.Height / 2 - h / 2;

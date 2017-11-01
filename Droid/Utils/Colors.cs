@@ -15,6 +15,10 @@ namespace data.collection.Droid
 
         public static readonly Color CartoNavy = Color.Rgb(22, 41, 69);
 
+        public static readonly Color LocationRed = Color.Rgb(215, 82, 75);
+
+        public static readonly Color CartoGreen = Color.Rgb(115, 200, 107);
+
         public static Color ToNativeColor(this Carto.Graphics.Color color)
         {
             return Color.Argb(color.A, color.R, color.G, color.B);
