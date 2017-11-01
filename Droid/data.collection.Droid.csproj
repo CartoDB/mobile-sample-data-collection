@@ -113,12 +113,12 @@
     <Compile Include="Views\Subviews\Entries\BaseEntry.cs" />
     <Compile Include="Views\Subviews\Entries\ImageEntry.cs" />
     <Compile Include="Views\Subviews\Entries\TextEntry.cs" />
-    <Compile Include="Views\Popup\SlideInPopup.cs" />
-    <Compile Include="Views\Popup\PopupBackButton.cs" />
-    <Compile Include="Views\Popup\PopupCloseButton.cs" />
-    <Compile Include="Views\Popup\PopupHeader.cs" />
-    <Compile Include="Views\Popup\PopupView.cs" />
-    <Compile Include="Views\Popup\PopupContent.cs" />
+    <Compile Include="Views\Subviews\Popup\PopupBackButton.cs" />
+    <Compile Include="Views\Subviews\Popup\PopupCloseButton.cs" />
+    <Compile Include="Views\Subviews\Popup\PopupContent.cs" />
+    <Compile Include="Views\Subviews\Popup\PopupHeader.cs" />
+    <Compile Include="Views\Subviews\Popup\PopupView.cs" />
+    <Compile Include="Views\Subviews\Popup\SlideInPopup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -153,8 +153,8 @@
     <Folder Include="Views\Subviews\" />
     <Folder Include="Utils\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Popup\" />
     <Folder Include="Views\Subviews\Entries\" />
+    <Folder Include="Views\Subviews\Popup\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\s3_tokens.txt" />
