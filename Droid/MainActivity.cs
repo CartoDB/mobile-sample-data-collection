@@ -7,6 +7,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.Locations;
 using Android.OS;
@@ -23,7 +24,7 @@ using Carto.Utils;
 
 namespace data.collection.Droid
 {
-    [Activity(Label = "DATA COLLECTION", MainLauncher = true, Icon = "@mipmap/icon")]
+    [Activity(Label = "DATA COLLECTION", MainLauncher = true, Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : BaseActivity, ILocationListener, ActivityCompat.IOnRequestPermissionsResultCallback
     {
         public MainView ContentView { get; set; }
