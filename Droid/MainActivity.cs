@@ -97,10 +97,11 @@ namespace data.collection.Droid
             MapListener.PointsAdded += OnPointsAdded;
 
             ContentView.Content.Done.Clicked += OnDoneClick;
-
             ContentView.Popup.Closed += OnPopupClose;
 
             ContentView.Content.CameraField.Click += TakePicture;
+
+            ContentView.Add.Clicked += OnAddLocationClick;
         }
 
         protected override void OnPause()
@@ -117,10 +118,16 @@ namespace data.collection.Droid
             MapListener.PointsAdded -= OnPointsAdded;
 
             ContentView.Content.Done.Clicked -= OnDoneClick;
-
             ContentView.Popup.Closed -= OnPopupClose;
 
             ContentView.Content.CameraField.Click -= TakePicture;
+
+            ContentView.Add.Clicked -= OnAddLocationClick;
+        }
+
+        void OnAddLocationClick(object sender, EventArgs e)
+        {
+            ContentView.ShowCrosshair();
         }
 
         void OnPopupClose(object sender, EventArgs e)

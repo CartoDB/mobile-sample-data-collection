@@ -1,6 +1,8 @@
 ﻿
 using System;
 using Android.Content;
+using Android.Views;
+using Android.Widget;
 using Carto.Layers;
 using Carto.Ui;
 
@@ -40,6 +42,12 @@ namespace data.collection.Droid
             Add.SetBackground(Colors.AppleBlue);
             AddView(Add);
 
+            crosshair = new ImageView(Context);
+            crosshair.SetImageResource(Resource.Drawable.icon_crosshair);
+            crosshair.SetScaleType(ImageView.ScaleType.CenterCrop);
+            crosshair.SetAdjustViewBounds(true);
+            AddView(crosshair);
+
             /* 
              * Frame setting. 
              * Everything should be initialized before this point 
@@ -51,6 +59,8 @@ namespace data.collection.Droid
 
             Banner.BringToFront();
             Popup.BringToFront();
+
+            crosshair.Visibility = ViewStates.Gone;
 		}
 
 		public override void LayoutSubviews()
@@ -61,15 +71,24 @@ namespace data.collection.Droid
 
             Popup.Frame = new CGRect(0, 0, Frame.W, Frame.H);
 
-            int padding = (int)(15 * Density);
-
             int w = (int)(55 * Density);
             int h = w;
             int x = Frame.W - (w + padding);
             int y = Frame.H - (h + padding);
 
             Add.Frame = new CGRect(x, y, w, h);
+
+            x = MapView.LayoutParameters.Width / 2 - w / 2;
+            y = MapView.LayoutParameters.Height / 2 - h / 2;
+
+            crosshair.SetFrame(x, y, w, h);
 		}
 
+        ImageView crosshair;
+
+        public void ShowCrosshair()
+        {
+            crosshair.Visibility = ViewStates.Visible;
+        }
     }
 }
