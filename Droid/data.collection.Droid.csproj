@@ -96,7 +96,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="_deprecatedActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CollectionApplication.cs" />
@@ -114,7 +113,6 @@
     <Compile Include="Views\Subviews\Entries\BaseEntry.cs" />
     <Compile Include="Views\Subviews\Entries\ImageEntry.cs" />
     <Compile Include="Views\Subviews\Entries\TextEntry.cs" />
-    <Compile Include="_deprecatedView.cs" />
     <Compile Include="Views\Popup\SlideInPopup.cs" />
     <Compile Include="Views\Popup\PopupBackButton.cs" />
     <Compile Include="Views\Popup\PopupCloseButton.cs" />
