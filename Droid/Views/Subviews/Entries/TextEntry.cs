@@ -30,7 +30,7 @@ namespace data.collection.Droid
             Field.TextSize = 14.0f;
             Field.SetTextColor(Color.DarkGray);
             Field.SetBackground(Color.White);
-            Field.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
+            Field.ImeOptions = ImeAction.Done;
             Field.InputType = Android.Text.InputTypes.TextFlagImeMultiLine;
 
             Field.SetBackground(Color.White);
