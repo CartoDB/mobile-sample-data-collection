@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -9,6 +10,7 @@ using Android.Content;
 using Android.Graphics;
 using Android.Locations;
 using Android.OS;
+using Android.Provider;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Views;
@@ -53,61 +55,65 @@ namespace data.collection.Droid
             ContentView = new MainView(this);
             SetContentView(ContentView);
 
-			LocationClient = new LocationClient(ContentView.MapView);
+            LocationClient = new LocationClient(ContentView.MapView);
 
-			if (IsMarshmallow)
-			{
-				RequestPermissions(Permissions);
-			}
-			else
-			{
-				OnPermissionsGranted();
-			}
+            if (IsMarshmallow)
+            {
+                RequestPermissions(Permissions);
+            }
+            else
+            {
+                OnPermissionsGranted();
+            }
 
-			MapListener = new LocationChoiceListener(ContentView.MapView);
+            MapListener = new LocationChoiceListener(ContentView.MapView);
             var bitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.icon_pin_red);
             MapListener.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
             ElementListener = new ElementClickListener(MapListener.PointSource);
 
-			MapListener.QueryPoints(DeviceId);
-			string text = "QUERYING POINTS...";
-			ContentView.Banner.SetLoadingText(text, false);
-		}
+            MapListener.QueryPoints(DeviceId);
+            string text = "QUERYING POINTS...";
+            ContentView.Banner.SetLoadingText(text, false);
+        }
 
         protected override void OnResume()
         {
             base.OnResume();
 
-			ContentView.MapView.MapEventListener = MapListener;
+            ContentView.MapView.MapEventListener = MapListener;
             MapListener.PointLayer.VectorElementEventListener = ElementListener;
 
             LocationClient.AttachIgnoreListener();
 
-			MapListener.PinAdded += OnPinAdded;
-			MapListener.QueryFailed += OnQueryFailed;
-			MapListener.PointsAdded += OnPointsAdded;
+            MapListener.PinAdded += OnPinAdded;
+            MapListener.QueryFailed += OnQueryFailed;
+            MapListener.PointsAdded += OnPointsAdded;
 
             ContentView.Content.Done.Clicked += OnDoneClick;
 
             ContentView.Popup.Closed += OnPopupClose;
+
+            ContentView.Content.CameraField.Click += TakePicture;
         }
 
         protected override void OnPause()
         {
             base.OnPause();
 
-			ContentView.MapView.MapEventListener = null;
+            ContentView.MapView.MapEventListener = null;
             MapListener.PointLayer.VectorElementEventListener = null;
 
             LocationClient.DetachIgnoreListener();
 
-			MapListener.PinAdded -= OnPinAdded;
-			MapListener.QueryFailed -= OnQueryFailed;
-			MapListener.PointsAdded -= OnPointsAdded;
+            MapListener.PinAdded -= OnPinAdded;
+            MapListener.QueryFailed -= OnQueryFailed;
+            MapListener.PointsAdded -= OnPointsAdded;
 
             ContentView.Content.Done.Clicked -= OnDoneClick;
 
             ContentView.Popup.Closed -= OnPopupClose;
+
+            ContentView.Content.CameraField.Click -= TakePicture;
         }
 
         void OnPopupClose(object sender, EventArgs e)
@@ -129,15 +135,15 @@ namespace data.collection.Droid
             });
         }
 
-		void OnQueryFailed(object sender, EventArgs e)
-		{
-			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+        void OnQueryFailed(object sender, EventArgs e)
+        {
+            string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
 
             RunOnUiThread(delegate
-			{
-				ContentView.Banner.SetInformationText(text, true);
-			});
-		}
+            {
+                ContentView.Banner.SetInformationText(text, true);
+            });
+        }
 
         void OnPointsAdded(object sender, EventArgs e)
         {
@@ -160,13 +166,13 @@ namespace data.collection.Droid
 
             });
         }
-		
-        void OnDoneClick(object sender, EventArgs e)
-		{
-            // TODO implement actions from _deprecatedActivity
-		}
 
-		public override void OnPermissionsGranted()
+        void OnDoneClick(object sender, EventArgs e)
+        {
+            // TODO implement actions from _deprecatedActivity
+        }
+
+        public override void OnPermissionsGranted()
         {
             manager = (LocationManager)GetSystemService(LocationService);
 
@@ -216,5 +222,67 @@ namespace data.collection.Droid
 
             LocationClient.Update();
         }
+
+        public Data GetData(string imageUrl)
+        {
+            string id = DeviceId;
+            string title = ContentView.Content.TitleField.Text;
+            string description = ContentView.Content.DescriptionField.Text;
+
+            return Data.Get(id, imageUrl, title, description);
+        }
+
+        #region Camera
+
+        const int Code_TakePicture = 1;
+
+        // Quality Accepts 0 - 100:
+        // 0 = MAX Compression(Least Quality which is suitable for Small images)
+        // 100 = Least Compression(MAX Quality which is suitable for Big images)
+        const int Quality = 100;
+
+        const string Extension = ".png";
+
+        void TakePicture(object sender, EventArgs e)
+        {
+            var intent = new Intent(MediaStore.ActionImageCapture);
+
+            // Most basic camera implementation from:
+            // https://developer.android.com/training/camera/photobasics.html
+            if (intent.ResolveActivity(PackageManager) != null)
+            {
+                StartActivityForResult(intent, Code_TakePicture);
+            }
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            if (requestCode == Code_TakePicture && resultCode == Result.Ok)
+            {
+                string name = GenerateName();
+                Bitmap image = (Bitmap)data.Extras.Get("data");
+
+                ContentView.Content.CameraField.Photo = image;
+                ContentView.Content.CameraField.ImageName = name;
+
+                string folder = FileUtils.GetFolder(name);
+
+                var input = new MemoryStream();
+                image.Compress(Bitmap.CompressFormat.Png, Quality, input);
+
+                var output = File.Create(folder);
+
+                input.Seek(0, SeekOrigin.Begin);
+                input.CopyTo(output);
+            }
+        }
+
+        string GenerateName()
+        {
+            return Guid.NewGuid().ToString() + Extension;
+        }
+
+        #endregion
+
     }
 }
