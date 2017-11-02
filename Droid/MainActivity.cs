@@ -219,13 +219,29 @@ namespace data.collection.Droid
             using (var stream = new MemoryStream())
             {
                 Bitmap bitmap = ContentView.Content.CameraField.Photo;
-                bitmap.Compress(Bitmap.CompressFormat.Png, Quality, stream);
 
-                string filename = ContentView.Content.CameraField.ImageName;
+                BucketResponse response1;
+                string filename;
 
-                ContentView.Banner.ShowUploadingImage();
+                if (bitmap == null)
+                {
+                    // Photo is an optional field. 
+                    // Create a mock successful response, 
+                    // if the user hasn't taken a photo
+                    response1 = new BucketResponse();
+                    response1.Path = "";
+                    filename = "";
+                }
+                else
+                {
+                    bitmap.Compress(Bitmap.CompressFormat.Png, Quality, stream);
 
-                BucketResponse response1 = await BucketClient.Upload(filename, stream);
+                    filename = ContentView.Content.CameraField.ImageName;
+
+                    ContentView.Banner.ShowUploadingImage();
+
+                    response1 = await BucketClient.Upload(filename, stream);
+                }
 
                 if (response1.IsOk)
                 {
@@ -395,14 +411,17 @@ namespace data.collection.Droid
             {
                 if (!item.IsUploadedToAmazon)
                 {
-                    byte[] bytes = File.ReadAllBytes(FileUtils.GetFolder(item.ImageUrl));
-                    Stream stream = new MemoryStream(bytes);
-                    BucketResponse response1 = await BucketClient.Upload(item.FileName, stream);
-
-                    if (response1.IsOk)
+                    if (item.ImageUrl != "")
                     {
-                        item.ImageUrl = response1.Path;
-                        Console.WriteLine("Uploaded offline image to: " + response1.Path);
+                        byte[] bytes = File.ReadAllBytes(FileUtils.GetFolder(item.ImageUrl));
+                        Stream stream = new MemoryStream(bytes);
+                        BucketResponse response1 = await BucketClient.Upload(item.FileName, stream);
+
+                        if (response1.IsOk)
+                        {
+                            item.ImageUrl = response1.Path;
+                            Console.WriteLine("Uploaded offline image to: " + response1.Path);
+                        }    
                     }
                 }
             }
