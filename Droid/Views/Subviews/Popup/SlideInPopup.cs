@@ -12,7 +12,8 @@ namespace data.collection.Droid
         public BaseView TransparentArea { get; private set; }
         PopupView popup;
 
-        int hiddenY, visibleY = -1;
+        public int HiddenY { get; private set; } = -1; 
+        public int VisibleY { get; private set; } = -1;
 
         BaseView content;
 
@@ -20,7 +21,7 @@ namespace data.collection.Droid
 
         public bool IsVisible
         { 
-            get { return popup.Frame.Y.Equals(visibleY); }
+            get { return popup.Frame.Y.Equals(VisibleY); }
         }
 
         public void ShowBackButton()
@@ -58,22 +59,22 @@ namespace data.collection.Droid
 
             TransparentArea.SetFrame(x, y, w, h);
 
-            hiddenY = h;
-            visibleY = h - (h / 5 * 3);
+            HiddenY = h;
+            VisibleY = h - (h / 5 * 3);
 
             if (IsLandscape || IsLargeTablet)
             {
                 w = (int)(400 * Density);
-                visibleY = 0;
+                VisibleY = 0;
             }
 
             if (!IsLandscape && IsLargeTablet)
             {
                 h = Frame.W;
-                visibleY = Frame.H - h;
+                VisibleY = Frame.H - h;
             }
 
-            y = visibleY;
+            y = VisibleY;
             popup.Frame = new CGRect(x, y, w, h);
 
             Hide(0);
@@ -104,7 +105,7 @@ namespace data.collection.Droid
             Visibility = Android.Views.ViewStates.Visible;
 
             AnimateAlpha(0.5f);
-            AnimateY(visibleY);
+            AnimateY(VisibleY);
 
             TransparentArea.Click += Hide;
             popup.Header.CloseButton.Click += Hide;
@@ -113,7 +114,7 @@ namespace data.collection.Droid
         public void Hide(long duration = 200)
         {
             AnimateAlpha(0.0f, duration);
-            AnimateY(hiddenY, duration);
+            AnimateY(HiddenY, duration);
 
 			TransparentArea.Click -= Hide;
 			popup.Header.CloseButton.Click -= Hide;
@@ -140,7 +141,7 @@ namespace data.collection.Droid
             animator.Start();
 
             animator.AnimationEnd += (object sender, EventArgs e) => {
-                if (to == hiddenY)
+                if (to == HiddenY)
                 {
                     Visibility = Android.Views.ViewStates.Gone;
                 }

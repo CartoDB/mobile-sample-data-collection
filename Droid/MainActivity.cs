@@ -142,6 +142,13 @@ namespace data.collection.Droid
             MapPos position = ContentView.MapView.ScreenToMap(screen);
             PointClient.AddUserMarker(position);
 
+            var mapBounds = new MapBounds(position, position);
+            y = ContentView.Popup.VisibleY / 2;
+            screen = new ScreenPos(x, y);
+
+            var screenBounds = new ScreenBounds(screen, screen);
+            ContentView.MapView.MoveToFitBounds(mapBounds, screenBounds, false, 0.2f);
+
             position = PointClient.Projection.ToLatLong(position.X, position.Y);
 
             LocationClient.MarkerLatitude = position.X;
