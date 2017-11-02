@@ -151,7 +151,6 @@ namespace data.collection.Droid
             {
                 ContentView.Popup.Show();
             });
-
         }
 
         void OnLocationChoiceCancelled(object sender, EventArgs e)
@@ -185,7 +184,6 @@ namespace data.collection.Droid
             RunOnUiThread(delegate
             {
                 ContentView.Banner.SetInformationText(text, true);
-
             });
         }
 
