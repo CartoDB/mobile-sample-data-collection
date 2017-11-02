@@ -24,7 +24,6 @@ namespace data.collection
         public Bitmap Bitmap { get; set; }
 
         public LocalVectorDataSource MarkerSource { get; private set; }
-        public LocalVectorDataSource PointSource { get; private set; }
 
         public Projection Projection
         {
@@ -33,10 +32,6 @@ namespace data.collection
 
         public MapPos MarkerPosition { get; set; }
 
-        CartoSQLService Service;
-
-        public VectorLayer PointLayer { get; private set; }
-
         public PointClient(MapView mapView)
         {
             MapView = mapView;
@@ -44,13 +39,6 @@ namespace data.collection
             MarkerSource = new LocalVectorDataSource(Projection);
             VectorLayer markerLayer = new VectorLayer(MarkerSource);
 			MapView.Layers.Add(markerLayer);
-
-            PointSource = new LocalVectorDataSource(Projection);
-			PointLayer = new VectorLayer(PointSource);
-			MapView.Layers.Add(PointLayer);
-
-            Service = new CartoSQLService();
-            Service.Username = "nutiteq";
 		}
 
         public void AddUserMarker(MapPos position)
@@ -75,81 +63,24 @@ namespace data.collection
 		// Gray
         public static readonly Color UnsyncedLocations = new Color(99, 109, 114, 255);
 
-        public void QueryPoints(string deviceId)
+        VectorTileLayer pointLayer;
+        public void QueryPoints(Action complete)
         {
-            PointSource.Clear();
-
-            var builder = new PointStyleBuilder { Size = 12 };
-
-            Dictionary<string, Color> ids = new Dictionary<string, Color>();
-
-            System.Threading.Tasks.Task.Run(delegate
+            if  (pointLayer != null)
             {
-                var query = "SELECT * FROM " + Codec.TableName;
+                MapView.Layers.Remove(pointLayer);
+            }
 
-                FeatureCollection features = null;
-                try
-                {
-                    features = Service.QueryFeatures(query, Projection);
-                }
-                catch (Exception e)
-                {
-                    QueryFailed?.Invoke(e.Message, EventArgs.Empty);
-                    return;
-                }
+            var username = "nutiteq";
+            var mapname = "tpl_76370647_9649_4d19_a6d5_4144348a6f67";
 
-                VectorElementVector points = new VectorElementVector();
-
-                for (int i = 0; i < features.FeatureCount; i++)
-                {
-                    Feature feature = features.GetFeature(i);
-
-                    PointGeometry geometry = (PointGeometry)feature.Geometry;
-
-                    string id = feature.Properties.GetObjectElement(Data.DEVICEID).String;
-
-                    if (id.Equals(deviceId))
-                    {
-                        builder.Color = MySyncedLocations;
-                    }
-                    else
-                    {
-                        builder.Color = SyncedLocations;
-                    }
-
-                    var point = new Point(geometry, builder.BuildStyle());
-
-                    var text = feature.Properties.GetObjectElement("title").String;
-                    point.SetMetaDataElement(ElementClickListener.TitleId, new Variant(text));
-                    text = feature.Properties.GetObjectElement("description").String;
-                    point.SetMetaDataElement(ElementClickListener.DescriptionId, new Variant(text));
-
-                    points.Add(point);
-                }
-
-                List<Data> unsynced = SQLClient.Instance.GetAll();
-
-                foreach (var item in unsynced)
-                {
-                    MapPos position = item.GetPosition(Projection);
-                    var geomery = new PointGeometry(position);
-
-                    builder.Color = UnsyncedLocations;
-
-                    var point = new Point(position, builder.BuildStyle());
-
-                    var text = item.Title;
-                    point.SetMetaDataElement(ElementClickListener.TitleId, new Variant(text));
-                    text = item.Description;
-                    point.SetMetaDataElement(ElementClickListener.DescriptionId, new Variant(text));
-
-                    points.Add(point);
-                }
-
-				PointSource.AddAll(points);
-
-				PointsAdded?.Invoke(this, EventArgs.Empty);
+            MapView.ConfigureNamedVectorLayers(username, mapname, (VectorTileLayer obj) =>
+            {
+                complete();
+                pointLayer = obj;
+                MapView.Layers.Add(pointLayer);
             });
+
         }
     }
 }

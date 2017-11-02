@@ -71,9 +71,9 @@ namespace data.collection.Droid
             PointClient = new PointClient(ContentView.MapView);
             var bitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.icon_pin_red);
             PointClient.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
-            ElementClickListener = new ElementClickListener(PointClient.PointSource);
 
-            PointClient.QueryPoints(DeviceId);
+            PointClient.QueryPoints(delegate { });
+
             string text = "QUERYING POINTS...";
             ContentView.Banner.SetLoadingText(text, false);
 
@@ -87,8 +87,6 @@ namespace data.collection.Droid
         protected override void OnResume()
         {
             base.OnResume();
-
-            PointClient.PointLayer.VectorElementEventListener = ElementClickListener;
 
             LocationClient.AttachIgnoreListener();
 
@@ -110,8 +108,6 @@ namespace data.collection.Droid
         protected override void OnPause()
         {
             base.OnPause();
-
-            PointClient.PointLayer.VectorElementEventListener = null;
 
             LocationClient.DetachIgnoreListener();
 
@@ -253,7 +249,7 @@ namespace data.collection.Droid
                     SQLClient.Instance.Insert(item);
                 }
 
-                PointClient.QueryPoints(DeviceId);
+                PointClient.QueryPoints(delegate { });
             }
         }
 
