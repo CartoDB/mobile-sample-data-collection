@@ -102,6 +102,8 @@ namespace data.collection.Droid
             ContentView.Content.CameraField.Click += TakePicture;
 
             ContentView.Add.Clicked += OnAddLocationClick;
+            ContentView.Done.Clicked += OnLocationChosen;
+            ContentView.Cancel.Clicked += OnLocationChoiceCancelled;
         }
 
         protected override void OnPause()
@@ -123,11 +125,23 @@ namespace data.collection.Droid
             ContentView.Content.CameraField.Click -= TakePicture;
 
             ContentView.Add.Clicked -= OnAddLocationClick;
+            ContentView.Done.Clicked -= OnLocationChosen;
+            ContentView.Cancel.Clicked -= OnLocationChoiceCancelled;
         }
 
         void OnAddLocationClick(object sender, EventArgs e)
         {
-            ContentView.ShowCrosshair();
+            ContentView.SetCrosshairMode();
+        }
+
+        void OnLocationChosen(object sender, EventArgs e)
+        {
+            
+        }
+
+        void OnLocationChoiceCancelled(object sender, EventArgs e)
+        {
+            ContentView.CancelCrosshairMode();
         }
 
         void OnPopupClose(object sender, EventArgs e)

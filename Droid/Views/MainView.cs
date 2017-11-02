@@ -71,9 +71,6 @@ namespace data.collection.Droid
             Popup.BringToFront();
 
             crosshair.Visibility = ViewStates.Gone;
-
-            Done.Hide();
-            Cancel.Hide();
 		}
 
 		public override void LayoutSubviews()
@@ -101,9 +98,24 @@ namespace data.collection.Droid
 
         ImageView crosshair;
 
-        public void ShowCrosshair()
+        public void SetCrosshairMode()
         {
             crosshair.Visibility = ViewStates.Visible;
+
+            Add.Hide();
+
+            int to = Done.Frame.X - (Done.Frame.W + padding);
+            Done.AnimateX(to);
+        }
+
+        public void CancelCrosshairMode()
+        {
+            crosshair.Visibility = ViewStates.Gone;
+
+            Add.Show();
+
+            int to = Done.Frame.X + (Done.Frame.W + padding);
+            Done.AnimateX(to);
         }
     }
 }

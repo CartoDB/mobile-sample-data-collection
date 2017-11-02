@@ -41,6 +41,11 @@ namespace data.collection.Droid
             Frame = new CGRect(Frame.X, y, Frame.W, Frame.H);
         }
 
+        public void UpdateInternalX(int x)
+        {
+            SetInternalFrame(x, Frame.Y, Frame.W, Frame.H);
+        }
+
         public float Density 
         { 
             get { return Context.Resources.DisplayMetrics.Density; } 
@@ -170,6 +175,15 @@ namespace data.collection.Droid
             var animator = ObjectAnimator.OfFloat(this, "Alpha", to);
             animator.SetDuration(duration);
             animator.Start();
+        }
+
+        public void AnimateX(int to, long duration = 200)
+        {
+            var animator = ObjectAnimator.OfFloat(this, "x", to);
+            animator.SetDuration(duration);
+            animator.Start();
+
+            UpdateInternalX(to);
         }
 
 	}

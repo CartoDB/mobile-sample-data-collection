@@ -14,10 +14,7 @@ namespace data.collection.Droid
 
 		public ActionButton(Context context, int resource) : base(context)
 		{
-			if (this.IsLollipopOrHigher())
-			{
-				Elevation = 5.0f;
-			}
+            Elevate();
 
 			this.SetBackground(Color.White);
 
