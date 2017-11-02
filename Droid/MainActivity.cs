@@ -210,6 +210,8 @@ namespace data.collection.Droid
                 return;
             }
 
+            ContentView.CancelCrosshairMode();
+
             PointClient.MarkerSource.Clear();
             ContentView.Popup.Hide();
             ContentView.Banner.SetInformationText("Compressing image...", false);
