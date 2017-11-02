@@ -81,7 +81,7 @@ namespace data.collection.Droid
 
             Popup.Frame = new CGRect(0, 0, Frame.W, Frame.H);
 
-            int w = (int)(55 * Density);
+            int w = (int)(58 * Density);
             int h = w;
             int x = Frame.W - (w + padding);
             int y = Frame.H - (h + padding);
