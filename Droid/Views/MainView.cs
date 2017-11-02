@@ -77,6 +77,8 @@ namespace data.collection.Droid
             Popup.SetPopupContent(Content);
 		}
 
+        int doneVisiblePosition, doneHiddenPosition = -1;
+
 		public override void LayoutSubviews()
 		{
             base.LayoutSubviews();
@@ -94,6 +96,8 @@ namespace data.collection.Droid
             Done.Frame = new CGRect(x, y, w, h);
             Cancel.Frame = new CGRect(x, y, w, h);
 
+            doneVisiblePosition = Done.Frame.X - (Done.Frame.W + padding);
+            doneHiddenPosition = Done.Frame.X;
             x = MapView.LayoutParameters.Width / 2 - w / 2;
             y = MapView.LayoutParameters.Height / 2 - h / 2;
 
@@ -106,8 +110,7 @@ namespace data.collection.Droid
 
             Add.Hide();
 
-            int to = Done.Frame.X - (Done.Frame.W + padding);
-            Done.AnimateX(to);
+            Done.AnimateX(doneVisiblePosition);
         }
 
         public void CancelCrosshairMode()
@@ -116,8 +119,7 @@ namespace data.collection.Droid
 
             Add.Show();
 
-            int to = Done.Frame.X + (Done.Frame.W + padding);
-            Done.AnimateX(to);
+            Done.AnimateX(doneHiddenPosition);
         }
     }
 }

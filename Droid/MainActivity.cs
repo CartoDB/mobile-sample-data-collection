@@ -103,6 +103,8 @@ namespace data.collection.Droid
             ContentView.Add.Clicked += OnAddLocationClick;
             ContentView.Done.Clicked += OnLocationChosen;
             ContentView.Cancel.Clicked += OnLocationChoiceCancelled;
+
+            ContentView.Popup.Closed += OnPopupClosed;
         }
 
         protected override void OnPause()
@@ -124,6 +126,13 @@ namespace data.collection.Droid
             ContentView.Add.Clicked -= OnAddLocationClick;
             ContentView.Done.Clicked -= OnLocationChosen;
             ContentView.Cancel.Clicked -= OnLocationChoiceCancelled;
+
+            ContentView.Popup.Closed += OnPopupClosed;
+        }
+
+        void OnPopupClosed(object sender, EventArgs e)
+        {
+            ContentView.CancelCrosshairMode();
         }
 
         void OnAddLocationClick(object sender, EventArgs e)
@@ -133,6 +142,8 @@ namespace data.collection.Droid
 
         void OnLocationChosen(object sender, EventArgs e)
         {
+            // Crosshair is a regular ImageView centered on the MapView,
+            // Translate crosshair's coordinates to a position on the map
             var parameters = (RelativeLayout.LayoutParams)ContentView.Crosshair.LayoutParameters;
             var x = parameters.LeftMargin + parameters.Width / 2;
             var y = parameters.TopMargin + parameters.Height / 2;
@@ -142,13 +153,14 @@ namespace data.collection.Droid
             MapPos position = ContentView.MapView.ScreenToMap(screen);
             PointClient.AddUserMarker(position);
 
+            // Center marker on currently visible area (partically hidden by popup)
             var mapBounds = new MapBounds(position, position);
             y = ContentView.Popup.VisibleY / 2;
             screen = new ScreenPos(x, y);
-
             var screenBounds = new ScreenBounds(screen, screen);
             ContentView.MapView.MoveToFitBounds(mapBounds, screenBounds, false, 0.2f);
 
+            // Translate internal units to lat/lon
             position = PointClient.Projection.ToLatLong(position.X, position.Y);
 
             LocationClient.MarkerLatitude = position.X;
