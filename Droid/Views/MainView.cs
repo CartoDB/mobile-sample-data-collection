@@ -69,8 +69,8 @@ namespace data.collection.Droid
             var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
             MapView.Layers.Add(layer);
 
-            Banner.BringToFront();
             Popup.BringToFront();
+            Banner.BringToFront();
 
             Crosshair.Visibility = ViewStates.Gone;
 
