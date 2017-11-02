@@ -14,9 +14,8 @@ using Carto.VectorElements;
 
 namespace data.collection
 {
-    public class LocationChoiceListener : MapEventListener
+    public class PointClient
     {
-        public EventHandler<EventArgs> PinAdded;
         public EventHandler<EventArgs> QueryFailed;
         public EventHandler<EventArgs> PointsAdded;
 
@@ -38,7 +37,7 @@ namespace data.collection
 
         public VectorLayer PointLayer { get; private set; }
 
-        public LocationChoiceListener(MapView mapView)
+        public PointClient(MapView mapView)
         {
             MapView = mapView;
 
@@ -54,21 +53,10 @@ namespace data.collection
             Service.Username = "nutiteq";
 		}
 
-        public override void OnMapClicked(MapClickInfo mapClickInfo)
-        {
-            MarkerSource.Clear();
-
-            MarkerPosition = mapClickInfo.ClickPos;
-            var marker = GetUserMarker(Bitmap, MarkerPosition);
-            MarkerSource.Add(marker);
-
-            PinAdded?.Invoke(this, EventArgs.Empty);
-        }
-
-        public static Marker GetUserMarker(Bitmap bitmap, MapPos position)
+        public void AddUserMarker(MapPos position)
         {
             var builder = new MarkerStyleBuilder();
-            builder.Bitmap = bitmap;
+            builder.Bitmap = Bitmap;
             builder.HideIfOverlapped = false;
             builder.Size = 30;
             builder.Color = new Color(0, 255, 0, 255);
@@ -77,7 +65,7 @@ namespace data.collection
             animationBuilder.SizeAnimationType = AnimationType.AnimationTypeSpring;
             builder.AnimationStyle = animationBuilder.BuildStyle();
 
-            return new Marker(position, builder.BuildStyle());
+            MarkerSource.Add(new Marker(position, builder.BuildStyle()));
         }
 
 		// Location Red

@@ -27,14 +27,15 @@ namespace data.collection.Droid
     [Activity(Label = "DATA COLLECTION", MainLauncher = true, Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : BaseActivity, ILocationListener, ActivityCompat.IOnRequestPermissionsResultCallback
     {
-        public MainView ContentView { get; set; }
+        MainView ContentView { get; set; }
 
-        public LocationClient LocationClient { get; set; }
+        LocationClient LocationClient { get; set; }
 
         LocationManager manager;
 
-        ElementClickListener ElementListener { get; set; }
-        LocationChoiceListener MapListener { get; set; }
+        ElementClickListener ElementClickListener { get; set; }
+
+        PointClient PointClient { get; set; }
 
         string[] Permissions
         {
@@ -67,12 +68,12 @@ namespace data.collection.Droid
                 OnPermissionsGranted();
             }
 
-            MapListener = new LocationChoiceListener(ContentView.MapView);
+            PointClient = new PointClient(ContentView.MapView);
             var bitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.icon_pin_red);
-            MapListener.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
-            ElementListener = new ElementClickListener(MapListener.PointSource);
+            PointClient.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
+            ElementClickListener = new ElementClickListener(PointClient.PointSource);
 
-            MapListener.QueryPoints(DeviceId);
+            PointClient.QueryPoints(DeviceId);
             string text = "QUERYING POINTS...";
             ContentView.Banner.SetLoadingText(text, false);
 
@@ -87,14 +88,12 @@ namespace data.collection.Droid
         {
             base.OnResume();
 
-            ContentView.MapView.MapEventListener = MapListener;
-            MapListener.PointLayer.VectorElementEventListener = ElementListener;
+            PointClient.PointLayer.VectorElementEventListener = ElementClickListener;
 
             LocationClient.AttachIgnoreListener();
 
-            MapListener.PinAdded += OnPinAdded;
-            MapListener.QueryFailed += OnQueryFailed;
-            MapListener.PointsAdded += OnPointsAdded;
+            PointClient.QueryFailed += OnQueryFailed;
+            PointClient.PointsAdded += OnPointsAdded;
 
             ContentView.Content.Done.Clicked += OnDoneClick;
             ContentView.Popup.Closed += OnPopupClose;
@@ -110,14 +109,12 @@ namespace data.collection.Droid
         {
             base.OnPause();
 
-            ContentView.MapView.MapEventListener = null;
-            MapListener.PointLayer.VectorElementEventListener = null;
+            PointClient.PointLayer.VectorElementEventListener = null;
 
             LocationClient.DetachIgnoreListener();
 
-            MapListener.PinAdded -= OnPinAdded;
-            MapListener.QueryFailed -= OnQueryFailed;
-            MapListener.PointsAdded -= OnPointsAdded;
+            PointClient.QueryFailed -= OnQueryFailed;
+            PointClient.PointsAdded -= OnPointsAdded;
 
             ContentView.Content.Done.Clicked -= OnDoneClick;
             ContentView.Popup.Closed -= OnPopupClose;
@@ -136,7 +133,25 @@ namespace data.collection.Droid
 
         void OnLocationChosen(object sender, EventArgs e)
         {
-            
+            var parameters = (RelativeLayout.LayoutParams)ContentView.Crosshair.LayoutParameters;
+            var x = parameters.LeftMargin + parameters.Width / 2;
+            var y = parameters.TopMargin + parameters.Height / 2;
+            var screen = new ScreenPos(x, y);
+            ContentView.MapView.ScreenToMap(screen);
+
+            MapPos position = ContentView.MapView.ScreenToMap(screen);
+            PointClient.AddUserMarker(position);
+
+            position = PointClient.Projection.ToLatLong(position.X, position.Y);
+
+            LocationClient.MarkerLatitude = position.X;
+            LocationClient.MarkerLongitude = position.Y;
+
+            RunOnUiThread(delegate
+            {
+                ContentView.Popup.Show();
+            });
+
         }
 
         void OnLocationChoiceCancelled(object sender, EventArgs e)
@@ -146,21 +161,7 @@ namespace data.collection.Droid
 
         void OnPopupClose(object sender, EventArgs e)
         {
-            MapListener.MarkerSource.Clear();
-        }
-
-        void OnPinAdded(object sender, EventArgs e)
-        {
-            MapPos position = MapListener.MarkerPosition;
-            position = MapListener.Projection.ToLatLong(position.X, position.Y);
-
-            LocationClient.MarkerLatitude = position.X;
-            LocationClient.MarkerLongitude = position.Y;
-
-            RunOnUiThread(delegate
-            {
-                ContentView.Popup.Show();
-            });
+            PointClient.MarkerSource.Clear();
         }
 
         void OnQueryFailed(object sender, EventArgs e)
@@ -175,9 +176,9 @@ namespace data.collection.Droid
 
         void OnPointsAdded(object sender, EventArgs e)
         {
-            var syncedColor = LocationChoiceListener.SyncedLocations.ToNativeColor();
-            var mySyncedColor = LocationChoiceListener.MySyncedLocations.ToNativeColor();
-            var unsyncedColor = LocationChoiceListener.UnsyncedLocations.ToNativeColor();
+            var syncedColor = PointClient.SyncedLocations.ToNativeColor();
+            var mySyncedColor = PointClient.MySyncedLocations.ToNativeColor();
+            var unsyncedColor = PointClient.UnsyncedLocations.ToNativeColor();
 
             string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
 
@@ -196,7 +197,7 @@ namespace data.collection.Droid
                 return;
             }
 
-            MapListener.MarkerSource.Clear();
+            PointClient.MarkerSource.Clear();
             ContentView.Popup.Hide();
             ContentView.Banner.SetInformationText("Compressing image...", false);
 
@@ -235,7 +236,7 @@ namespace data.collection.Droid
                     SQLClient.Instance.Insert(item);
                 }
 
-                MapListener.QueryPoints(DeviceId);
+                PointClient.QueryPoints(DeviceId);
             }
         }
 

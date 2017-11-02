@@ -20,6 +20,8 @@ namespace data.collection.Droid
         public ActionButton Done { get; private set; }
         public ActionButton Cancel { get; private set; }
 
+        public ImageView Crosshair { get; private set; }
+
         public bool IsAnyRequiredFieldEmpty 
         {
             get { return Content.TitleField.IsEmpty || Content.DescriptionField.IsEmpty; }
@@ -52,11 +54,11 @@ namespace data.collection.Droid
             Add.SetBackground(Colors.AppleBlue);
             AddView(Add);
 
-            crosshair = new ImageView(Context);
-            crosshair.SetImageResource(Resource.Drawable.icon_crosshair);
-            crosshair.SetScaleType(ImageView.ScaleType.CenterCrop);
-            crosshair.SetAdjustViewBounds(true);
-            AddView(crosshair);
+            Crosshair = new ImageView(Context);
+            Crosshair.SetImageResource(Resource.Drawable.icon_crosshair);
+            Crosshair.SetScaleType(ImageView.ScaleType.CenterCrop);
+            Crosshair.SetAdjustViewBounds(true);
+            AddView(Crosshair);
 
             /* 
              * Frame setting. 
@@ -70,7 +72,9 @@ namespace data.collection.Droid
             Banner.BringToFront();
             Popup.BringToFront();
 
-            crosshair.Visibility = ViewStates.Gone;
+            Crosshair.Visibility = ViewStates.Gone;
+
+            Popup.SetPopupContent(Content);
 		}
 
 		public override void LayoutSubviews()
@@ -93,14 +97,12 @@ namespace data.collection.Droid
             x = MapView.LayoutParameters.Width / 2 - w / 2;
             y = MapView.LayoutParameters.Height / 2 - h / 2;
 
-            crosshair.SetFrame(x, y, w, h);
+            Crosshair.SetFrame(x, y, w, h);
 		}
-
-        ImageView crosshair;
 
         public void SetCrosshairMode()
         {
-            crosshair.Visibility = ViewStates.Visible;
+            Crosshair.Visibility = ViewStates.Visible;
 
             Add.Hide();
 
@@ -110,7 +112,7 @@ namespace data.collection.Droid
 
         public void CancelCrosshairMode()
         {
-            crosshair.Visibility = ViewStates.Gone;
+            Crosshair.Visibility = ViewStates.Gone;
 
             Add.Show();
 

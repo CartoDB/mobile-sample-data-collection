@@ -14,7 +14,7 @@ namespace data.collection.iOS
 
 		LocationClient LocationClient { get; set; }
 
-        LocationChoiceListener Listener { get; set; }
+        PointClient Listener { get; set; }
 
 		public override void ViewDidLoad()
         {
@@ -27,7 +27,7 @@ namespace data.collection.iOS
 
 			LocationClient = new LocationClient(ContentView.MapView);
 
-            Listener = new LocationChoiceListener(ContentView.MapView);
+            Listener = new PointClient(ContentView.MapView);
             Listener.Bitmap = BitmapUtils.CreateBitmapFromUIImage(UIImage.FromFile("icon_pin_red.png"));
 
             Listener.QueryPoints(Device.Id);
@@ -97,9 +97,9 @@ namespace data.collection.iOS
 
         void OnPointsAdded(object sender, EventArgs e)
         {
-            var syncedColor = LocationChoiceListener.SyncedLocations.ToNativeColor();
-            var mySyncedColor = LocationChoiceListener.MySyncedLocations.ToNativeColor();
-            var unsyncedColor = LocationChoiceListener.UnsyncedLocations.ToNativeColor();
+            var syncedColor = PointClient.SyncedLocations.ToNativeColor();
+            var mySyncedColor = PointClient.MySyncedLocations.ToNativeColor();
+            var unsyncedColor = PointClient.UnsyncedLocations.ToNativeColor();
 			
             string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
 
