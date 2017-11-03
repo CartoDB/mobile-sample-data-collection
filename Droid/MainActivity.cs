@@ -63,8 +63,15 @@ namespace data.collection.Droid
             }
 
             PointClient = new PointClient(ContentView.MapView);
+
             var bitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.icon_pin_red);
             PointClient.Bitmap = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
+
+            bitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.icon_banner_info);
+            // Scale down, as our original image is too large
+            int size = (int)(20 * ContentView.Density);
+            bitmap = Bitmap.CreateScaledBitmap(bitmap, size, size, false);
+            PointClient.Listener.LeftImage = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
 
             PointClient.QueryPoints(delegate { });
 

@@ -12,6 +12,8 @@ namespace data.collection
 {
     public class ElementClickListener : VectorTileEventListener
     {
+        public Bitmap LeftImage { get; set; }
+
         LocalVectorDataSource source;
 
         public BalloonPopup Previous { get; private set; }
@@ -36,12 +38,15 @@ namespace data.collection
             builder.RightMargins = new BalloonPopupMargins(6, 3, 6, 3);
             builder.PlacementPriority = 10;
             builder.CornerRadius = 5;
-            builder.TitleFontSize = 12;
-            builder.DescriptionFontSize = 10;
 
-            var navy = new Color(22, 41, 69, 255);
-            builder.TitleColor = navy;
-            builder.DescriptionColor = navy;
+            builder.TitleFontSize = 14;
+            builder.TitleColor = new Color(20, 20, 20, 255);
+            builder.DescriptionFontSize = 9;
+            builder.DescriptionColor = new Color(100, 100, 100, 255);
+
+            builder.LeftMargins = new BalloonPopupMargins(6, 6, 6, 6);
+            builder.LeftImage = LeftImage;
+            builder.RightMargins = new BalloonPopupMargins(2, 6, 12, 6);
 
             var animationBuilder = new AnimationStyleBuilder();
             animationBuilder.RelativeSpeed = 2.0f;

@@ -35,6 +35,8 @@ namespace data.collection
         public LocalVectorDataSource PopupSource { get; private set; }
         VectorLayer popupLayer;
 
+        public ElementClickListener Listener { get; private set; }
+
         public PointClient(MapView mapView)
         {
             MapView = mapView;
@@ -46,6 +48,8 @@ namespace data.collection
             PopupSource = new LocalVectorDataSource(Projection);
             popupLayer = new VectorLayer(PopupSource);
             mapView.Layers.Add(popupLayer);
+
+            Listener = new ElementClickListener(PopupSource);
 		}
 
         public void AddUserMarker(MapPos position)
@@ -89,7 +93,7 @@ namespace data.collection
                 pointLayer = obj;
                 MapView.Layers.Add(pointLayer);
 
-                pointLayer.VectorTileEventListener = new ElementClickListener(PopupSource);
+                pointLayer.VectorTileEventListener = Listener;
             });
         }
     }
