@@ -7,6 +7,7 @@ using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Util;
 using Android.Views;
+using Android.Views.Animations;
 using Android.Views.InputMethods;
 using Android.Widget;
 
@@ -186,5 +187,68 @@ namespace data.collection.Droid
             UpdateInternalX(to);
         }
 
+        public void AnimateFrame(int x, int y, int w, int h)
+        {
+            SetInternalFrame(x, y, w, h);
+
+            var animation = new ResizeAnimation();
+            animation.View = this;
+
+            animation.X = x;
+            animation.Y = y;
+            animation.Width = w;
+            animation.Height = h;
+
+            animation.Duration = 300;
+
+            StartAnimation(animation);
+        }
 	}
+
+    public class ResizeAnimation : Animation
+    {
+        public int X { get; set; }
+
+        public int Y { get; set; }
+
+        public int Width { get; set; }
+
+        public int Height { get; set; }
+
+        public View View { get; set; }
+
+        public RelativeLayout.LayoutParams Parameters
+        {
+            get { return (RelativeLayout.LayoutParams)View.LayoutParameters; }
+        }
+
+        public override long Duration
+        {
+            get
+            {
+                return base.Duration;
+            }
+            set
+            {
+                base.Duration = value;
+            }
+        }
+    
+        protected override void ApplyTransformation(float interpolatedTime, Transformation t)
+        {
+            // TODO multiply by interpolatedTime and delta:
+            // https://stackoverflow.com/questions/18742274/how-to-animate-the-width-and-height-of-a-layout
+            Parameters.LeftMargin = X;
+            Parameters.TopMargin = Y;
+            Parameters.Width = Width;
+            Parameters.Height = Height;
+
+            View.RequestLayout();
+        }
+
+        public override bool WillChangeBounds()
+        {
+            return true;
+        }
+    }
 }

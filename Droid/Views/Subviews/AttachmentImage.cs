@@ -19,16 +19,23 @@ namespace data.collection.Droid
 
             spinner = new ProgressBar(context);
             AddView(spinner);
+
+            imageView.Click += delegate
+            {
+                int width = (Parent as BaseView).Frame.W - 2 * Padding;
+                AnimateFrame(Padding, Padding, width, (int)(Frame.H * 2));
+            };
         }
+
+        int Padding { get { return (int)(5 * Density); } }
 
         public override void LayoutSubviews()
         {
-            int padding = (int)(5 * Density);
-
-            int x = padding;
-            int y = padding;
-            int w = Frame.W - 2 * padding;
-            int h = Frame.H - 2 * padding;
+            
+            int x = Padding;
+            int y = Padding;
+            int w = Frame.W - 2 * Padding;
+            int h = Frame.H - 2 * Padding;
 
             imageView.SetFrame(x, y, w, h);
 
