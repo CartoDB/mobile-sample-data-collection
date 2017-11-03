@@ -70,9 +70,6 @@ namespace data.collection.Droid
 
             MapListener = new MapClickListener();
 
-            string text = "QUERYING POINTS...";
-            ContentView.Banner.SetLoadingText(text, false);
-
             List<Data> items = SQLClient.Instance.GetAll();
             if (items.Count > 0)
             {

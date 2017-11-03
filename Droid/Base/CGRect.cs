@@ -13,10 +13,9 @@ namespace data.collection.Droid
 
         public int H { get; private set; }
 
-        public int Bottom
-        {
-            get { return Y + H; }
-        }
+        public int Bottom { get { return Y + H; } }
+
+        public int Right { get { return W + X; } }
 
         public CGRect(int x, int y, int w, int h)
         {
@@ -27,6 +26,7 @@ namespace data.collection.Droid
         }
 
         public static CGRect Empty { get { return new CGRect(0, 0, 0, 0); } }
+
 
     }
 }

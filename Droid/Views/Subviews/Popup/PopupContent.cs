@@ -32,6 +32,9 @@ namespace data.collection.Droid
             Done.SetBackground(Colors.AppleBlue);
             AddView(Done);
 
+            TitleField.Field.SetCornerRadius((int)(5 * Density));
+            DescriptionField.Field.SetCornerRadius((int)(5 * Density));
+
             Click += (sender, e) =>
             {
                 // Click event just so it wouldn't close on click
@@ -41,33 +44,35 @@ namespace data.collection.Droid
         public override void LayoutSubviews()
         {
             int pad = (int)(15 * Density);
+            int doneSize = (int)(55 * Density);
 
-            int w = (int)(55 * Density);
-            int h = w;
-            int x = Frame.W - (w + pad);
-            int y = Frame.H - (h + pad);
-
-            y = pad;
-
-            Done.Frame = new CGRect(x, y, w, h);
-
-            w = Frame.W - (w + 3 * pad);
-            h = (int)(60 * Density);
-            x = pad;
-            y = 0;
+            int w = Frame.W - (doneSize + 3 * pad);
+            int h = (int)(60 * Density);
+            int x = pad;
+            int y = 0;
 
             TitleField.Frame = new CGRect(x, y, w, h);
 
             y += h;
+            h += h;
 
             DescriptionField.Frame = new CGRect(x, y, w, h);
 
             y += h + pad / 2;
 
-            h = (int)(1.3 * h);
+            x += (int)(5 * Density);
+            h = (int)(71 * Density);
             w = (int)(1.1 * h);
 
             CameraField.Frame = new CGRect(x, y, w, h);
+
+            y += (CameraField.Frame.H - doneSize) / 2;
+            x = TitleField.Frame.Right - doneSize;
+            w = doneSize;
+            h = w;
+
+            Done.Frame = new CGRect(x, y, w, h);
+
         }
     }
 }
