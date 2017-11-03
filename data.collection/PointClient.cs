@@ -32,6 +32,9 @@ namespace data.collection
 
         public MapPos MarkerPosition { get; set; }
 
+        LocalVectorDataSource popupSource;
+        VectorLayer popupLayer;
+
         public PointClient(MapView mapView)
         {
             MapView = mapView;
@@ -39,6 +42,10 @@ namespace data.collection
             MarkerSource = new LocalVectorDataSource(Projection);
             VectorLayer markerLayer = new VectorLayer(MarkerSource);
 			MapView.Layers.Add(markerLayer);
+
+            popupSource = new LocalVectorDataSource(Projection);
+            popupLayer = new VectorLayer(popupSource);
+            mapView.Layers.Add(popupLayer);
 		}
 
         public void AddUserMarker(MapPos position)
@@ -68,7 +75,9 @@ namespace data.collection
         {
             if  (pointLayer != null)
             {
+                pointLayer.VectorTileEventListener = null;
                 MapView.Layers.Remove(pointLayer);
+
             }
 
             var username = "nutiteq";
@@ -79,8 +88,9 @@ namespace data.collection
                 complete();
                 pointLayer = obj;
                 MapView.Layers.Add(pointLayer);
-            });
 
+                pointLayer.VectorTileEventListener = new ElementClickListener(popupSource);
+            });
         }
     }
 }

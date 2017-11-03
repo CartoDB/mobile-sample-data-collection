@@ -10,7 +10,7 @@ using Carto.Core;
 
 namespace data.collection
 {
-    public class ElementClickListener : VectorElementEventListener
+    public class ElementClickListener : VectorTileEventListener
     {
         public const string NullId = "null";
         public const string TitleId = "_title";
@@ -20,19 +20,20 @@ namespace data.collection
 
         BalloonPopup previous;
 
-        public ElementClickListener(LocalVectorDataSource dataSource)
+        public ElementClickListener(LocalVectorDataSource source)
         {
-            source = dataSource;
+            this.source = source;
         }
 
-        public override bool OnVectorElementClicked(VectorElementClickInfo clickInfo)
+        public override bool OnVectorTileClicked(VectorTileClickInfo clickInfo)
         {
             if (previous != null)
             {
                 source.Remove(previous);
             }
 
-            VectorElement element = clickInfo.VectorElement;
+            var feature = clickInfo.Feature;
+            var properties = feature.Properties;
 
             BalloonPopupStyleBuilder builder = new BalloonPopupStyleBuilder();
             builder.LeftMargins = new BalloonPopupMargins(0, 0, 0, 0);
@@ -53,21 +54,11 @@ namespace data.collection
 
             BalloonPopupStyle style = builder.BuildStyle();
 
-            string title = element.GetMetaDataElement(TitleId).String;
-            string description = element.GetMetaDataElement(DescriptionId).String;
+            string title = properties.GetObjectElement("title").String;
+            string description = properties.GetObjectElement("description").String;
 
-            BalloonPopup popup;
-
-            if (element is BalloonPopup)
-            {
-                Billboard billboard = (Billboard)element;
-                popup = new BalloonPopup(billboard, style, title, description);
-            }
-            else
-            {
-                MapPos position = clickInfo.ClickPos;
-                popup = new BalloonPopup(position, style, title, description);
-            }
+            MapPos position = clickInfo.ClickPos;
+            BalloonPopup popup = new BalloonPopup(position, style, title, description);;
 
             source.Add(popup);
             previous = popup;
