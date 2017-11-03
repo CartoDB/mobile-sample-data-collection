@@ -14,7 +14,7 @@ namespace data.collection
     {
         LocalVectorDataSource source;
 
-        BalloonPopup previous;
+        public BalloonPopup Previous { get; private set; }
 
         public ElementClickListener(LocalVectorDataSource source)
         {
@@ -23,9 +23,9 @@ namespace data.collection
 
         public override bool OnVectorTileClicked(VectorTileClickInfo clickInfo)
         {
-            if (previous != null)
+            if (Previous != null)
             {
-                source.Remove(previous);
+                source.Remove(Previous);
             }
 
             var feature = clickInfo.Feature;
@@ -57,7 +57,7 @@ namespace data.collection
             BalloonPopup popup = new BalloonPopup(position, style, title, description);;
 
             source.Add(popup);
-            previous = popup;
+            Previous = popup;
 
             return true;
         }

@@ -32,7 +32,7 @@ namespace data.collection
 
         public MapPos MarkerPosition { get; set; }
 
-        LocalVectorDataSource popupSource;
+        public LocalVectorDataSource PopupSource { get; private set; }
         VectorLayer popupLayer;
 
         public PointClient(MapView mapView)
@@ -43,8 +43,8 @@ namespace data.collection
             VectorLayer markerLayer = new VectorLayer(MarkerSource);
 			MapView.Layers.Add(markerLayer);
 
-            popupSource = new LocalVectorDataSource(Projection);
-            popupLayer = new VectorLayer(popupSource);
+            PopupSource = new LocalVectorDataSource(Projection);
+            popupLayer = new VectorLayer(PopupSource);
             mapView.Layers.Add(popupLayer);
 		}
 
@@ -89,7 +89,7 @@ namespace data.collection
                 pointLayer = obj;
                 MapView.Layers.Add(pointLayer);
 
-                pointLayer.VectorTileEventListener = new ElementClickListener(popupSource);
+                pointLayer.VectorTileEventListener = new ElementClickListener(PopupSource);
             });
         }
     }

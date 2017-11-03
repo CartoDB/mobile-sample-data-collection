@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 using Android.App;
 using Android.Content;
@@ -12,14 +10,10 @@ using Android.Graphics;
 using Android.Locations;
 using Android.OS;
 using Android.Provider;
-using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
 using Carto.Core;
-using Carto.DataSources;
-using Carto.Layers;
-using Carto.Projections;
 using Carto.Utils;
 
 namespace data.collection.Droid
@@ -33,7 +27,7 @@ namespace data.collection.Droid
 
         LocationManager manager;
 
-        ElementClickListener ElementClickListener { get; set; }
+        MapClickListener MapListener { get; set; }
 
         PointClient PointClient { get; set; }
 
@@ -74,6 +68,8 @@ namespace data.collection.Droid
 
             PointClient.QueryPoints(delegate { });
 
+            MapListener = new MapClickListener();
+
             string text = "QUERYING POINTS...";
             ContentView.Banner.SetLoadingText(text, false);
 
@@ -103,6 +99,9 @@ namespace data.collection.Droid
             ContentView.Cancel.Clicked += OnLocationChoiceCancelled;
 
             ContentView.Popup.Closed += OnPopupClosed;
+
+            ContentView.MapView.MapEventListener = MapListener;
+            MapListener.MapClicked += OnMapClicked;
         }
 
         protected override void OnPause()
@@ -124,6 +123,14 @@ namespace data.collection.Droid
             ContentView.Cancel.Clicked -= OnLocationChoiceCancelled;
 
             ContentView.Popup.Closed += OnPopupClosed;
+
+            ContentView.MapView.MapEventListener = null;
+            MapListener.MapClicked -= OnMapClicked;
+        }
+
+        void OnMapClicked(object sender, EventArgs e)
+        {
+            PointClient.PopupSource.Clear();
         }
 
         void OnPopupClosed(object sender, EventArgs e)

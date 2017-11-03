@@ -22,13 +22,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)PointClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\DateUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\StringUtils.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ElementClickListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Listener\ElementClickListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Listener\MapClickListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Model\" />
     <Folder Include="$(MSBuildThisFileDirectory)Networking\" />
     <Folder Include="$(MSBuildThisFileDirectory)Networking\Response\" />
     <Folder Include="$(MSBuildThisFileDirectory)Utils\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Listener\" />
   </ItemGroup>
 </Project>
