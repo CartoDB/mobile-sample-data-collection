@@ -141,6 +141,11 @@ namespace data.collection.Droid
 
         async void OnPointClicked(object sender, EventArgs e)
         {
+            RunOnUiThread(delegate
+            {
+                ContentView.Attachment.Show();
+            });
+
             var url = (string)sender;
             ImageResponse response = await Networking.GetImage(url);
 
@@ -148,17 +153,18 @@ namespace data.collection.Droid
             {
                 Bitmap bitmap = BitmapFactory.DecodeStream(response.Stream);
 
-                RunOnUiThread(delegate {
+                RunOnUiThread(delegate
+                {
                     ContentView.Attachment.SetImage(bitmap);
-                    ContentView.Attachment.Show();    
                 });
-
             }
             else
             {
                 var text = "Unable to load element image";
-                RunOnUiThread(delegate {
-                    ContentView.Banner.SetInformationText(text, true);    
+                RunOnUiThread(delegate
+                {
+                    ContentView.Banner.SetInformationText(text, true);
+                    ContentView.Attachment.Hide();
                 });
             }
         }
