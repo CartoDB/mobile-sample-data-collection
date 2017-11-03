@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Listener\ElementClickListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Listener\MapClickListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Networking\Response\ImageResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Model\" />

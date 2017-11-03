@@ -57,5 +57,28 @@ namespace data.collection
 			return response;
 		}
 
+        public static async Task<ImageResponse> GetImage(string url)
+        {
+            var response = new ImageResponse();
+
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage httpResponse = null;
+
+                try
+                {
+                    httpResponse = await client.GetAsync(url);
+                    response.Stream = await httpResponse.Content.ReadAsStreamAsync();
+                }
+                catch (Exception e)
+                {
+                    response.Error = e.Message;
+                    return response;
+                }
+            }
+
+            return response;
+        }
+
     }
 }
