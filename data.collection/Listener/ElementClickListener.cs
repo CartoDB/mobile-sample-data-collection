@@ -12,6 +12,8 @@ namespace data.collection
 {
     public class ElementClickListener : VectorTileEventListener
     {
+        public EventHandler<EventArgs> Click;
+
         public Bitmap LeftImage { get; set; }
 
         LocalVectorDataSource source;
@@ -63,6 +65,9 @@ namespace data.collection
 
             source.Add(popup);
             Previous = popup;
+
+            string url = properties.GetObjectElement("attachment_url").String;
+            Click?.Invoke(url, EventArgs.Empty);
 
             return true;
         }

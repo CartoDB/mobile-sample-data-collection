@@ -119,6 +119,7 @@
     <Compile Include="Views\Subviews\Popup\PopupHeader.cs" />
     <Compile Include="Views\Subviews\Popup\PopupView.cs" />
     <Compile Include="Views\Subviews\Popup\SlideInPopup.cs" />
+    <Compile Include="Views\Subviews\AttachmentImage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

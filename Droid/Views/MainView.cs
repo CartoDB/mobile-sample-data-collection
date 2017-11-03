@@ -1,6 +1,7 @@
 ﻿
 using System;
 using Android.Content;
+using Android.Graphics;
 using Android.Views;
 using Android.Widget;
 using Carto.Layers;
@@ -21,6 +22,8 @@ namespace data.collection.Droid
         public ActionButton Cancel { get; private set; }
 
         public ImageView Crosshair { get; private set; }
+
+        public AttachmentImage Attachment { get; private set; }
 
         public bool IsAnyRequiredFieldEmpty 
         {
@@ -59,6 +62,10 @@ namespace data.collection.Droid
             Crosshair.SetScaleType(ImageView.ScaleType.CenterCrop);
             Crosshair.SetAdjustViewBounds(true);
             AddView(Crosshair);
+
+            Attachment = new AttachmentImage(context);
+            Attachment.Alpha = 0;
+            AddView(Attachment);
 
             /* 
              * Frame setting. 
@@ -102,6 +109,15 @@ namespace data.collection.Droid
             y = MapView.LayoutParameters.Height / 2 - h / 2;
 
             Crosshair.SetFrame(x, y, w, h);
+
+            int smallPad = padding / 2;
+
+            w = (int)(Frame.W / 2.5);
+            h = (int)(w * 1.3);
+            x = Frame.W - (w + smallPad);
+            y = smallPad;
+
+            Attachment.Frame = new CGRect(x, y, w, h);
 		}
 
         public void SetCrosshairMode()
@@ -121,5 +137,6 @@ namespace data.collection.Droid
 
             Done.AnimateX(doneHiddenPosition);
         }
+
     }
 }

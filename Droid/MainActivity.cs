@@ -71,7 +71,7 @@ namespace data.collection.Droid
             // Scale down, as our original image is too large
             int size = (int)(20 * ContentView.Density);
             bitmap = Bitmap.CreateScaledBitmap(bitmap, size, size, false);
-            PointClient.Listener.LeftImage = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
+            PointClient.PointListener.LeftImage = BitmapUtils.CreateBitmapFromAndroidBitmap(bitmap);
 
             PointClient.QueryPoints(delegate { });
 
@@ -109,6 +109,8 @@ namespace data.collection.Droid
 
             ContentView.MapView.MapEventListener = MapListener;
             MapListener.MapClicked += OnMapClicked;
+
+            PointClient.PointListener.Click += OnPointClicked;
         }
 
         protected override void OnPause()
@@ -133,11 +135,41 @@ namespace data.collection.Droid
 
             ContentView.MapView.MapEventListener = null;
             MapListener.MapClicked -= OnMapClicked;
+
+            PointClient.PointListener.Click -= OnPointClicked;
+        }
+
+        async void OnPointClicked(object sender, EventArgs e)
+        {
+            var url = (string)sender;
+            ImageResponse response = await Networking.GetImage(url);
+
+            if (response.IsOk)
+            {
+                Bitmap bitmap = BitmapFactory.DecodeStream(response.Stream);
+
+                RunOnUiThread(delegate {
+                    ContentView.Attachment.SetImage(bitmap);
+                    ContentView.Attachment.Show();    
+                });
+
+            }
+            else
+            {
+                var text = "Unable to load element image";
+                RunOnUiThread(delegate {
+                    ContentView.Banner.SetInformationText(text, true);    
+                });
+            }
         }
 
         void OnMapClicked(object sender, EventArgs e)
         {
             PointClient.PopupSource.Clear();
+
+            RunOnUiThread(delegate {
+                ContentView.Attachment.Hide();    
+            });
         }
 
         void OnPopupClosed(object sender, EventArgs e)
