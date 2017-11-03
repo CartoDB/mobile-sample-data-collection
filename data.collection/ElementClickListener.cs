@@ -12,10 +12,6 @@ namespace data.collection
 {
     public class ElementClickListener : VectorTileEventListener
     {
-        public const string NullId = "null";
-        public const string TitleId = "_title";
-        public const string DescriptionId = "_description";
-
         LocalVectorDataSource source;
 
         BalloonPopup previous;
