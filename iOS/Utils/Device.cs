@@ -30,5 +30,20 @@ namespace data.collection.iOS
                 return appDelegate.Controller.NavigationBar.Frame.Height;
             }
         }
+
+        public static bool IsLandscape
+        {
+            get
+            {
+                var orientation = UIDevice.CurrentDevice.Orientation;
+                return orientation == UIDeviceOrientation.LandscapeLeft || orientation == UIDeviceOrientation.LandscapeRight;
+            }
+        }
+
+        public static bool IsTablet
+        {
+            get { return UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad; }
+        }
+
     }
 }

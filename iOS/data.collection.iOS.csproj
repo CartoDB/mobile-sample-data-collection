@@ -58,7 +58,7 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>f
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
@@ -172,6 +172,8 @@
     <Folder Include="Views\Components\" />
     <Folder Include="Views\Extensions\" />
     <Folder Include="SQLite\" />
+    <Folder Include="Views\Subviews\" />
+    <Folder Include="Views\Subviews\Popup\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -207,6 +209,9 @@
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="SQLite\SQLite.cs" />
     <Compile Include="SQLite\SQLiteAsync.cs" />
+    <Compile Include="Views\Subviews\Popup\PopupHeader.cs" />
+    <Compile Include="Views\Subviews\Popup\PopupView.cs" />
+    <Compile Include="Views\Subviews\Popup\SlideInPopup.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_camera.png" />
