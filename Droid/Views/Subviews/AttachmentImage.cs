@@ -7,22 +7,28 @@ namespace data.collection.Droid
 {
     public class AttachmentImage : BaseView
     {
-        ImageView imageView;
+        ImageView photoView;
         ProgressBar spinner;
+        ImageView closeButton;
 
         public AttachmentImage(Context context) : base(context)
         {
             this.SetBackground(Colors.DarkTransparentGray);
 
-            imageView = new ImageView(context);
-            AddView(imageView);
+            photoView = new ImageView(context);
+            AddView(photoView);
 
             spinner = new ProgressBar(context);
             AddView(spinner);
 
-            imageView.Click += delegate
+            closeButton = new ImageView(context);
+            closeButton.SetImageResource(Resource.Drawable.icon_close_white);
+            closeButton.SetScaleType(ImageView.ScaleType.CenterCrop);
+            AddView(closeButton);
+
+            photoView.Click += delegate
             {
-                if (Frame.IsEqual(original) || original == null)
+                if (Frame.IsEqual(original) || original.IsEqual(CGRect.Empty))
                 {
                     Expand();    
                 }
@@ -30,8 +36,9 @@ namespace data.collection.Droid
                 {
                     Collapse();
                 }
-
             };
+
+            closeButton.Visibility = Android.Views.ViewStates.Gone;
         }
 
         int Padding { get { return (int)(5 * Density); } }
@@ -43,7 +50,7 @@ namespace data.collection.Droid
             int w = Frame.W - 2 * Padding;
             int h = Frame.H - 2 * Padding;
 
-            imageView.SetFrame(x, y, w, h);
+            photoView.SetFrame(x, y, w, h);
 
             w = Frame.W / 4;
             h = w;
@@ -51,15 +58,22 @@ namespace data.collection.Droid
             y = Frame.H / 2 - h / 2;
 
             spinner.SetFrame(x, y, w, h);
+
+            w = (int)(30 * Density);
+            h = w;
+            x = Frame.W - (w + Padding);
+            y = Padding;
+
+            closeButton.SetFrame(x, y, w, h);
         }
 
         public void SetImage(Bitmap bitmap)
         {
-            imageView.SetImageBitmap(bitmap);
+            photoView.SetImageBitmap(bitmap);
             spinner.Visibility = Android.Views.ViewStates.Gone;
         }
 
-        CGRect original;
+        CGRect original = CGRect.Empty;
 
         void Expand()
         {
@@ -67,11 +81,21 @@ namespace data.collection.Droid
 
             int width = (Parent as BaseView).Frame.W - 2 * Padding;
             AnimateFrame(Padding, Padding, width, Frame.H * 2);
+            closeButton.Visibility = Android.Views.ViewStates.Visible;
         }
 
-        void Collapse()
+        public void Collapse(bool animated = true)
         {
-            AnimateFrame(original.X, original.Y, original.W, original.H);
+            if (animated)
+            {
+                AnimateFrame(original.X, original.Y, original.W, original.H);    
+            }
+            else 
+            {
+                Frame = original;
+            }
+
+            closeButton.Visibility = Android.Views.ViewStates.Gone;
         }
 
         public void Show()

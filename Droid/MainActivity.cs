@@ -173,8 +173,10 @@ namespace data.collection.Droid
         {
             PointClient.PopupSource.Clear();
 
-            RunOnUiThread(delegate {
-                ContentView.Attachment.Hide();    
+            RunOnUiThread(delegate
+            {
+                ContentView.Attachment.Hide();
+                ContentView.Attachment.Collapse(false);
             });
         }
 
