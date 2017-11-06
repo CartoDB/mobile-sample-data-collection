@@ -4,7 +4,6 @@ using UIKit;
 
 namespace data.collection.iOS
 {
-
     public class BaseView : UIView
     {
         public Banner Banner { get; private set; }

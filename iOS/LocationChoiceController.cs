@@ -109,7 +109,6 @@ namespace data.collection.iOS
             InvokeOnMainThread(delegate
             {
                 ContentView.Banner.SetInformationText(text, false);
-                ContentView.Legend.Update(syncedColor, mySyncedColor, unsyncedColor);
             });
         }
 

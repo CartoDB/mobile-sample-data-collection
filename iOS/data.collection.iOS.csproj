@@ -58,7 +58,7 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
-    <DebugSymbols>true</DebugSymbols>f
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
@@ -169,11 +169,11 @@
     <Folder Include="Resources\" />
     <Folder Include="Utils\" />
     <Folder Include="Views\" />
-    <Folder Include="Views\Components\" />
+    <Folder Include="Views\Subviews\" />
     <Folder Include="Views\Extensions\" />
     <Folder Include="SQLite\" />
-    <Folder Include="Views\Subviews\" />
-    <Folder Include="Views\Subviews\Popup\" />
+    <Folder Include="Views\Popup\" />
+    <Folder Include="Views\Subviews\Entries\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -191,27 +191,25 @@
     <Compile Include="Colors.cs" />
     <Compile Include="Utils\Camera.cs" />
     <Compile Include="Views\MainView.cs" />
-    <Compile Include="Views\Components\Button.cs" />
+    <Compile Include="Views\Subviews\Button.cs" />
     <Compile Include="Utils\Device.cs" />
-    <Compile Include="Views\Components\Banner.cs" />
-    <Compile Include="Views\Components\TextEntry.cs" />
-    <Compile Include="Views\Components\BaseEntry.cs" />
-    <Compile Include="Views\Components\ImageEntry.cs" />
+    <Compile Include="Views\Subviews\Banner.cs" />
     <Compile Include="Utils\LocationManager.cs" />
-    <Compile Include="Views\Components\SubmitButton.cs" />
     <Compile Include="LocationChoiceController.cs" />
     <Compile Include="Views\Extensions\ViewExtensions.cs" />
     <Compile Include="Views\LocationChoiceView.cs" />
     <Compile Include="Views\BaseView.cs" />
-    <Compile Include="Views\Components\ActionButton.cs" />
+    <Compile Include="Views\Subviews\ActionButton.cs" />
     <Compile Include="Utils\UIExtensions.cs" />
-    <Compile Include="Views\Components\Legend.cs" />
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="SQLite\SQLite.cs" />
     <Compile Include="SQLite\SQLiteAsync.cs" />
-    <Compile Include="Views\Subviews\Popup\PopupHeader.cs" />
-    <Compile Include="Views\Subviews\Popup\PopupView.cs" />
-    <Compile Include="Views\Subviews\Popup\SlideInPopup.cs" />
+    <Compile Include="Views\Popup\PopupHeader.cs" />
+    <Compile Include="Views\Popup\PopupView.cs" />
+    <Compile Include="Views\Popup\SlideInPopup.cs" />
+    <Compile Include="Views\Subviews\Entries\BaseEntry.cs" />
+    <Compile Include="Views\Subviews\Entries\ImageEntry.cs" />
+    <Compile Include="Views\Subviews\Entries\TextEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_camera.png" />

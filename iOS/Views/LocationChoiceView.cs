@@ -12,8 +12,6 @@ namespace data.collection.iOS
 
         public ActionButton Done { get; private set; }
 
-        public Legend Legend { get; private set; }
-
 		public LocationChoiceView()
         {
 			MapView = new MapView();
@@ -22,9 +20,6 @@ namespace data.collection.iOS
             Done = new ActionButton("icon_done.png");
             Done.BackgroundColor = Colors.DarkTransparentAppleBlue;
             AddSubview(Done);
-
-            Legend = new Legend();
-            AddSubview(Legend);
 
             var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
 			MapView.Layers.Add(layer);
@@ -48,13 +43,6 @@ namespace data.collection.iOS
             Done.Frame = new CGRect(x, y, w, h);
 
             nfloat legendPadding = 5;
-
-            w = 220;
-            h = 100;
-            x = legendPadding;
-            y = Frame.Height - (h + legendPadding);
-
-            Legend.Frame = new CGRect(x, y, w, h);
         }
 
     }
