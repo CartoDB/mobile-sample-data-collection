@@ -11,7 +11,8 @@ namespace data.collection.iOS
         PopupView popup;
         UIView content;
 
-        nfloat hiddenY, visibleY;
+        public nfloat HiddenY { get; private set; } 
+        public nfloat VisibleY { get; private set; }
 
         public PopupHeader Header { get { return popup.Header; } }
 
@@ -57,8 +58,8 @@ namespace data.collection.iOS
 			
             transparentArea.Frame = new CGRect(x, y, w, h);
 
-			hiddenY = h;
-            visibleY = h - (h / 5 * 3);
+			HiddenY = h;
+            VisibleY = h - (h / 5 * 3);
 
             if (Device.IsLandscape || Device.IsTablet)
             {
@@ -67,16 +68,16 @@ namespace data.collection.iOS
                 w = 375;
                 if (Device.IsTablet)
                 {
-                    visibleY = Frame.Height / 3 * 2;
+                    VisibleY = Frame.Height / 3 * 2;
                 }
                 else
                 {
-                    visibleY = Device.NavigationBarHeight + Device.StatusBarHeight;
+                    VisibleY = Device.NavigationBarHeight + Device.StatusBarHeight;
                 }
 			}
 
             y += h;
-            h = h - visibleY;
+            h = h - VisibleY;
 
             popup.Frame = new CGRect(x, y, w, h);
 
@@ -112,12 +113,12 @@ namespace data.collection.iOS
         public void Show()
         {
             Superview.BringSubviewToFront(this);
-            SlidePopupTo(visibleY);
+            SlidePopupTo(VisibleY);
         }
 
         public void Hide()
         {
-            SlidePopupTo(hiddenY);
+            SlidePopupTo(HiddenY);
         }
 
         const double Duration = 0.3;
@@ -128,7 +129,7 @@ namespace data.collection.iOS
             {
                 popup.UpdateY(y);
 
-                if (y.Equals(hiddenY))
+                if (y.Equals(HiddenY))
                 {
                     transparentArea.Alpha = 0;
                 }
@@ -139,7 +140,7 @@ namespace data.collection.iOS
 
             }, delegate
             {
-                if (y.Equals(hiddenY))
+                if (y.Equals(HiddenY))
                 {
                     Superview.SendSubviewToBack(this);
                 }

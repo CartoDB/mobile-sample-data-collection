@@ -220,6 +220,11 @@
     <BundleResource Include="Resources\icon_done.png" />
     <BundleResource Include="Resources\icon_add_location.png" />
     <BundleResource Include="Resources\icon_pin_red.png" />
+    <BundleResource Include="Resources\icon_add.png" />
+    <BundleResource Include="Resources\icon_close_white.png" />
+    <BundleResource Include="Resources\icon_close.png" />
+    <BundleResource Include="Resources\icon_crosshair.png" />
+    <BundleResource Include="Resources\icon_remove.png" />
   </ItemGroup>
   <Import Project="..\data.collection\data.collection.projitems" Label="Shared" Condition="Exists('..\data.collection\data.collection.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

@@ -23,6 +23,9 @@ namespace data.collection.iOS
 
             image = UIImage.FromFile(imageUrl);
             imageView.Image = image;
+
+            imageView.UserInteractionEnabled = false;
+            UserInteractionEnabled = true;
         }
 
         public override void LayoutSubviews()

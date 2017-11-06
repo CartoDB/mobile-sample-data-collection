@@ -13,6 +13,8 @@ namespace data.collection.iOS
 
 		public static UIColor CartoRed = UIColor.FromRGB(215, 82, 75);
 
+        public static UIColor CartoGreen = UIColor.FromRGB(115, 200, 107);
+
 		public static UIColor CartoNavy = UIColor.FromRGB(22, 41, 69);
 
         public static UIColor DarkTransparentGray = UIColor.FromRGBA(50, 50, 50, 200);

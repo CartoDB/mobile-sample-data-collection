@@ -22,6 +22,8 @@ namespace data.collection.iOS
         {
             base.ViewDidLoad();
 
+            Title = "Data Collection";
+
             ContentView = new MainView();
             View = ContentView;
 
@@ -61,7 +63,9 @@ namespace data.collection.iOS
 			PointClient.QueryFailed += OnQueryFailed;
 			PointClient.PointsAdded += OnPointsAdded;
 
-			ContentView.Done.Click += OnDoneClick;
+            ContentView.AddLocation.Click += OnAddLocationClick;
+            ContentView.Done.Click += OnLocationChosen;
+            ContentView.Cancel.Click += OnLocationChoiceCancelled;
 		}
 
         public override void ViewWillDisappear(bool animated)
@@ -78,7 +82,51 @@ namespace data.collection.iOS
             PointClient.QueryFailed -= OnQueryFailed;
             PointClient.PointsAdded -= OnPointsAdded;
 
-            ContentView.Done.Click -= OnDoneClick;
+            ContentView.AddLocation.Click -= OnAddLocationClick;
+            ContentView.Done.Click -= OnLocationChosen;
+            ContentView.Cancel.Click -= OnLocationChoiceCancelled;
+        }
+
+        void OnAddLocationClick(object sender, EventArgs e)
+        {
+            ContentView.SetCrosshairMode();
+        }
+
+        void OnLocationChosen(object sender, EventArgs e)
+        {
+            // Crosshair is a regular ImageView centered on the MapView,
+            // Translate crosshair's coordinates to a position on the map
+            var parameters = ContentView.Crosshair.Frame;
+            var x = parameters.X + parameters.Width / 2;
+            var y = parameters.Y + parameters.Height / 2;
+            var screen = new ScreenPos((float)x, (float)y);
+            ContentView.MapView.ScreenToMap(screen);
+
+            MapPos position = ContentView.MapView.ScreenToMap(screen);
+            PointClient.AddUserMarker(position);
+
+            // Center marker on currently visible area (partically hidden by popup)
+            var mapBounds = new MapBounds(position, position);
+            y = ContentView.Popup.VisibleY / 2;
+            screen = new ScreenPos((float)x, (float)y);
+            var screenBounds = new ScreenBounds(screen, screen);
+            ContentView.MapView.MoveToFitBounds(mapBounds, screenBounds, false, 0.2f);
+
+            // Translate internal units to lat/lon
+            position = PointClient.Projection.ToLatLong(position.X, position.Y);
+
+            LocationClient.MarkerLatitude = position.X;
+            LocationClient.MarkerLongitude = position.Y;
+
+            InvokeOnMainThread(delegate
+            {
+                ContentView.Popup.Show();
+            });
+        }
+
+        void OnLocationChoiceCancelled(object sender, EventArgs e)
+        {
+            ContentView.CancelCrosshairMode();
         }
 
         void OnPinAdded(object sender, EventArgs e)
