@@ -50,7 +50,7 @@ namespace data.collection.Droid
             Parameters.Height = startH + (int)((NewHeight - startH) * interpolatedTime);
 
             View.RequestLayout();
-            (View as BaseView).LayoutSubviews();
+            (View as BaseView).UpdateFrameFromParams();
         }
 
         public override bool WillChangeBounds()

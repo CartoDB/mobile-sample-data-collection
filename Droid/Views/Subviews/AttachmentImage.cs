@@ -22,8 +22,15 @@ namespace data.collection.Droid
 
             imageView.Click += delegate
             {
-                int width = (Parent as BaseView).Frame.W - 2 * Padding;
-                AnimateFrame(Padding, Padding, width, (int)(Frame.H * 2));
+                if (Frame.IsEqual(original) || original == null)
+                {
+                    Expand();    
+                }
+                else
+                {
+                    Collapse();
+                }
+
             };
         }
 
@@ -50,6 +57,21 @@ namespace data.collection.Droid
         {
             imageView.SetImageBitmap(bitmap);
             spinner.Visibility = Android.Views.ViewStates.Gone;
+        }
+
+        CGRect original;
+
+        void Expand()
+        {
+            original = Frame;
+
+            int width = (Parent as BaseView).Frame.W - 2 * Padding;
+            AnimateFrame(Padding, Padding, width, Frame.H * 2);
+        }
+
+        void Collapse()
+        {
+            AnimateFrame(original.X, original.Y, original.W, original.H);
         }
 
         public void Show()

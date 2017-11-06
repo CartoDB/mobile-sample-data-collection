@@ -25,6 +25,16 @@ namespace data.collection.Droid
             H = h;
         }
 
+        public bool IsEqual(CGRect frame)
+        {
+            if (frame == null)
+            {
+                return false;
+            }
+
+            return frame.X == X && frame.Y == Y && frame.W == W && frame.H == H;
+        }
+
         public static CGRect Empty { get { return new CGRect(0, 0, 0, 0); } }
 
 

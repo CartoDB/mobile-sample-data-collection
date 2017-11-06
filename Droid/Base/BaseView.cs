@@ -189,8 +189,6 @@ namespace data.collection.Droid
 
         public void AnimateFrame(int x, int y, int w, int h)
         {
-            SetInternalFrame(x, y, w, h);
-
             var animation = new ResizeAnimation(this);
 
             animation.NewX = x;
@@ -201,6 +199,13 @@ namespace data.collection.Droid
             animation.Duration = 300;
 
             StartAnimation(animation);
+        }
+
+        public void UpdateFrameFromParams()
+        {
+            var parameters = (RelativeLayout.LayoutParams)LayoutParameters;
+            Frame = new CGRect(parameters.LeftMargin, parameters.TopMargin,
+                               parameters.Width, parameters.Height);
         }
 
 	}
