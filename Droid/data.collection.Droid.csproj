@@ -60,9 +60,6 @@
     <Reference Include="AWSSDK.S3">
       <HintPath>..\packages\AWSSDK.S3.3.3.10.2\lib\MonoAndroid10\AWSSDK.S3.dll</HintPath>
     </Reference>
-    <Reference Include="CartoMobileSDK.Android">
-      <HintPath>..\packages\CartoMobileSDK.Android.4.1.0-pre2\lib\MonoAndroid230\CartoMobileSDK.Android.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http.Extensions">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\monoandroid\System.Net.Http.Extensions.dll</HintPath>
     </Reference>
@@ -93,6 +90,9 @@
     </Reference>
     <Reference Include="SQLite-net">
       <HintPath>..\packages\sqlite-net-pcl.1.4.118\lib\netstandard1.1\SQLite-net.dll</HintPath>
+    </Reference>
+    <Reference Include="CartoMobileSDK.Android">
+      <HintPath>..\packages\CartoMobileSDK.Android.4.1.0\lib\MonoAndroid230\CartoMobileSDK.Android.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

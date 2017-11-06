@@ -28,7 +28,7 @@ namespace data.collection.Droid
 
             photoView.Click += delegate
             {
-                if (Frame.IsEqual(original) || original.IsEqual(CGRect.Empty))
+                if (Frame.IsEqual(original) || original.IsEmpty)
                 {
                     Expand();    
                 }
@@ -88,11 +88,14 @@ namespace data.collection.Droid
         {
             if (animated)
             {
-                AnimateFrame(original.X, original.Y, original.W, original.H);    
+                AnimateFrame(original.X, original.Y, original.W, original.H);        
             }
             else 
             {
-                Frame = original;
+                if (!original.IsEmpty)
+                {
+                    Frame = original;
+                }
             }
 
             closeButton.Visibility = Android.Views.ViewStates.Gone;

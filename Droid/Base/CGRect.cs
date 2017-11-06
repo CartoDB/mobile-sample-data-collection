@@ -17,6 +17,11 @@ namespace data.collection.Droid
 
         public int Right { get { return W + X; } }
 
+        public bool IsEmpty
+        {
+            get { return IsEqual(CGRect.Empty); }
+        }
+
         public CGRect(int x, int y, int w, int h)
         {
             X = x;

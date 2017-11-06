@@ -82,9 +82,6 @@ namespace data.collection.Droid
             {
                 ShowSyncAlert(items.Count);
             }
-
-            //var url = "https://s3.amazonaws.com/com.carto.mobile.images/dde1cfd1-1538-499c-b9ed-6a52ff0e9b9d.png";
-            //Networking.GetImage(url);
         }
 
         protected override void OnResume()
