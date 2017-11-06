@@ -31,7 +31,6 @@ namespace data.collection.Droid
 
         public override void LayoutSubviews()
         {
-            
             int x = Padding;
             int y = Padding;
             int w = Frame.W - 2 * Padding;

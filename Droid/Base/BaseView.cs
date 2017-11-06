@@ -191,13 +191,12 @@ namespace data.collection.Droid
         {
             SetInternalFrame(x, y, w, h);
 
-            var animation = new ResizeAnimation();
-            animation.View = this;
+            var animation = new ResizeAnimation(this);
 
-            animation.X = x;
-            animation.Y = y;
-            animation.Width = w;
-            animation.Height = h;
+            animation.NewX = x;
+            animation.NewY = y;
+            animation.NewWidth = w;
+            animation.NewHeight = h;
 
             animation.Duration = 300;
 
@@ -207,13 +206,10 @@ namespace data.collection.Droid
 
     public class ResizeAnimation : Animation
     {
-        public int X { get; set; }
-
-        public int Y { get; set; }
-
-        public int Width { get; set; }
-
-        public int Height { get; set; }
+        public int NewX { get; set; }
+        public int NewY { get; set; }
+        public int NewWidth { get; set; }
+        public int NewHeight { get; set; }
 
         public View View { get; set; }
 
@@ -224,26 +220,36 @@ namespace data.collection.Droid
 
         public override long Duration
         {
-            get
-            {
-                return base.Duration;
-            }
-            set
-            {
-                base.Duration = value;
-            }
+            get { return base.Duration; }
+            set { base.Duration = value; }
         }
-    
+
+        int startX, startY, startW, startH;
+
+        public ResizeAnimation(View view)
+        {
+            View = view;
+            Interpolator = new LinearInterpolator();
+            startX = Parameters.LeftMargin;
+            startY = Parameters.TopMargin;
+            startW = Parameters.Width;
+            startH = Parameters.Height;
+        }
+
+        public override void Initialize(int width, int height, int parentWidth, int parentHeight)
+        {
+            base.Initialize(width, height, parentWidth, parentHeight);
+        }
+
         protected override void ApplyTransformation(float interpolatedTime, Transformation t)
         {
-            // TODO multiply by interpolatedTime and delta:
-            // https://stackoverflow.com/questions/18742274/how-to-animate-the-width-and-height-of-a-layout
-            Parameters.LeftMargin = X;
-            Parameters.TopMargin = Y;
-            Parameters.Width = Width;
-            Parameters.Height = Height;
+            Parameters.LeftMargin = startX + (int)((NewX - startX) * interpolatedTime);
+            Parameters.TopMargin = startY + (int)((NewY - startY) * interpolatedTime);
+            Parameters.Width = startW + (int)((NewWidth - startW) * interpolatedTime);
+            Parameters.Height = startH + (int)((NewHeight - startH) * interpolatedTime);
 
             View.RequestLayout();
+            (View as BaseView).LayoutSubviews();
         }
 
         public override bool WillChangeBounds()
