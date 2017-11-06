@@ -51,6 +51,8 @@
 	<string>New Entry</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string></string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need location for geolocator plugin.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UIBackgroundModes</key>
