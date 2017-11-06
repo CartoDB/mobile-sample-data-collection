@@ -14,7 +14,9 @@ namespace data.collection.iOS
 
 		LocationClient LocationClient { get; set; }
 
-        PointClient Listener { get; set; }
+        PointClient PointClient { get; set; }
+
+        MapClickListener MapListener { get; set; }
 
 		public override void ViewDidLoad()
         {
@@ -27,10 +29,13 @@ namespace data.collection.iOS
 
 			LocationClient = new LocationClient(ContentView.MapView);
 
-            Listener = new PointClient(ContentView.MapView);
-            Listener.Bitmap = BitmapUtils.CreateBitmapFromUIImage(UIImage.FromFile("icon_pin_red.png"));
+            PointClient = new PointClient(ContentView.MapView);
+            PointClient.Bitmap = BitmapUtils.CreateBitmapFromUIImage(UIImage.FromFile("icon_pin_red.png"));
 
-            Listener.QueryPoints(Device.Id);
+            MapListener = new MapClickListener();
+
+            PointClient.QueryPoints(delegate { });
+
             string text = "QUERYING POINTS...";
             ContentView.Banner.SetLoadingText(text, false);
 		}
@@ -44,11 +49,10 @@ namespace data.collection.iOS
 			LocationManager.Start();
 			LocationManager.LocationUpdated += OnLocationUpdate;
 
-            ContentView.MapView.MapEventListener = Listener;
+            ContentView.MapView.MapEventListener = MapListener;
 
-            Listener.PinAdded += OnPinAdded;
-			Listener.QueryFailed += OnQueryFailed;
-			Listener.PointsAdded += OnPointsAdded;
+			PointClient.QueryFailed += OnQueryFailed;
+			PointClient.PointsAdded += OnPointsAdded;
 
 			ContentView.Done.Click += OnDoneClick;
 		}
@@ -64,17 +68,16 @@ namespace data.collection.iOS
 
             ContentView.MapView.MapEventListener = null;
 
-            Listener.PinAdded -= OnPinAdded;
-            Listener.QueryFailed -= OnQueryFailed;
-            Listener.PointsAdded -= OnPointsAdded;
+            PointClient.QueryFailed -= OnQueryFailed;
+            PointClient.PointsAdded -= OnPointsAdded;
 
             ContentView.Done.Click -= OnDoneClick;
         }
 
         void OnPinAdded(object sender, EventArgs e)
         {
-            MapPos position = Listener.MarkerPosition;
-            position = Listener.Projection.ToLatLong(position.X, position.Y);
+            MapPos position = PointClient.MarkerPosition;
+            position = PointClient.Projection.ToLatLong(position.X, position.Y);
 
             LocationClient.MarkerLatitude = position.X;
             LocationClient.MarkerLongitude = position.Y;
