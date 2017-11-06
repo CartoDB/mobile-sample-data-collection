@@ -50,6 +50,8 @@ namespace data.collection.iOS
             BringSubviewToFront(Done);
             BringSubviewToFront(Cancel);
             BringSubviewToFront(AddLocation);
+
+            SendSubviewToBack(Popup);
         }
 
         nfloat doneVisiblePosition, doneHiddenPosition = -1;
