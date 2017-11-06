@@ -196,7 +196,7 @@ namespace data.collection.Droid
             animation.NewWidth = w;
             animation.NewHeight = h;
 
-            animation.Duration = 300;
+            animation.Duration = 200;
 
             StartAnimation(animation);
         }
