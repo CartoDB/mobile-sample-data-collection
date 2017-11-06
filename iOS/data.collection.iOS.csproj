@@ -187,17 +187,16 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainController.cs" />
+    <Compile Include="_deprecatedController.cs" />
     <Compile Include="Colors.cs" />
     <Compile Include="Utils\Camera.cs" />
-    <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\Subviews\Button.cs" />
     <Compile Include="Utils\Device.cs" />
     <Compile Include="Views\Subviews\Banner.cs" />
     <Compile Include="Utils\LocationManager.cs" />
-    <Compile Include="LocationChoiceController.cs" />
+    <Compile Include="MainController.cs" />
     <Compile Include="Views\Extensions\ViewExtensions.cs" />
-    <Compile Include="Views\LocationChoiceView.cs" />
+    <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\BaseView.cs" />
     <Compile Include="Views\Subviews\ActionButton.cs" />
     <Compile Include="Utils\UIExtensions.cs" />
@@ -210,6 +209,7 @@
     <Compile Include="Views\Subviews\Entries\BaseEntry.cs" />
     <Compile Include="Views\Subviews\Entries\ImageEntry.cs" />
     <Compile Include="Views\Subviews\Entries\TextEntry.cs" />
+    <Compile Include="_deprecatedView.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_camera.png" />

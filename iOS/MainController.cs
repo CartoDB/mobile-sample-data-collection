@@ -1,208 +1,136 @@
 ﻿
 using System;
-using System.IO;
-using System.Collections.Generic;
+using Carto.Core;
+using Carto.Utils;
 using UIKit;
 
 namespace data.collection.iOS
 {
     public class MainController : UIViewController
     {
-        MainView ContentView { get; set; }
+        public MainView ContentView { get; set; }
 
-		public override void ViewDidLoad()
+		LocationManager LocationManager { get; set; }
+
+		LocationClient LocationClient { get; set; }
+
+        PointClient PointClient { get; set; }
+
+        MapClickListener MapListener { get; set; }
+
+        public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
             ContentView = new MainView();
             View = ContentView;
 
-            Title = "DATA COLLECTION";
+            LocationManager = new LocationManager();
 
-            NavigationItem.RightBarButtonItem = ContentView.GetSubmitButton();
+            LocationClient = new LocationClient(ContentView.MapView);
 
-            List<Data> items = SQLClient.Instance.GetAll();
-            if (items.Count > 0)
+            PointClient = new PointClient(ContentView.MapView);
+            PointClient.Bitmap = BitmapUtils.CreateBitmapFromUIImage(UIImage.FromFile("icon_pin_red.png"));
+
+            MapListener = new MapClickListener();
+
+            string text = "QUERYING POINTS...";
+            ContentView.Banner.SetLoadingText(text, false);
+
+            PointClient.QueryPoints(delegate
             {
-                ShowSyncAlert(items.Count);
-            }
+                InvokeOnMainThread(delegate
+                {
+                    ContentView.Banner.Hide();
+                });
+
+            });
         }
 
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
 
-            Camera.Instance.Delegate.Complete += OnCameraActionComplete;
+            LocationClient.AttachIgnoreListener();
 
-            ContentView.CameraField.AddGestureRecognizer(OnCameraButtonClick);
-            ContentView.LocationField.AddGestureRecognizer(OnLocationButtonClick);
+			LocationManager.Start();
+			LocationManager.LocationUpdated += OnLocationUpdate;
 
-            (NavigationItem.RightBarButtonItem.CustomView as UIButton).TouchUpInside += OnSubmitClicked;
+            ContentView.MapView.MapEventListener = MapListener;
 
-            if (LocationClient.IsMarkerSet)
-            {
-                ContentView.AddMapOverlayTo(
-                    LocationClient.MarkerLongitude, LocationClient.MarkerLatitude
-                );
-            }
-        }
+			PointClient.QueryFailed += OnQueryFailed;
+			PointClient.PointsAdded += OnPointsAdded;
+
+			ContentView.Done.Click += OnDoneClick;
+		}
 
         public override void ViewWillDisappear(bool animated)
         {
             base.ViewWillDisappear(animated);
 
-            Camera.Instance.Delegate.Complete -= OnCameraActionComplete;
+            LocationClient.DetachIgnoreListener();
 
-            ContentView.CameraField.RemoveGestureRecognizer();
-            ContentView.LocationField.RemoveGestureRecognizer();
+            LocationManager.Stop();
+            LocationManager.LocationUpdated -= OnLocationUpdate;
 
-            (NavigationItem.RightBarButtonItem.CustomView as UIButton).TouchUpInside -= OnSubmitClicked;
+            ContentView.MapView.MapEventListener = null;
+
+            PointClient.QueryFailed -= OnQueryFailed;
+            PointClient.PointsAdded -= OnPointsAdded;
+
+            ContentView.Done.Click -= OnDoneClick;
         }
 
-        public Data GetData(string url)
+        void OnPinAdded(object sender, EventArgs e)
         {
-            string id = Device.Id;
+            MapPos position = PointClient.MarkerPosition;
+            position = PointClient.Projection.ToLatLong(position.X, position.Y);
 
-            string title = ContentView.TitleField.Text;
-            string description = ContentView.DescriptionField.Text;
+            LocationClient.MarkerLatitude = position.X;
+            LocationClient.MarkerLongitude = position.Y;
 
-            return Data.Get(id, url, title, description);
+            InvokeOnMainThread(delegate
+            {
+                ContentView.Done.Hidden = false;
+            });
         }
 
-        string GenerateName()
+        void OnQueryFailed(object sender, EventArgs e)
         {
-            return Guid.NewGuid().ToString() + Camera.Extension;
+			string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+
+            InvokeOnMainThread(delegate
+            {
+                ContentView.Banner.SetInformationText(text, false);
+            });
         }
 
-        async void OnSubmitClicked(object sender, EventArgs e)
+        void OnPointsAdded(object sender, EventArgs e)
         {
-            if (ContentView.IsAnyFieldEmpty)
+            var syncedColor = PointClient.SyncedLocations.ToNativeColor();
+            var mySyncedColor = PointClient.MySyncedLocations.ToNativeColor();
+            var unsyncedColor = PointClient.UnsyncedLocations.ToNativeColor();
+			
+            string text = "CLICK ON THE MAP TO SPECIFY A LOCATION";
+
+            InvokeOnMainThread(delegate
             {
-                ContentView.Banner.SetInformationText("Please fill our all fields", true);
-                return;
-            }
-
-            UIImage image = ContentView.CameraField.Photo.Image;
-
-            if (image == null)
-            {
-                ContentView.Banner.SetInformationText("Please set an image before submitting", true);
-                return;
-            }
-
-            Stream stream = Camera.GetStreamFromImage(image);
-
-            ContentView.Banner.ShowUploadingImage();
-
-            string filename = ContentView.CameraField.ImageName;
-
-            BucketResponse response1 = await BucketClient.Upload(filename, stream);
-
-            if (response1.IsOk)
-            {
-                ContentView.Banner.ShowUploadingData();
-
-                Data item = GetData(response1.Path);
-                CartoResponse response2 = await Networking.Post(item);
-
-                if (response2.IsOk)
-                {
-                    ContentView.Banner.Complete();
-                }
-                else
-                {
-                    ContentView.Banner.ShowFailedCartoUpload();
-                    SQLClient.Instance.Insert(item);
-                }
-            }
-            else
-            {
-                ContentView.Banner.ShowFailedAmazonUpload();
-				Data item = GetData(Camera.LatestImageName);
-				SQLClient.Instance.Insert(item);
-            }
+                ContentView.Banner.SetInformationText(text, false);
+            });
         }
 
-        void OnCameraButtonClick()
-		{
-			Camera.Instance.TakePicture(this);
-		}
-
-        void OnLocationButtonClick()
+        void OnLocationUpdate(object sender, LocationUpdatedEventArgs e)
         {
-            var controller = new LocationChoiceController();
-            NavigationController.PushViewController(controller, true);
+            LocationClient.Latitude = e.Location.Coordinate.Latitude;
+            LocationClient.Longitude = e.Location.Coordinate.Longitude;
+            LocationClient.Accuracy = e.Location.HorizontalAccuracy;
+
+            LocationClient.Update();
         }
 
-		void OnCameraActionComplete(object sender, PhotoEventArgs e)
+        void OnDoneClick(object sender, EventArgs e)
         {
-            UIImage image = Camera.GetImageFromInfo(e.Info);
-
-            image = ImageUtils.Resize(image);
-
-            ContentView.CameraField.SetPhoto(image);
-
-            string filename = GenerateName();
-            ContentView.CameraField.ImageName = filename;
-
-			InvokeInBackground(delegate
-			{
-				Camera.SaveImage(image, filename);
-			});
+            NavigationController.PopViewController(true);
         }
-
-        public void ShowSyncAlert(int count)
-        {
-            string title = "Attention!";
-            string description = "You have " + count + " items stored locally. Would you like to upload now?";
-            var controller = UIAlertController.Create(title, description, UIAlertControllerStyle.Alert);
-
-			controller.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, OnUploadAlertOK));
-			controller.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, OnUploadAlertCancel));
-
-			PresentViewController(controller, true, null);
-        }
-
-        public async void OnUploadAlertOK(UIAlertAction action)
-        {
-            List<Data> items = SQLClient.Instance.GetAll();
-            int count = items.Count;
-
-            ContentView.Banner.ShowUploadingEverything(count);
-
-            foreach (Data item in items)
-            {
-                if (!item.IsUploadedToAmazon)
-                {
-                    byte[] bytes = File.ReadAllBytes(FileUtils.GetFolder(item.ImageUrl));
-                    Stream stream = new MemoryStream(bytes);
-                    BucketResponse response1 = await BucketClient.Upload(item.FileName, stream);
-					if (response1.IsOk)
-					{
-						item.ImageUrl = response1.Path;
-						Console.WriteLine("Uploaded offline image to: " + response1.Path);
-					}
-                }
-            }
-
-            CartoResponse response2 = await Networking.Post(items);
-
-            if (response2.IsOk)
-            {
-                ContentView.Banner.ShowUploadedEverything(count);
-                SQLClient.Instance.DeleteAll();
-            }
-            else
-            {
-                ContentView.Banner.ShowEverythingUploadFailed(count);
-                SQLClient.Instance.UpdateAll(items);
-            }
-        }
-
-		public void OnUploadAlertCancel(UIAlertAction action)
-		{
-            string text = "Fine. We'll just keep your stuff offline then";
-            ContentView.Banner.SetInformationText(text, true);
-		}
     }
 }
