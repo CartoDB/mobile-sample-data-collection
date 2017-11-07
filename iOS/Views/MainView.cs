@@ -20,6 +20,8 @@ namespace data.collection.iOS
 
         public AttachmentImage Attachment { get; private set; }
 
+        public PopupContent Content { get; private set; }
+
         public MainView()
         {
 			MapView = new MapView();
@@ -38,6 +40,7 @@ namespace data.collection.iOS
             AddSubview(AddLocation);
 
             Popup = new SlideInPopup();
+            Popup.Header.Text = "SUBMIT A NEW LOCATION";
             AddSubview(Popup);
 
             Crosshair = new UIImageView();
@@ -46,6 +49,9 @@ namespace data.collection.iOS
 
             Attachment = new AttachmentImage();
             AddSubview(Attachment);
+
+            Content = new PopupContent();
+            Popup.SetContent(Content);
 
             var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
 			MapView.Layers.Add(layer);

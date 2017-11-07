@@ -13,6 +13,17 @@ namespace data.collection.iOS
 
         public UILabel Label { get; private set; }
 
+        public string Text 
+        { 
+            get { return Label.Text; }
+            set 
+            { 
+                Label.Text = value;
+                Label.SizeToFit();
+                LayoutSubviews();
+            }
+        }
+
         PopupCloseButton closeButton;
 
         public PopupHeader()
@@ -60,13 +71,6 @@ namespace data.collection.iOS
             x = Frame.Width - w;
 
             closeButton.Frame = new CGRect(x, y, w, h);
-        }
-
-        public void SetText(string text)
-        {
-            Label.Text = text;
-            Label.SizeToFit();
-            LayoutSubviews();
         }
     }
 

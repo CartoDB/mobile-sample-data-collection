@@ -211,6 +211,7 @@
     <Compile Include="Views\Subviews\Entries\TextEntry.cs" />
     <Compile Include="_deprecatedView.cs" />
     <Compile Include="Views\Subviews\AttachmentImage.cs" />
+    <Compile Include="Views\Popup\PopupContent.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_camera.png" />
