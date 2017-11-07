@@ -59,8 +59,6 @@ namespace data.collection.iOS
 			LocationManager.Start();
 			LocationManager.LocationUpdated += OnLocationUpdate;
 
-            ContentView.MapView.MapEventListener = MapListener;
-
 			PointClient.QueryFailed += OnQueryFailed;
 			PointClient.PointsAdded += OnPointsAdded;
 
@@ -69,6 +67,11 @@ namespace data.collection.iOS
             ContentView.Cancel.Click += OnLocationChoiceCancelled;
 
             PointClient.PointListener.Click += OnPointClicked;
+
+            ContentView.MapView.MapEventListener = MapListener;
+            MapListener.MapClicked += OnMapClicked;
+
+            ContentView.Popup.Closed += OnPopupClosed;
 		}
 
         public override void ViewWillDisappear(bool animated)
@@ -80,8 +83,6 @@ namespace data.collection.iOS
             LocationManager.Stop();
             LocationManager.LocationUpdated -= OnLocationUpdate;
 
-            ContentView.MapView.MapEventListener = null;
-
             PointClient.QueryFailed -= OnQueryFailed;
             PointClient.PointsAdded -= OnPointsAdded;
 
@@ -90,6 +91,28 @@ namespace data.collection.iOS
             ContentView.Cancel.Click -= OnLocationChoiceCancelled;
 
             PointClient.PointListener.Click -= OnPointClicked;
+
+            ContentView.MapView.MapEventListener = null;
+            MapListener.MapClicked += OnMapClicked;
+
+            ContentView.Popup.Closed -= OnPopupClosed;
+        }
+
+        void OnPopupClosed(object sender, EventArgs e)
+        {
+            PointClient.MarkerSource.Clear();
+            ContentView.CancelCrosshairMode();
+        }
+
+        void OnMapClicked(object sender, EventArgs e)
+        {
+            PointClient.PopupSource.Clear();
+
+            InvokeOnMainThread(delegate
+            {
+                ContentView.Attachment.Hide();
+                ContentView.Attachment.Collapse(false);
+            });
         }
 
         async void OnPointClicked(object sender, EventArgs e)

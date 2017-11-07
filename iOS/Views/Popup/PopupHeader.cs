@@ -81,7 +81,7 @@ namespace data.collection.iOS
         public PopupCloseButton()
         {
             image = new UIImageView();
-            image.Image = UIImage.FromFile("icons/icon_close_dark.png");
+            image.Image = UIImage.FromFile("icon_close.png");
 
             AddSubview(image);
         }

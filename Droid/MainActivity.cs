@@ -128,7 +128,7 @@ namespace data.collection.Droid
             ContentView.Done.Clicked -= OnLocationChosen;
             ContentView.Cancel.Clicked -= OnLocationChoiceCancelled;
 
-            ContentView.Popup.Closed += OnPopupClosed;
+            ContentView.Popup.Closed -= OnPopupClosed;
 
             ContentView.MapView.MapEventListener = null;
             MapListener.MapClicked -= OnMapClicked;

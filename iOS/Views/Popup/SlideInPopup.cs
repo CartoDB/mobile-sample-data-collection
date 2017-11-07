@@ -7,6 +7,8 @@ namespace data.collection.iOS
 {
     public class SlideInPopup : UIView
     {
+        public EventHandler<EventArgs> Closed;
+
         UIView transparentArea;
         PopupView popup;
         UIView content;
@@ -119,6 +121,7 @@ namespace data.collection.iOS
         public void Hide()
         {
             SlidePopupTo(HiddenY);
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         const double Duration = 0.3;
