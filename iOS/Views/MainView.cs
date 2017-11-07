@@ -22,6 +22,24 @@ namespace data.collection.iOS
 
         public PopupContent Content { get; private set; }
 
+        public bool IsAnyRequiredFieldEmpty 
+        { 
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Content.TitleField.Text))
+                {
+                    return true;
+                }
+
+                if (string.IsNullOrWhiteSpace(Content.DescriptionField.Text))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
         public MainView()
         {
 			MapView = new MapView();

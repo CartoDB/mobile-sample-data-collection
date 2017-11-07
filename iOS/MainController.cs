@@ -79,6 +79,8 @@ namespace data.collection.iOS
             MapListener.MapClicked += OnMapClicked;
 
             ContentView.Popup.Closed += OnPopupClosed;
+
+            ContentView.Content.Done.Click += OnDoneClick;
 		}
 
         public override void ViewWillDisappear(bool animated)
@@ -103,6 +105,8 @@ namespace data.collection.iOS
             MapListener.MapClicked -= OnMapClicked;
 
             ContentView.Popup.Closed -= OnPopupClosed;
+
+            ContentView.Content.Done.Click -= OnDoneClick;
         }
 
         void OnPopupClosed(object sender, EventArgs e)
@@ -245,11 +249,64 @@ namespace data.collection.iOS
             LocationClient.Update();
         }
 
-        void OnDoneClick(object sender, EventArgs e)
+        async void OnDoneClick(object sender, EventArgs e)
         {
-            NavigationController.PopViewController(true);
+            if (ContentView.IsAnyRequiredFieldEmpty)
+            {
+                ContentView.Banner.SetInformationText("Please fill our all fields", true);
+                return;
+            }
+
+            UIImage image = ContentView.Content.CameraField.Photo.Image;
+
+            if (image == null)
+            {
+                ContentView.Banner.SetInformationText("Please set an image before submitting", true);
+                return;
+            }
+
+            Stream stream = Camera.GetStreamFromImage(image);
+
+            ContentView.Banner.ShowUploadingImage();
+
+            string filename = ContentView.Content.CameraField.ImageName;
+
+            BucketResponse response1 = await BucketClient.Upload(filename, stream);
+
+            if (response1.IsOk)
+            {
+                ContentView.Banner.ShowUploadingData();
+
+                Data item = GetData(response1.Path);
+                CartoResponse response2 = await Networking.Post(item);
+
+                if (response2.IsOk)
+                {
+                    ContentView.Banner.Complete();
+                }
+                else
+                {
+                    ContentView.Banner.ShowFailedCartoUpload();
+                    SQLClient.Instance.Insert(item);
+                }
+            }
+            else
+            {
+                ContentView.Banner.ShowFailedAmazonUpload();
+                Data item = GetData(Camera.LatestImageName);
+                SQLClient.Instance.Insert(item);
+            }
         }
 
+        public Data GetData(string url)
+        {
+            string id = Device.Id;
+
+            string title = ContentView.Content.TitleField.Text;
+            string description = ContentView.Content.DescriptionField.Text;
+
+            return Data.Get(id, url, title, description);
+        }
 
         public void ShowSyncAlert(int count)
         {
