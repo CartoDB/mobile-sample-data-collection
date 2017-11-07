@@ -20,6 +20,9 @@ namespace data.collection.iOS
             Field = new UITextView();
             Field.TextColor = UIColor.DarkGray;
             Field.Font = UIFont.FromName("HelveticaNeue", 14);
+            Field.Layer.BorderWidth = 1.0f;
+            Field.Layer.BorderColor = UIColor.LightGray.CGColor;
+
             AddSubview(Field);
         }
 

@@ -17,6 +17,8 @@ namespace data.collection.iOS
 
         UIImageView image;
 
+        UIView imageBackground;
+
         public ImageEntry(string title, string resource, bool isRequired = false) : base(title, isRequired)
         {
             Photo = new UIImageView();
@@ -31,6 +33,11 @@ namespace data.collection.iOS
             AddSubview(image);
 
             BringSubviewToFront(label);
+
+            Layer.CornerRadius = 5;
+            Layer.BorderWidth = 1;
+            Layer.BorderColor = UIColor.LightGray.CGColor;
+            ClipsToBounds = true;
         }
 
         public override void LayoutSubviews()
@@ -42,12 +49,12 @@ namespace data.collection.iOS
             nfloat w = Frame.Height / 3.5f;
             nfloat h = w;
             nfloat x = Frame.Width / 2 - w / 2;
-            nfloat y = Frame.Height / 2 - h / 2;
+            nfloat y = Frame.Height / 2 - h / 2 + padding;
 
 			image.Frame = new CGRect(x, y, w, h);
-        }
 
-        UIView imageBackground;
+            SetIconRoundWithBackground();
+        }
 
         void SetIconRoundWithBackground()
         {
