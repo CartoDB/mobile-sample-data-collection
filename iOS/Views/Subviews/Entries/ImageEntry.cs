@@ -17,7 +17,7 @@ namespace data.collection.iOS
 
         UIImageView image;
 
-        public ImageEntry(string title, string resource) : base(title)
+        public ImageEntry(string title, string resource, bool isRequired = false) : base(title, isRequired)
         {
             Photo = new UIImageView();
 			Photo.ClipsToBounds = true;

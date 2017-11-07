@@ -17,10 +17,10 @@ namespace data.collection.iOS
 
         public PopupContent()
         {
-            TitleField = new TextEntry("TITLE");
+            TitleField = new TextEntry("TITLE", true);
             AddSubview(TitleField);
 
-            DescriptionField = new TextEntry("DESCRIPTION");
+            DescriptionField = new TextEntry("DESCRIPTION", true);
             AddSubview(DescriptionField);
 
             CameraField = new ImageEntry("TAKE PHOTO", "icon_camera.png");

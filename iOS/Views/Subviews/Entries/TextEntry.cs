@@ -15,7 +15,7 @@ namespace data.collection.iOS
             set { Field.Text = value; }
         }
 
-        public TextEntry(string title) : base(title)
+        public TextEntry(string title, bool isRequired = false) : base(title, isRequired)
         {
             Field = new UITextView();
             Field.TextColor = UIColor.DarkGray;

@@ -1,6 +1,7 @@
 ﻿
 using System;
 using CoreGraphics;
+using Foundation;
 using UIKit;
 
 namespace data.collection.iOS
@@ -9,20 +10,42 @@ namespace data.collection.iOS
     {
 		protected UILabel label;
 
-        public BaseEntry(string title)
+        public BaseEntry(string title, bool isRequired)
         {
-			BackgroundColor = Colors.DarkTransparentGray;
-
-			Layer.BorderWidth = 1;
-			Layer.BorderColor = UIColor.LightGray.CGColor;
-
 			label = new UILabel();
-            label.TextColor = UIColor.White;
-			label.Text = title;
-			label.Font = UIFont.FromName("HelveticaNeue", 10);
+            label.TextColor = Colors.CartoNavy;
+			
+			label.Font = UIFont.FromName("HelveticaNeue", 11);
 			AddSubview(label);
+
+            if (isRequired)
+            {
+                var attributed = new NSMutableAttributedString(title + " *");
+
+                var attribute = GetColorAttribute(Colors.CartoNavy);
+                var range = new NSRange(0, title.Length);                         
+                attributed.SetAttributes(attribute, range);
+
+                attribute = GetColorAttribute(Colors.CartoRed);
+                range = new NSRange(title.Length, 2);
+                attributed.SetAttributes(attribute, range);
+
+                attribute.Font = UIFont.FromName("HelveticaNeue-Bold", 13);
+                attributed.SetAttributes(attribute, range);
+
+                label.AttributedText = attributed;
+            }
+            else 
+            {
+                label.Text = title;        
+            }
 		}
 		
+        UIStringAttributes GetColorAttribute(UIColor color)
+        {
+            return new UIStringAttributes { ForegroundColor = color };
+        }
+
         protected nfloat padding = 5;
 
 		public override void LayoutSubviews()
