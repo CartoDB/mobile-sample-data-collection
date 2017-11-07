@@ -18,6 +18,8 @@ namespace data.collection.iOS
 
         public UIImageView Crosshair { get; private set; }
 
+        public AttachmentImage Attachment { get; private set; }
+
         public MainView()
         {
 			MapView = new MapView();
@@ -41,6 +43,9 @@ namespace data.collection.iOS
             Crosshair = new UIImageView();
             Crosshair.Image = UIImage.FromFile("icon_crosshair.png");
             AddSubview(Crosshair);
+
+            Attachment = new AttachmentImage();
+            AddSubview(Attachment);
 
             var layer = new CartoOnlineVectorTileLayer(CartoBaseMapStyle.CartoBasemapStyleVoyager);
 			MapView.Layers.Add(layer);
@@ -82,6 +87,20 @@ namespace data.collection.iOS
             y = MapView.Frame.Height / 2 - h / 2;
 
             Crosshair.Frame = new CGRect(x, y, w, h);
+
+            nfloat smallPad = padding / 2;
+
+            if (Attachment.IsAnimating)
+            {
+                return;
+            }
+
+            w = (nfloat)(Frame.Width / 2.5);
+            h = (nfloat)(w * 1.3);
+            x = Frame.Width - (w + smallPad);
+            y = Device.TrueY0 + smallPad;
+
+            Attachment.Frame = new CGRect(x, y, w, h);
         }
 
         public void SetCrosshairMode()

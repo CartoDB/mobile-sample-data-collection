@@ -2,6 +2,7 @@
 using System;
 using Carto.Core;
 using Carto.Utils;
+using Foundation;
 using UIKit;
 
 namespace data.collection.iOS
@@ -66,6 +67,8 @@ namespace data.collection.iOS
             ContentView.AddLocation.Click += OnAddLocationClick;
             ContentView.Done.Click += OnLocationChosen;
             ContentView.Cancel.Click += OnLocationChoiceCancelled;
+
+            PointClient.PointListener.Click += OnPointClicked;
 		}
 
         public override void ViewWillDisappear(bool animated)
@@ -85,6 +88,38 @@ namespace data.collection.iOS
             ContentView.AddLocation.Click -= OnAddLocationClick;
             ContentView.Done.Click -= OnLocationChosen;
             ContentView.Cancel.Click -= OnLocationChoiceCancelled;
+
+            PointClient.PointListener.Click -= OnPointClicked;
+        }
+
+        async void OnPointClicked(object sender, EventArgs e)
+        {
+            InvokeOnMainThread(delegate
+            {
+                ContentView.Attachment.Show();
+            });
+
+            var url = (string)sender;
+            ImageResponse response = await Networking.GetImage(url);
+
+            if (response.IsOk)
+            {
+                UIImage bitmap = new UIImage(NSData.FromStream(response.Stream));
+
+                InvokeOnMainThread(delegate
+                {
+                    ContentView.Attachment.SetImage(bitmap);
+                });
+            }
+            else
+            {
+                var text = "Unable to load element image";
+                InvokeOnMainThread(delegate
+                {
+                    ContentView.Banner.SetInformationText(text, true);
+                    ContentView.Attachment.Hide();
+                });
+            }
         }
 
         void OnAddLocationClick(object sender, EventArgs e)
