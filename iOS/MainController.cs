@@ -1,5 +1,7 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Carto.Core;
 using Carto.Utils;
 using Foundation;
@@ -40,13 +42,18 @@ namespace data.collection.iOS
             string text = "QUERYING POINTS...";
             ContentView.Banner.SetLoadingText(text, false);
 
+            List<Data> items = SQLClient.Instance.GetAll();
+            if (items.Count > 0)
+            {
+                ShowSyncAlert(items.Count);
+            }
+
             PointClient.QueryPoints(delegate
             {
                 InvokeOnMainThread(delegate
                 {
                     ContentView.Banner.Hide();
                 });
-
             });
         }
 
@@ -93,7 +100,7 @@ namespace data.collection.iOS
             PointClient.PointListener.Click -= OnPointClicked;
 
             ContentView.MapView.MapEventListener = null;
-            MapListener.MapClicked += OnMapClicked;
+            MapListener.MapClicked -= OnMapClicked;
 
             ContentView.Popup.Closed -= OnPopupClosed;
         }
@@ -241,6 +248,61 @@ namespace data.collection.iOS
         void OnDoneClick(object sender, EventArgs e)
         {
             NavigationController.PopViewController(true);
+        }
+
+
+        public void ShowSyncAlert(int count)
+        {
+            string title = "Attention!";
+            string description = "You have " + count + " items stored locally. Would you like to upload now?";
+            var controller = UIAlertController.Create(title, description, UIAlertControllerStyle.Alert);
+
+            controller.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, OnUploadAlertOK));
+            controller.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, OnUploadAlertCancel));
+
+            PresentViewController(controller, true, null);
+        }
+
+        public async void OnUploadAlertOK(UIAlertAction action)
+        {
+            List<Data> items = SQLClient.Instance.GetAll();
+            int count = items.Count;
+
+            ContentView.Banner.ShowUploadingEverything(count);
+
+            foreach (Data item in items)
+            {
+                if (!item.IsUploadedToAmazon)
+                {
+                    byte[] bytes = File.ReadAllBytes(FileUtils.GetFolder(item.ImageUrl));
+                    Stream stream = new MemoryStream(bytes);
+                    BucketResponse response1 = await BucketClient.Upload(item.FileName, stream);
+                    if (response1.IsOk)
+                    {
+                        item.ImageUrl = response1.Path;
+                        Console.WriteLine("Uploaded offline image to: " + response1.Path);
+                    }
+                }
+            }
+
+            CartoResponse response2 = await Networking.Post(items);
+
+            if (response2.IsOk)
+            {
+                ContentView.Banner.ShowUploadedEverything(count);
+                SQLClient.Instance.DeleteAll();
+            }
+            else
+            {
+                ContentView.Banner.ShowEverythingUploadFailed(count);
+                SQLClient.Instance.UpdateAll(items);
+            }
+        }
+
+        public void OnUploadAlertCancel(UIAlertAction action)
+        {
+            string text = "Fine. We'll just keep your stuff offline then";
+            ContentView.Banner.SetInformationText(text, true);
         }
     }
 }
