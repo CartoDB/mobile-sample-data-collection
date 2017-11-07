@@ -94,11 +94,15 @@ namespace data.collection.iOS
 
         void OnLocationChosen(object sender, EventArgs e)
         {
+            // Scale needs to be accounted for separetly,
+            // multiply all iOS view coordinates by scale to get real values
+            nfloat scale = UIScreen.MainScreen.Scale;
+
             // Crosshair is a regular ImageView centered on the MapView,
             // Translate crosshair's coordinates to a position on the map
             var parameters = ContentView.Crosshair.Frame;
-            var x = parameters.X + parameters.Width / 2;
-            var y = parameters.Y + parameters.Height / 2;
+            var x = (parameters.X + parameters.Width / 2) * scale;
+            var y = (parameters.Y + parameters.Height / 2) * scale;
             var screen = new ScreenPos((float)x, (float)y);
             ContentView.MapView.ScreenToMap(screen);
 
@@ -107,7 +111,7 @@ namespace data.collection.iOS
 
             // Center marker on currently visible area (partically hidden by popup)
             var mapBounds = new MapBounds(position, position);
-            y = ContentView.Popup.VisibleY / 2;
+            y = (ContentView.Popup.VisibleY / 2) * scale;
             screen = new ScreenPos((float)x, (float)y);
             var screenBounds = new ScreenBounds(screen, screen);
             ContentView.MapView.MoveToFitBounds(mapBounds, screenBounds, false, 0.2f);
