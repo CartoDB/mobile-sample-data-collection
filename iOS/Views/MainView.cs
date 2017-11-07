@@ -60,8 +60,9 @@ namespace data.collection.iOS
         {
             base.LayoutSubviews();
 
-            MapView.Frame = Bounds;
-            Popup.Frame = Bounds;
+            var screen = new CGRect(0, Device.TrueY0, Frame.Width, Frame.Height - Device.TrueY0);
+            MapView.Frame = screen;
+            Popup.Frame = screen;
 
             nfloat padding = 15;
 
