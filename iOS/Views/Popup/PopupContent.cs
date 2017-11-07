@@ -1,11 +1,12 @@
 ﻿
 using System;
 using CoreGraphics;
+using Foundation;
 using UIKit;
 
 namespace data.collection.iOS
 {
-    public class PopupContent : UIView
+    public class PopupContent : UIView, IUITextViewDelegate
     {
         public TextEntry TitleField { get; private set; }
 
@@ -18,9 +19,13 @@ namespace data.collection.iOS
         public PopupContent()
         {
             TitleField = new TextEntry("TITLE", true);
+            TitleField.Field.ReturnKeyType = UIReturnKeyType.Next;
+            TitleField.Field.Delegate = this;
             AddSubview(TitleField);
 
             DescriptionField = new TextEntry("DESCRIPTION", true);
+            DescriptionField.Field.ReturnKeyType = UIReturnKeyType.Done;
+            DescriptionField.Field.Delegate = this;
             AddSubview(DescriptionField);
 
             CameraField = new ImageEntry("TAKE PHOTO", "icon_camera.png");
@@ -64,6 +69,25 @@ namespace data.collection.iOS
             h = w;
 
             Done.Frame = new CGRect(x, y, w, h);
+        }
+
+        [Export("textView:shouldChangeTextInRange:replacementText:")]
+        public bool ShouldChangeText(UITextView textView, NSRange range, string text)
+        {
+            if (text.Equals(Environment.NewLine))
+            {
+                if (textView == TitleField.Field)
+                {
+                    // TODO Move view up
+                    DescriptionField.Field.BecomeFirstResponder();
+                }
+                else
+                {
+                    this.EndEditing(true);
+                }
+            }
+
+            return true;
         }
     }
 }

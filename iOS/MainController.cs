@@ -113,6 +113,8 @@ namespace data.collection.iOS
         {
             PointClient.MarkerSource.Clear();
             ContentView.CancelCrosshairMode();
+
+            ContentView.Content.EndEditing(true);
         }
 
         void OnMapClicked(object sender, EventArgs e)
