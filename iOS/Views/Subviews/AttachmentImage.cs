@@ -15,7 +15,7 @@ namespace data.collection.iOS
         {
             BackgroundColor = Colors.DarkTransparentGray;
             ClipsToBounds = true;
-
+                
             photoView = new UIImageView();
             photoView.ClipsToBounds = true;
             AddSubview(photoView);
