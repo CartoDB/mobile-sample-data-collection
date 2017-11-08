@@ -1,15 +1,14 @@
 ## DATA COLLECTION
 
-Sample app demonstrating how **Carto Mobile SDK** and **CARTO SQL API** can be used to actively (and passively) collect data.
+Sample app demonstrating how **Carto Mobile SDK** and **CARTO Engine** can be used to actively (and passively) collect data. **CARTO MAPS API** is used to query an existing map built with **CARTO Builder**.
 
-The user takes a picture, adds a title, description and, if necessary, a custom identifier, the data is then stored locally (SQLite) until it can be uploaded to CARTO via an SQL function, so it could be realized without the use of your API KEY, which introduces a security risk, if stored on your application.
+##### IMPORTANT!
 
-* Images are stored in Amazon S3 Bucket, only the URL is uploaded to CARTO.
-* The function which receives your post request is available in the root folder of this project, **cdb_insert_collected_data**
+`Conf.cs` is missing from the source code, this application will not compile out-of-the-box. `Conf.cs` is there all our account-specific configuration is located, e.g. Amazon S3 authentication, CARTO username, table name, function name etc.
 
-This application will not run out-of-the-box. You need to provide your own aws access key and secret key via `s3_tokens.txt` file. Our token asset is not included in the repository.
+`Conf_Template.cs` serves as a template for your own `Conf.cs` file. 
 
-###### SETUP
+##### SETUP
 
 * Create an account at [carto.com](https://carto.com/)
 * Set up a new data set:
@@ -22,6 +21,12 @@ This application will not run out-of-the-box. You need to provide your own aws a
 To modify how your data is displayed, click on the layer: ![](images/image_click_layer.png)
 
 Here you can change the color of your entries, how they are aggregated etc.
+
+##### USAGE
+
+Open the application, press the **+** icon to open location choice mode (crosshair for maximum precision), and click done when complete. A popup will slide in.
+
+Now enter a **title**, **description** and, optionally, **take a photo** – now press the done button, your data will be uploaded to our CARTO table and, if taken, your photo will be uploaded to amazon S3 (the url is added to your CARTO table).
 
 ##### DISCLAIMER
 
