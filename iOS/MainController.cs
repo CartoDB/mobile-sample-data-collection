@@ -255,7 +255,8 @@ namespace data.collection.iOS
         {
             if (ContentView.IsAnyRequiredFieldEmpty)
             {
-                ContentView.Banner.SetInformationText("Please fill our all fields", true);
+                string text = "Please fill out all required fields";
+                ContentView.Banner.SetInformationText(text, true);
                 return;
             }
 
@@ -263,7 +264,8 @@ namespace data.collection.iOS
 
             if (image == null)
             {
-                ContentView.Banner.SetInformationText("Please set an image before submitting", true);
+                string text = "Please set an image before submitting";
+                ContentView.Banner.SetInformationText(text, true);
                 return;
             }
 
