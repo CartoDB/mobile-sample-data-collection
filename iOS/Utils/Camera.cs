@@ -15,7 +15,7 @@ namespace data.collection.iOS
 
         static UIImagePickerController picker;
 
-        public static string LatestImageName { get; private set; }
+        public static string LatestImageName { get; private set; } = "";
 
         public static string LatestImagePath
         {

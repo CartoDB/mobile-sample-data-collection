@@ -378,13 +378,16 @@ namespace data.collection.iOS
             {
                 if (!item.IsUploadedToAmazon)
                 {
-                    byte[] bytes = File.ReadAllBytes(FileUtils.GetFolder(item.ImageUrl));
-                    Stream stream = new MemoryStream(bytes);
-                    BucketResponse response1 = await BucketClient.Upload(item.FileName, stream);
-                    if (response1.IsOk)
+                    if (item.ImageUrl != "")
                     {
-                        item.ImageUrl = response1.Path;
-                        Console.WriteLine("Uploaded offline image to: " + response1.Path);
+                        byte[] bytes = File.ReadAllBytes(FileUtils.GetFolder(item.ImageUrl));
+                        Stream stream = new MemoryStream(bytes);
+                        BucketResponse response1 = await BucketClient.Upload(item.FileName, stream);
+                        if (response1.IsOk)
+                        {
+                            item.ImageUrl = response1.Path;
+                            Console.WriteLine("Uploaded offline image to: " + response1.Path);
+                        }
                     }
                 }
             }
