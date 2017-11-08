@@ -13,7 +13,7 @@ namespace data.collection.Conf
         public const string Username = "<your-username>";
 
         // Schema is the same as your CARTO user name,
-        // separating it into a separate variable from clarity.
+        // separating it into a separate variable for clarity.
         public const string Schema = Username;
 
         // The function you've crated in CARTO Engine (via CDB or otherwise)
