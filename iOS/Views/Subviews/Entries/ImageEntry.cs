@@ -11,6 +11,8 @@ namespace data.collection.iOS
 {
     public class ImageEntry : BaseEntry
     {
+        public EventHandler<EventArgs> Click;
+
         public string ImageName { get; set; }
 
         public UIImageView Photo { get; private set; }
@@ -54,6 +56,11 @@ namespace data.collection.iOS
 			image.Frame = new CGRect(x, y, w, h);
 
             SetIconRoundWithBackground();
+        }
+
+        public override void TouchesEnded(Foundation.NSSet touches, UIEvent evt)
+        {
+            Click?.Invoke(this, EventArgs.Empty);
         }
 
         void SetIconRoundWithBackground()

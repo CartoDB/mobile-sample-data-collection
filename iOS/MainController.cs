@@ -80,6 +80,9 @@ namespace data.collection.iOS
 
             ContentView.Popup.Closed += OnPopupClosed;
 
+            ContentView.Content.CameraField.Click += OnCameraButtonClick;
+            Camera.Instance.Delegate.Complete += OnCameraActionComplete;
+
             ContentView.Content.Done.Click += OnDoneClick;
 		}
 
@@ -106,7 +109,37 @@ namespace data.collection.iOS
 
             ContentView.Popup.Closed -= OnPopupClosed;
 
+            ContentView.Content.CameraField.Click -= OnCameraButtonClick;
+            Camera.Instance.Delegate.Complete -= OnCameraActionComplete;
+
             ContentView.Content.Done.Click -= OnDoneClick;
+        }
+
+        void OnCameraButtonClick(object sender, EventArgs e)
+        {
+            Camera.Instance.TakePicture(this);
+        }
+
+        void OnCameraActionComplete(object sender, PhotoEventArgs e)
+        {
+            UIImage image = Camera.GetImageFromInfo(e.Info);
+
+            image = ImageUtils.Resize(image);
+
+            ContentView.Content.CameraField.SetPhoto(image);
+
+            string filename = GenerateName();
+            ContentView.Content.CameraField.ImageName = filename;
+
+            InvokeInBackground(delegate
+            {
+                Camera.SaveImage(image, filename);
+            });
+        }
+
+        string GenerateName()
+        {
+            return Guid.NewGuid().ToString() + Camera.Extension;
         }
 
         void OnPopupClosed(object sender, EventArgs e)
