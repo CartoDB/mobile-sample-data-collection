@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Listener\ElementClickListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Listener\MapClickListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Networking\Response\ImageResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conf\Conf_Template.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Model\" />
@@ -33,5 +34,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Networking\Response\" />
     <Folder Include="$(MSBuildThisFileDirectory)Utils\" />
     <Folder Include="$(MSBuildThisFileDirectory)Listener\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Conf\" />
   </ItemGroup>
 </Project>
