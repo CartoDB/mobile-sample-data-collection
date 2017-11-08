@@ -46,8 +46,8 @@ namespace data.collection
         public override string ToString()
         {
             var map = new StringVariantMap();
-            map.Add("title", new Variant(Title.EscapeQuotes()));
-            map.Add("description", new Variant(Description.EscapeQuotes()));
+            map.Add("title", new Variant(Title.EscapeQuotes().EscapeNewLine()));
+            map.Add("description", new Variant(Description.EscapeQuotes().EscapeNewLine()));
             map.Add("attachment_url", new Variant(ImageUrl));
             map.Add("marker_latitude", new Variant(MarkerLatitude));
             map.Add("marker_longitude", new Variant(MarkerLongitude));

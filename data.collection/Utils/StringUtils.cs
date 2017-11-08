@@ -8,5 +8,10 @@ namespace data.collection
             // Escape single apostrophes, replace quotation marks
             return source.Replace("'", "''").Replace("\"", "");
         }
+
+        public static string EscapeNewLine(this string source)
+        {
+            return source.Replace(Environment.NewLine, "");
+        }
     }
 }
