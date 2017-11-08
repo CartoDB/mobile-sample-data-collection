@@ -293,22 +293,30 @@ namespace data.collection.iOS
                 return;
             }
 
+            ContentView.CancelCrosshairMode();
+            PointClient.MarkerSource.Clear();
+            ContentView.Popup.Hide();
+
             UIImage image = ContentView.Content.CameraField.Photo.Image;
+
+            BucketResponse response1;
 
             if (image == null)
             {
-                string text = "Please set an image before submitting";
-                ContentView.Banner.SetInformationText(text, true);
-                return;
+                // Photo is an optional field. 
+                // Create a mock successful response, 
+                // if the user hasn't taken a photo
+                response1 = new BucketResponse();
+                response1.Path = "";
             }
+            else
+            {
 
-            Stream stream = Camera.GetStreamFromImage(image);
-
-            ContentView.Banner.ShowUploadingImage();
-
-            string filename = ContentView.Content.CameraField.ImageName;
-
-            BucketResponse response1 = await BucketClient.Upload(filename, stream);
+                Stream stream = Camera.GetStreamFromImage(image);
+                ContentView.Banner.ShowUploadingImage();
+                string filename = ContentView.Content.CameraField.ImageName;
+                response1 = await BucketClient.Upload(filename, stream);
+            }
 
             if (response1.IsOk)
             {
@@ -333,6 +341,8 @@ namespace data.collection.iOS
                 Data item = GetData(Camera.LatestImageName);
                 SQLClient.Instance.Insert(item);
             }
+
+            PointClient.QueryPoints(delegate { });
         }
 
         public Data GetData(string url)
