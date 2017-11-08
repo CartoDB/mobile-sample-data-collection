@@ -187,7 +187,6 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="_deprecatedController.cs" />
     <Compile Include="Colors.cs" />
     <Compile Include="Utils\Camera.cs" />
     <Compile Include="Views\Subviews\Button.cs" />
@@ -209,7 +208,6 @@
     <Compile Include="Views\Subviews\Entries\BaseEntry.cs" />
     <Compile Include="Views\Subviews\Entries\ImageEntry.cs" />
     <Compile Include="Views\Subviews\Entries\TextEntry.cs" />
-    <Compile Include="_deprecatedView.cs" />
     <Compile Include="Views\Subviews\AttachmentImage.cs" />
     <Compile Include="Views\Popup\PopupContent.cs" />
   </ItemGroup>
