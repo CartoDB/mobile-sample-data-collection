@@ -30,8 +30,6 @@ namespace data.collection.Droid
 			Log.ShowWarn = true;
 
 			MapView.RegisterLicense(CartoLicense, ApplicationContext);
-
-            BucketClient.Initialize(Assets);
 		}
 	}
 

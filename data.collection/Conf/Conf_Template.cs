@@ -1,5 +1,5 @@
 ﻿using System;
-namespace data.collection.Conf
+namespace data.collection
 {
     /*
      * Conf.cs template file. 

@@ -214,7 +214,6 @@
   <ItemGroup>
     <BundleResource Include="Resources\icon_camera.png" />
     <BundleResource Include="Resources\icon_camera_roll.png" />
-    <BundleResource Include="Resources\s3_tokens.txt" />
     <BundleResource Include="Resources\icon_banner_info.png" />
     <BundleResource Include="Resources\icon_take_photo.png" />
     <BundleResource Include="Resources\icon_done.png" />

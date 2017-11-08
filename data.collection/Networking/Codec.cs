@@ -7,9 +7,9 @@ namespace data.collection
 {
     public class Codec
     {
-		public const string Schema = "nutiteq";
-		public const string FunctionName = "cdb_insert_collected_data";
-		public const string TableName = "sample_collected_data";
+        public const string Schema = Conf.Schema;
+        public const string FunctionName = Conf.FunctionName;
+        public const string TableName = Conf.TableName;
 
 		public const string BaseUrl = "https://" + Schema + ".carto.com/api/v2/sql";
 		public const string SQLUrl = BaseUrl + "?q=";

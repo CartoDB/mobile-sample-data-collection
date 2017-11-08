@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Listener\MapClickListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Networking\Response\ImageResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Conf\Conf_Template.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conf\Conf.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Model\" />

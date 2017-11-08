@@ -10,10 +10,10 @@ namespace data.collection
 {
     public static class BucketClient
     {
-        public static string Name = "com.carto.mobile.images";
+        public static string Name = Conf.S3BucketName;
 
-        public static string AccessKey = "<your-s3-access-key>";
-        public static string SecretKey = "<your-s3-secret-key>";
+        public static string AccessKey = Conf.S3AccessKey;
+        public static string SecretKey = Conf.S3SecretKey;
 
         public static string UploadPath = "https://" + Name + ".s3.amazonaws.com/";
 
@@ -56,25 +56,6 @@ namespace data.collection
             return response;
         }
 
-
-        public static void Initialize(
-#if __ANDROID__
-            Android.Content.Res.AssetManager assets
-#endif
-        )
-        {
-            string name = "s3_tokens.txt";
-#if __ANDROID__
-            var stream = assets.Open(name);
-            var text = new StreamReader(stream).ReadToEnd();
-#elif __IOS__
-            var text = File.ReadAllText(name);
-#endif
-			Variant variant = Variant.FromString(text);
-
-			AccessKey = variant.GetObjectElement("access_key").String;
-			SecretKey = variant.GetObjectElement("secret_key").String;
-		}
 	}
 }
 

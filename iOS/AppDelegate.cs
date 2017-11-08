@@ -43,8 +43,6 @@ namespace data.collection.iOS
 
 			Window.MakeKeyAndVisible();
 
-            BucketClient.Initialize();
-
 			return true;
         }
     }

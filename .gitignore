@@ -40,3 +40,4 @@ packages/
 
 # project-specific: data.collection bundled s3 tokens
 s3_tokens.txt
+Conf.cs

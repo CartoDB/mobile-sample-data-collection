@@ -158,9 +158,7 @@
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Subviews\Entries\" />
     <Folder Include="Views\Subviews\Popup\" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\s3_tokens.txt" />
+    <Folder Include="Assets\" />
   </ItemGroup>
   <Import Project="..\data.collection\data.collection.projitems" Label="Shared" Condition="Exists('..\data.collection\data.collection.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
