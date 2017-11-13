@@ -148,6 +148,8 @@ namespace data.collection.iOS
             ContentView.CancelCrosshairMode();
 
             ContentView.Content.EndEditing(true);
+
+            ContentView.Content.Clear();
         }
 
         void OnMapClicked(object sender, EventArgs e)

@@ -72,6 +72,14 @@ namespace data.collection.Droid
             h = w;
 
             Done.Frame = new CGRect(x, y, w, h);
+        }
+
+        public void Clear()
+        {
+            TitleField.Text = "";
+            DescriptionField.Text = "";
+
+            CameraField.Clear();
 
         }
     }

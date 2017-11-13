@@ -94,7 +94,6 @@ namespace data.collection.Droid
             PointClient.PointsAdded += OnPointsAdded;
 
             ContentView.Content.Done.Clicked += OnDoneClick;
-            ContentView.Popup.Closed += OnPopupClose;
 
             ContentView.Content.CameraField.Click += TakePicture;
 
@@ -120,7 +119,6 @@ namespace data.collection.Droid
             PointClient.PointsAdded -= OnPointsAdded;
 
             ContentView.Content.Done.Clicked -= OnDoneClick;
-            ContentView.Popup.Closed -= OnPopupClose;
 
             ContentView.Content.CameraField.Click -= TakePicture;
 
@@ -180,6 +178,8 @@ namespace data.collection.Droid
         void OnPopupClosed(object sender, EventArgs e)
         {
             ContentView.CancelCrosshairMode();
+            ContentView.Content.Clear();
+            PointClient.MarkerSource.Clear();
         }
 
         void OnAddLocationClick(object sender, EventArgs e)
@@ -222,11 +222,6 @@ namespace data.collection.Droid
         void OnLocationChoiceCancelled(object sender, EventArgs e)
         {
             ContentView.CancelCrosshairMode();
-        }
-
-        void OnPopupClose(object sender, EventArgs e)
-        {
-            PointClient.MarkerSource.Clear();
         }
 
         void OnQueryFailed(object sender, EventArgs e)

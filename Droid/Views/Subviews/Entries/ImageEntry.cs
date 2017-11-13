@@ -27,6 +27,11 @@ namespace data.collection.Droid
             }
         }
 
+        public void Clear()
+        {
+            photoView.SetImageResource(0);
+        }
+
         public string ImageName { get; set; }
 
         public ImageEntry(Context context, string title, int resource) : base(context, title)

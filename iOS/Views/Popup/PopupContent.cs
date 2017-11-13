@@ -89,5 +89,13 @@ namespace data.collection.iOS
 
             return true;
         }
+
+        public void Clear()
+        {
+            TitleField.Field.Text = "";
+            DescriptionField.Field.Text = "";
+
+            CameraField.Photo.Image = null;
+        }
     }
 }

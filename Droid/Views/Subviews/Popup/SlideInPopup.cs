@@ -118,13 +118,14 @@ namespace data.collection.Droid
 
 			TransparentArea.Click -= Hide;
 			popup.Header.CloseButton.Click -= Hide;
+
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         public EventHandler<EventArgs> Closed;
         void Hide(object sender, EventArgs e)
         {
             Hide();
-            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         void AnimateAlpha(float to, long duration = 200)
