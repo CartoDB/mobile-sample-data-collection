@@ -206,7 +206,7 @@ namespace data.collection.iOS
             // Translate crosshair's coordinates to a position on the map
             var parameters = ContentView.Crosshair.Frame;
             var x = (parameters.X + parameters.Width / 2) * scale;
-            var y = (parameters.Y + parameters.Height / 2) * scale;
+            var y = (parameters.Y + parameters.Height / 2 - Device.TrueY0) * scale;
             var screen = new ScreenPos((float)x, (float)y);
             ContentView.MapView.ScreenToMap(screen);
 
@@ -229,6 +229,7 @@ namespace data.collection.iOS
             InvokeOnMainThread(delegate
             {
                 ContentView.Popup.Show();
+                ContentView.CancelCrosshairMode();
             });
         }
 
