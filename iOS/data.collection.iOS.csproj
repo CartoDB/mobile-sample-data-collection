@@ -220,6 +220,7 @@
     <BundleResource Include="Resources\icon_close.png" />
     <BundleResource Include="Resources\icon_crosshair.png" />
     <BundleResource Include="Resources\icon_remove.png" />
+    <BundleResource Include="Resources\icon_no_image.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />

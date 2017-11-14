@@ -8,6 +8,7 @@ namespace data.collection.iOS
     public class AttachmentImage : UIView
     {
         UIImageView photoView;
+        UIImageView placeHolder;
         UIActivityIndicatorView spinner;
         UIImageView closeButton;
 
@@ -15,7 +16,11 @@ namespace data.collection.iOS
         {
             BackgroundColor = Colors.DarkTransparentGray;
             ClipsToBounds = true;
-                
+
+            placeHolder = new UIImageView();
+            placeHolder.Image = UIImage.FromFile("icon_no_image.png");
+            AddSubview(placeHolder);
+
             photoView = new UIImageView();
             photoView.ClipsToBounds = true;
             AddSubview(photoView);
@@ -28,6 +33,7 @@ namespace data.collection.iOS
             AddSubview(closeButton);
 
             closeButton.Hidden = true;
+            placeHolder.Hidden = true;
 
             Alpha = 0.0f;
         }
@@ -38,10 +44,17 @@ namespace data.collection.iOS
         {
             base.LayoutSubviews();
 
-            nfloat x = Padding;
-            nfloat y = Padding;
-            nfloat w = Frame.Width - 2 * Padding;
-            nfloat h = Frame.Height - 2 * Padding;
+            nfloat w = Frame.Width / 2;
+            nfloat h = w;
+            nfloat x = Frame.Width / 2 - w / 2;
+            nfloat y = Frame.Height / 2 - h / 2;
+
+            placeHolder.Frame = new CGRect(x, y, w, h);
+
+            x = Padding;
+            y = Padding;
+            w = Frame.Width - 2 * Padding;
+            h = Frame.Height - 2 * Padding;
 
             photoView.Frame = new CGRect(x, y, w, h);
 
@@ -120,6 +133,17 @@ namespace data.collection.iOS
         public void SetImage(UIImage image)
         {
             photoView.Image = image;
+            photoView.Hidden = false;
+            placeHolder.Hidden = true;
+
+            spinner.StopAnimating();
+        }
+
+        public void ShowPlaceholder()
+        {
+            placeHolder.Hidden = false;
+            photoView.Hidden = true;
+
             spinner.StopAnimating();
         }
 
@@ -127,6 +151,7 @@ namespace data.collection.iOS
         {
             AnimateAlpha(1.0f);
             spinner.StartAnimating();
+            placeHolder.Hidden = true;
         }
 
         public void Hide()

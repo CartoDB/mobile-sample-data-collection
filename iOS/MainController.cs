@@ -184,11 +184,9 @@ namespace data.collection.iOS
             }
             else
             {
-                var text = "Unable to load element image";
                 InvokeOnMainThread(delegate
                 {
-                    ContentView.Banner.SetInformationText(text, true);
-                    ContentView.Attachment.Hide();
+                    ContentView.Attachment.ShowPlaceholder();
                 });
             }
         }
