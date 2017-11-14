@@ -23,6 +23,8 @@ namespace data.collection.iOS
             Field.Layer.BorderWidth = 1.0f;
             Field.Layer.BorderColor = UIColor.LightGray.CGColor;
 
+            Field.AutocorrectionType = UITextAutocorrectionType.No;
+
             AddSubview(Field);
         }
 

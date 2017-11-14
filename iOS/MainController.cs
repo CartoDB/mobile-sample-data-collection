@@ -125,12 +125,13 @@ namespace data.collection.iOS
 
         void OnKeyboardWillShow(object sender, UIKeyboardEventArgs e)
         {
-            Console.WriteLine("Keyboard show");
+            ContentView.KeyboardHeight = e.FrameEnd.Height;
+            ContentView.MoveFieldToVisible();
         }
 
         void OnKeyboardWillHide(object sender, UIKeyboardEventArgs e)
         {
-            Console.WriteLine("Keyboard hide");
+            ContentView.ResetPopup();
         }
 
         void OnCameraButtonClick(object sender, EventArgs e)

@@ -8,6 +8,8 @@ namespace data.collection.iOS
 {
     public class PopupContent : UIView, IUITextViewDelegate
     {
+        public EventHandler<EventArgs> BeganEditing;
+
         public TextEntry TitleField { get; private set; }
 
         public TextEntry DescriptionField { get; private set; }
@@ -15,6 +17,23 @@ namespace data.collection.iOS
         public ActionButton Done { get; private set; }
 
         public ImageEntry CameraField { get; private set; }
+
+        public nfloat TitleFieldBottom
+        {
+            get { return GetBottomOf(TitleField); }
+        }
+
+        public nfloat DescriptionFieldBottom
+        {
+            get { return GetBottomOf(DescriptionField); }
+        }
+
+        nfloat GetBottomOf(TextEntry field)
+        {
+            nfloat padding = 5;
+            nfloat parent = Superview.Frame.Y + Frame.Y;
+            return parent + field.Frame.Y + field.Field.Frame.Bottom + padding;
+        }
 
         public PopupContent()
         {
@@ -78,7 +97,6 @@ namespace data.collection.iOS
             {
                 if (textView == TitleField.Field)
                 {
-                    // TODO Move view up
                     DescriptionField.Field.BecomeFirstResponder();
                 }
                 else
@@ -86,6 +104,15 @@ namespace data.collection.iOS
                     this.EndEditing(true);
                 }
             }
+
+            return true;
+        }
+
+        [Export("textViewShouldBeginEditing:")]
+        public bool ShouldBeginEditing(UITextView textView)
+        {
+            var parent = (TextEntry)textView.Superview;
+            BeganEditing?.Invoke(parent, EventArgs.Empty);
 
             return true;
         }

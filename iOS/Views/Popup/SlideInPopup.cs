@@ -23,6 +23,8 @@ namespace data.collection.iOS
             get { return transparentArea.Alpha >= 0.5f; }
         }
 
+        public bool ShouldAnimateChildren { get; set; } = true;
+
         public void ShowBackButton()
         {
             Header.BackButton.Hidden = false;    
@@ -53,6 +55,11 @@ namespace data.collection.iOS
 
         public override void LayoutSubviews()
         {
+            if (!ShouldAnimateChildren)
+            {
+                return;
+            }
+
             nfloat x = 0;
             nfloat y = 0;
             nfloat w = Frame.Width;

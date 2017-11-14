@@ -40,6 +40,8 @@ namespace data.collection.iOS
             }
         }
 
+        public nfloat KeyboardHeight { get; set; } = -1;
+
         public MainView()
         {
 			MapView = new MapView();
@@ -143,11 +145,38 @@ namespace data.collection.iOS
             AnimateDoneTo(doneHiddenPosition);
         }
 
+        public void MoveFieldToVisible()
+        {
+            nfloat keyboardTopY = Frame.Height - (Device.TrueY0 + KeyboardHeight);
+
+            nfloat requiredY = Content.DescriptionFieldBottom - keyboardTopY;
+            AnimatePopupTo(Device.TrueY0 - requiredY);
+
+        }
+
+        public void ResetPopup()
+        {
+            AnimatePopupTo(Device.TrueY0);
+        }
+
+        void AnimatePopupTo(nfloat y)
+        {
+            var screen = new CGRect(0, y, Frame.Width, Frame.Height - Device.TrueY0);
+            Popup.ShouldAnimateChildren = false;
+            Animate(0.2, delegate
+            {
+                Popup.Frame = screen;
+            }, delegate
+            {
+                Popup.ShouldAnimateChildren = true;
+            });
+        }
+
         void AnimateDoneTo(nfloat to)
         {
             Animate(0.2, delegate
             {
-                Done.Frame = new CGRect(to, Done.Frame.Y, Done.Frame.Width, Done.Frame.Height);   
+                Done.Frame = new CGRect(to, Done.Frame.Y, Done.Frame.Width, Done.Frame.Height);
             });
         }
     }
