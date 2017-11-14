@@ -1,12 +1,14 @@
 ﻿using System;
 using Android.Content;
 using Android.Graphics;
+using Android.Views;
 using Android.Widget;
 
 namespace data.collection.Droid
 {
     public class AttachmentImage : BaseView
     {
+        ImageView placeHolder;
         ImageView photoView;
         ProgressBar spinner;
         ImageView closeButton;
@@ -14,6 +16,11 @@ namespace data.collection.Droid
         public AttachmentImage(Context context) : base(context)
         {
             this.SetBackground(Colors.DarkTransparentGray);
+
+            placeHolder = new ImageView(context);
+            placeHolder.SetImageResource(Resource.Drawable.icon_no_image);
+            placeHolder.SetScaleType(ImageView.ScaleType.CenterCrop);
+            AddView(placeHolder);
 
             photoView = new ImageView(context);
             AddView(photoView);
@@ -38,17 +45,25 @@ namespace data.collection.Droid
                 }
             };
 
-            closeButton.Visibility = Android.Views.ViewStates.Gone;
+            closeButton.Visibility = ViewStates.Gone;
+            placeHolder.Visibility = ViewStates.Gone;
         }
 
         int Padding { get { return (int)(5 * Density); } }
 
         public override void LayoutSubviews()
         {
-            int x = Padding;
-            int y = Padding;
-            int w = Frame.W - 2 * Padding;
-            int h = Frame.H - 2 * Padding;
+            int w = Frame.W / 2;
+            int h = w;
+            int x = Frame.W / 2 - w / 2;
+            int y = Frame.H / 2 - h / 2;
+
+            placeHolder.SetFrame(x, y, w, h);
+
+            x = Padding;
+            y = Padding;
+            w = Frame.W - 2 * Padding;
+            h = Frame.H - 2 * Padding;
 
             photoView.SetFrame(x, y, w, h);
 
@@ -70,7 +85,16 @@ namespace data.collection.Droid
         public void SetImage(Bitmap bitmap)
         {
             photoView.SetImageBitmap(bitmap);
-            spinner.Visibility = Android.Views.ViewStates.Gone;
+            photoView.Visibility = ViewStates.Visible;
+            placeHolder.Visibility = ViewStates.Gone;
+            spinner.Visibility = ViewStates.Gone;
+        }
+
+        public void ShowPlaceHolder()
+        {
+            placeHolder.Visibility = ViewStates.Visible;
+            photoView.Visibility = ViewStates.Gone;
+            spinner.Visibility = ViewStates.Gone;
         }
 
         CGRect original = CGRect.Empty;
@@ -105,6 +129,7 @@ namespace data.collection.Droid
         {
             AnimateAlpha(1);
             spinner.Visibility = Android.Views.ViewStates.Visible;
+            placeHolder.Visibility = ViewStates.Gone;
         }
 
         public void Hide()

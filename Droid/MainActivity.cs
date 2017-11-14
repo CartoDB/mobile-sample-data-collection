@@ -155,11 +155,9 @@ namespace data.collection.Droid
             }
             else
             {
-                var text = "Unable to load element image";
                 RunOnUiThread(delegate
                 {
-                    ContentView.Banner.SetInformationText(text, true);
-                    ContentView.Attachment.Hide();
+                    ContentView.Attachment.ShowPlaceHolder();
                 });
             }
         }
