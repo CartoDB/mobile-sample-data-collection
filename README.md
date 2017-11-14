@@ -2,13 +2,23 @@
 
 Sample app demonstrating how **Carto Mobile SDK** and **CARTO Engine** can be used to actively (and passively) collect data. **CARTO MAPS API** is used to query an existing map built with **CARTO Builder**.
 
-##### IMPORTANT!
+#### SETUP
+
+Clone the repository, open the project in Visual Studio, wait for the packages to resture and you're almost good to go. 
 
 `Conf.cs` is missing from the source code, this application will not compile out-of-the-box. `Conf.cs` is there all our account-specific configuration is located, e.g. Amazon S3 authentication, CARTO username, table name, function name etc.
 
 `Conf_Template.cs` serves as a template for your own `Conf.cs` file. 
 
-##### SETUP
+#### USAGE
+
+Press the **+** icon to open location choice mode (crosshair for maximum precision), and click done when complete. A popup will slide in.
+
+Now enter a **title**, **description** and, optionally, **take a photo** – now press the done button, your data will be uploaded to our CARTO table and, if taken, your photo will be uploaded to amazon S3 (the url is added to your CARTO table).
+
+In its current form, all the data you collect will be sent to CARTO's CARTO account and and AWS S3 Bucket. We take no responsibility for lost data.
+
+#### COLLECT YOUR OWN DATA
 
 * Create an account at [carto.com](https://carto.com/)
 * Set up a new data set:
@@ -22,12 +32,16 @@ To modify how your data is displayed, click on the layer: ![](images/image_click
 
 Here you can change the color of your entries, how they are aggregated etc.
 
-##### USAGE
+#### PROJECT STRUCTURE
 
-Open the application, press the **+** icon to open location choice mode (crosshair for maximum precision), and click done when complete. A popup will slide in.
+This is a native view project written in Visual Studio via Xamarin, not a forms project. All of the custom views (buttons, crosshair, banner etc.) are native code (UIView/RelativeLayout).
 
-Now enter a **title**, **description** and, optionally, **take a photo** – now press the done button, your data will be uploaded to our CARTO table and, if taken, your photo will be uploaded to amazon S3 (the url is added to your CARTO table).
+CARTO's Mobile SDK MapView's iOS and Droid API is common, so most of the logic related to the SDK is situated in the shared project.
 
-##### DISCLAIMER
+Networking, parsing and local storage logic is also in the shared project, for maximum code reuse.
+
+I could, in theory, put even more logic into the shared project, but that would hinder legibility: everything that you would commonly find in the **controller** (UIViewController/Activity) is still located in the controller.
+
+#### DISCLAIMER!
 
 This is a sample app with relatively simple code structure, it has not passed extensive testing etc. I can assure you, if you wish to break it, you will be able to.
