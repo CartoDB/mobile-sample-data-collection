@@ -62,6 +62,8 @@ namespace data.collection.iOS
             PointClient.PointListener.LeftImage = BitmapUtils.CreateBitmapFromUIImage(image);
         }
 
+        NSObject keyboardShow, keyboardHide;
+
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
@@ -89,6 +91,9 @@ namespace data.collection.iOS
             Camera.Instance.Delegate.Complete += OnCameraActionComplete;
 
             ContentView.Content.Done.Click += OnDoneClick;
+
+            keyboardShow = NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillShowNotification, OnKeyboardShow);
+            keyboardHide = NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillHideNotification, OnKeyboardHide);
 		}
 
         public override void ViewWillDisappear(bool animated)
@@ -118,6 +123,19 @@ namespace data.collection.iOS
             Camera.Instance.Delegate.Complete -= OnCameraActionComplete;
 
             ContentView.Content.Done.Click -= OnDoneClick;
+
+            NSNotificationCenter.DefaultCenter.RemoveObserver(keyboardShow);
+            NSNotificationCenter.DefaultCenter.RemoveObserver(keyboardHide);
+        }
+
+        void OnKeyboardShow(NSNotification obj)
+        {
+            Console.WriteLine("Keyboard show");
+        }
+
+        void OnKeyboardHide(NSNotification obj)
+        {
+            Console.WriteLine("Keyboard hide");
         }
 
         void OnCameraButtonClick(object sender, EventArgs e)
