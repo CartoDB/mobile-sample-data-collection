@@ -60,7 +60,7 @@ namespace data.collection
             string title = properties.GetObjectElement("title").String;
             string description = properties.GetObjectElement("description").String;
 
-            MapPos position = clickInfo.ClickPos;
+            MapPos position = clickInfo.Feature.Geometry.CenterPos;
             BalloonPopup popup = new BalloonPopup(position, style, title, description);;
 
             source.Add(popup);
