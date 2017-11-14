@@ -12,6 +12,11 @@ namespace data.collection.iOS
             return MaxResize(source, 800, 800);
         }
 
+        public static UIImage Resize(UIImage source, float size)
+        {
+            return MaxResize(source, size, size);
+        }
+
 		// resize the image to be contained within a maximum width and height, keeping aspect ratio
         static UIImage MaxResize(UIImage sourceImage, float maxWidth, float maxHeight)
 		{

@@ -55,6 +55,11 @@ namespace data.collection.iOS
                     ContentView.Banner.Hide();
                 });
             });
+
+            var image = UIImage.FromFile("icon_banner_info.png");
+            image = ImageUtils.Resize(image, 70.0f);
+
+            PointClient.PointListener.LeftImage = BitmapUtils.CreateBitmapFromUIImage(image);
         }
 
         public override void ViewWillAppear(bool animated)
