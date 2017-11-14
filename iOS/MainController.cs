@@ -167,8 +167,6 @@ namespace data.collection.iOS
             ContentView.CancelCrosshairMode();
 
             ContentView.Content.EndEditing(true);
-
-            ContentView.Content.Clear();
         }
 
         void OnMapClicked(object sender, EventArgs e)
@@ -362,6 +360,7 @@ namespace data.collection.iOS
                 SQLClient.Instance.Insert(item);
             }
 
+            ContentView.Content.Clear();
             PointClient.QueryPoints(delegate { });
         }
 

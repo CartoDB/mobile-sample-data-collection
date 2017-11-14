@@ -176,7 +176,6 @@ namespace data.collection.Droid
         void OnPopupClosed(object sender, EventArgs e)
         {
             ContentView.CancelCrosshairMode();
-            ContentView.Content.Clear();
             PointClient.MarkerSource.Clear();
         }
 
@@ -311,6 +310,7 @@ namespace data.collection.Droid
                     SQLClient.Instance.Insert(item);
                 }
 
+                ContentView.Content.Clear();
                 PointClient.QueryPoints(delegate { });
             }
         }
