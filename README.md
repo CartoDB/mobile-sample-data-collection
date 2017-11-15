@@ -1,6 +1,6 @@
 # DATA COLLECTION
 
-Sample app demonstrating how **Carto Mobile SDK** and **CARTO Engine** can be used to collect location-based data. It covers most common use case for point + image data collection:
+Sample app demonstrating how **Carto Mobile SDK** and **CARTO Engine** can be used to collect location-based data in cross-platform: iPhone and Android native app. It covers most common use case for point + image data collection:
 
 1. User selects location on map - using assistance from GPS
 2. Enters data form
@@ -40,7 +40,7 @@ Like here sample (note that `the_geom` and `cartodb_id` fields are created autom
 
 1. Clone this repository, open the Xamarin project (data.collection.sln) in Visual Studio, wait for the packages to restore
 2. Rename `Conf_Template.cs` in the *data.collection/Conf* folder to `Conf.cs` 
-3. Change as minimum following: 
+3. Update Conf.cs with your data, as minimum following: 
 
 * **Username** - your CARTO username
 * **MapName** - your map name, it is like GUID in URL of your map, but the formatting is a bit different: add `tpl_` as prefix and replace dashes with underscores, so with our map, original `76370647-9649-4d19-a6d5-4144348a6f67` becomes to : `tpl_76370647_9649_4d19_a6d5_4144348a6f67`
@@ -49,7 +49,7 @@ Like here sample (note that `the_geom` and `cartodb_id` fields are created autom
 
 ### 4. Customize and use the app
 
-If basic sample is working, then you probably want to create your own modified data form, use own fields etc. Gradually adjust mobile side (UI and data objects) and backend side (dataset in CARTO and the SQL function parameters) in parallel, make sure backend accepts new fields etc. You can also add your specific rules to checking data etc.
+If basic sample is working, then you probably want to create your own modified data form, use own fields etc. Gradually adjust mobile side (UI, data objects, sqlite database storage) and backend side (dataset in CARTO and the SQL function parameters) in parallel, make sure backend accepts new fields. You can also add your specific rules to checking data, user identification etc.
 
 ## USAGE
 
