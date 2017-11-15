@@ -19,8 +19,8 @@ namespace data.collection
         // The function you've crated in CARTO Engine (via CDB or otherwise)
         public const string FunctionName = "<your-function-name>";
 
-        // The table you've created in CARTO platform
-        public const string TableName = "<your-table-name>";
+        // The map you've created in CARTO Builder
+        public const string MapName = "tpl_76370647_9649_4d19_a6d5_4144348a6f67";
 
         // Your AWS Bucket name
         public const string S3BucketName = "<your-bucket-name";

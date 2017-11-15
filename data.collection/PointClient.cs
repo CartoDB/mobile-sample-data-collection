@@ -85,7 +85,7 @@ namespace data.collection
             }
 
             var username = Conf.Username;
-            var mapname = "tpl_76370647_9649_4d19_a6d5_4144348a6f67";
+            var mapname = Conf.MapName;
 
             MapView.ConfigureNamedVectorLayers(username, mapname, (VectorTileLayer obj) =>
             {

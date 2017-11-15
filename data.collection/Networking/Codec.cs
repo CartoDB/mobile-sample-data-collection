@@ -9,7 +9,6 @@ namespace data.collection
     {
         public const string Schema = Conf.Schema;
         public const string FunctionName = Conf.FunctionName;
-        public const string TableName = Conf.TableName;
 
 		public const string BaseUrl = "https://" + Schema + ".carto.com/api/v2/sql";
 		public const string SQLUrl = BaseUrl + "?q=";
