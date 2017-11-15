@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION nutiteq.cdb_insert_collected_data(jsons jsonb[])
+CREATE OR REPLACE FUNCTION cdb_insert_collected_data(jsons jsonb[])
  RETURNS TABLE(cartodb_id integer)
  LANGUAGE plpgsql
  STRICT SECURITY DEFINER
